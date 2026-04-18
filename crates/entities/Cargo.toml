@@ -1,0 +1,44 @@
+[package]
+name = "lom_entities"
+version = "0.2.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+bevy = { version = "0.18" }
+bevy_ecs = "0.18"
+lom_game = { path = "../game" }
+lom_assets = { path = "../assets" }
+lom_ldtk = { path = "../ldtk" }
+lom_ui = { path = "../ui" }
+bevy_tweening = "0.15"
+bevy_kira_audio = "0.25"
+bevy_rapier2d = "0.33.0"
+pecs = { git = "https://github.com/stillonearth/pecs.git", rev = "0b274c9" }
+rand = "0.10.1"
+bevy_ecs_ldtk = { version = "0.14", features = [
+    "default",
+    "derive",
+    "atlas",
+    "render",
+] }
+
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+[features]
+dev = [
+    "bevy/dynamic_linking",
+]

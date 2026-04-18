@@ -5,47 +5,15 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-bevy = { version = "0.12", default-features = false, features = [
-    "animation",
-    "bevy_asset",
-    "bevy_gilrs",
-    "bevy_scene",
-    "bevy_winit",
-    "bevy_core_pipeline",
-    "bevy_pbr",
-    "bevy_gltf",
-    "bevy_render",
-    "bevy_sprite",
-    "bevy_text",
-    "bevy_ui",
-    "multi-threaded",
-    "png",
-    "jpeg",
-    "hdr",
-    "x11",
-    "bevy_gizmos",
-    "tonemapping_luts",
-    "default_font",
-    "webgl2",
-] }
-bevy_ecs_ldtk = { version = "0.9", features = [
-    "default",
-    "derive",
-    "atlas",
-    "render",
-] }
-bevy-inspector-egui = "0.22"
-bevy_rapier2d = "0.23"
-rand = "0.8.5"
-pecs = "0.5"
-bevy_particle_systems = "0.11"
-bevy_asset_loader = "0.18"
-bevy_kira_audio = "0.18"
-webbrowser = { version = "0.8", features = ["hardened"] }
-ffmpeg-next = "6.1"
-bevy-scene-hook = "9.0"
-bevy_tweening = "0.9.0"
-bevy_magic_light_2d = {git="https://github.com/zaycev/bevy-magic-light-2d", rev="8ce01dc618d4905b3"}
+bevy = { version = "0.18" }
+lom_assets = { path = "crates/assets" }
+lom_audio = { path = "crates/audio" }
+lom_cutscene = { path = "crates/cutscene" }
+lom_entities = { path = "crates/entities" }
+lom_game = { path = "crates/game" }
+lom_ldtk = { path = "crates/ldtk" }
+lom_splashscreen = { path = "crates/splashscreen" }
+lom_ui = { path = "crates/ui" }
 
 [profile.dev.package."*"]
 opt-level = 3
