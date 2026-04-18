@@ -253,7 +253,7 @@ pub fn ui_wave_info_text(
         let _next_wave_event_in = (gameplay_state.wave_event_timer.duration()
             - gameplay_state.wave_event_timer.elapsed())
         .as_secs();
-        text.0[0].value = format!(
+        text.0 = format!(
             "Wave: {}\t | {} seconds left",
             current_wave, wave_seconds_left,
         );

@@ -60,18 +60,18 @@ fn inject_machete_indicator(
 
         commands.entity(player_entity).with_children(|parent| {
             let mesh_handle = meshes.add(Circle::new(80.));
-            let material_handle = materials.add(ColorMaterial::from(Color::srgba(0.5, 0.0, 0.5, 0.5)));
+            let material_handle =
+                materials.add(ColorMaterial::from(Color::srgba(0.5, 0.0, 0.5, 0.5)));
             parent.spawn((
                 MacheteIndictorBundle {
                     machete_indicator: Machete {},
                     machete_indicator_material: MacheteIndicatorMaterial(material_handle),
                     timer_activation: machete_timer.clone(),
                 },
-                Mesh2d(mesh_handle),
-                ColorMaterial::from(Color::srgba(0.5, 0.0, 0.5, 0.5)),
-                Transform::from_translation(player_transform.translation + offset),
-                Name::new("machete radius indicator"),
                 ZIndex(103),
+                Name::new("machete radius indicator"),
+                Mesh2d(mesh_handle),
+                Transform::from_translation(player_transform.translation + offset), //
             ));
         });
     }

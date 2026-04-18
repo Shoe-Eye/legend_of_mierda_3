@@ -192,102 +192,126 @@ pub struct SpawnEnemyEvent {
 
 pub fn handle_spawn_enemy(world: &mut World) {
     type Params<'w, 's> = (
-        Commands<'w, 's>,
         MessageReader<'w, 's, SpawnEnemyEvent>,
         Res<'w, LevelSelection>,
-        Query<'w, 's, (Entity, &'w LevelIid)>,
-        Query<'w, 's, &'w LdtkProjectHandle>,
+        Query<'w, 's, (Entity, &'static LevelIid)>,
+        Query<'w, 's, &'static LdtkProjectHandle>,
         Res<'w, Assets<LdtkProject>>,
-        Query<'w, 's, (Entity, &'w ChildOf, &'w Enemy, &'w Transform)>,
-        Query<'w, 's, (&'w Player, &'w Transform)>,
+        Query<'w, 's, (Entity, &'static ChildOf, &'static Enemy)>,
+        Query<'w, 's, (&'static Player, &'static Transform)>,
     );
 
     let mut state: SystemState<Params> = SystemState::new(world);
 
-    let events_read = {
-        let (_, ev_spawn_enemy, _, _, _, _, _, _) = state.get(world);
-        let spawns: Vec<SpawnEnemyEvent> = ev_spawn_enemy.read().cloned().collect();
-        spawns
+    // 1. Drain events into owned data
+    let events: Vec<SpawnEnemyEvent> = {
+        let (mut ev, ..) = state.get_mut(world);
+        ev.read().cloned().collect()
     };
 
-    if events_read.is_empty() {
+    if events.is_empty() {
         return;
     }
 
     let mut rng = ThreadRng::default();
 
-    for ev_spawn in events_read {
-        let (mut commands, _, level_selection, levels, projects, project_assets, enemies, q_player_query) = state.get_mut(world);
+    for ev_spawn in &events {
+        // 2. Read all query data into owned values (no world borrow held after block)
+        let (player_translation, level_bounds, dummy_candidates) = {
+            let (_, level_selection, levels, projects, project_assets, enemies, players) =
+                state.get(world);
 
-        if let Some((_, player_transform)) = q_player_query.iter().next() {
-            let player_translation = player_transform.translation;
+            let player_translation = match players.iter().next() {
+                Some((_, t)) => t.translation,
+                None => continue,
+            };
 
-            for (_, level_iid) in levels.iter() {
-                let project = match project_assets.get(projects.iter().next().unwrap()) {
-                    Some(p) => p,
-                    None => continue,
-                };
-                let level = match project.get_raw_level_by_iid(level_iid.get()) {
-                    Some(l) => l,
-                    None => continue,
-                };
+            let project_handle = match projects.iter().next() {
+                Some(h) => h,
+                None => continue,
+            };
+            let project = match project_assets.get(project_handle) {
+                Some(p) => p,
+                None => continue,
+            };
 
-                if !level_selection.is_match(&LevelIndices { level: 0, ..default() }, level) {
-                    continue;
-                }
-
-                let max_level_dimension = level.px_wid.max(level.px_hei) as f32;
-
-                for _ in 0..ev_spawn.count {
-                    let (dummy_entity, parent_entity, enemy_transform) = {
-                        let mut found: Option<(Entity, Entity, Transform)> = None;
-                        for (e, child_of, enemy, transform) in enemies.iter() {
-                            if enemy.is_dummy && enemy.enemy_type == ev_spawn.enemy_type {
-                                found = Some((e, child_of.parent(), *transform));
-                                break;
-                            }
-                        }
-                        match found {
-                            Some(f) => f,
-                            None => continue,
-                        }
-                    };
-
-                    let mut enemy_position = player_translation;
-                    while (player_translation - enemy_position).length()
-                        < max_level_dimension / 2.0
-                        || enemy_position.x < 24.0
-                        || enemy_position.x > (level.px_wid as f32) - 24.0
-                        || enemy_position.y < 24.0
-                        || enemy_position.y > (level.px_hei as f32) - 24.0
-                    {
-                        let r = rng.random_range(0.0..1000.0);
-                        let angle = rng.random_range(0.0..std::f32::consts::TAU);
-                        enemy_position = player_translation
-                            + Vec3::new(r * angle.sin(), r * angle.cos(), 0.0);
-                    }
-
-                    let new_entity = commands.spawn_empty().id();
-                    let transform = Transform::from_translation(enemy_position).with_scale(Vec3::ONE * 0.5);
-
-                    commands.entity(parent_entity).add_child(new_entity);
-                    commands.entity(new_entity).insert(Enemy {
-                        enemy_type: ev_spawn.enemy_type,
-                        is_dummy: false,
-                        health: match ev_spawn.enemy_type {
-                            EnemyType::Mierda => 50,
-                            EnemyType::Pendejo => 100,
-                            EnemyType::Psychiatrist1 => 5000,
-                            EnemyType::Psychiatrist2 => 5000,
+            let level_bounds: Vec<(i32, i32, Entity)> = levels
+                .iter()
+                .filter_map(|(entity, iid)| {
+                    let level = project.get_raw_level_by_iid(iid.get())?;
+                    if level_selection.is_match(
+                        &LevelIndices {
+                            level: 0,
+                            ..default()
                         },
-                        move_direction: Vec2::ZERO,
-                        hit_at: None,
-                        marked_for_despawn: false,
-                    });
-                    commands.entity(new_entity).insert(transform);
+                        level,
+                    ) {
+                        Some((level.px_wid, level.px_hei, entity))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
 
-                    EntityCloner::build_opt_out(world).clone_entity(dummy_entity, new_entity);
+            let dummy_candidates: Vec<(Entity, Entity)> = enemies
+                .iter()
+                .filter(|(_, _, enemy)| enemy.is_dummy && enemy.enemy_type == ev_spawn.enemy_type)
+                .map(|(e, child_of, _)| (e, child_of.parent()))
+                .collect();
+
+            (player_translation, level_bounds, dummy_candidates)
+        }; // <-- ALL state borrows dropped here
+
+        for (px_wid, px_hei, _) in &level_bounds {
+            let px_wid = *px_wid;
+            let px_hei = *px_hei;
+            let max_level_dimension = px_wid.max(px_hei) as f32;
+
+            for _ in 0..ev_spawn.count {
+                let (dummy_entity, parent_entity) = match dummy_candidates.first() {
+                    Some(&d) => d,
+                    None => continue,
+                };
+
+                // Generate position
+                let mut enemy_position = player_translation;
+                while (player_translation - enemy_position).length() < max_level_dimension / 2.0
+                    || enemy_position.x < 24.0
+                    || enemy_position.x > px_wid as f32 - 24.0
+                    || enemy_position.y < 24.0
+                    || enemy_position.y > px_hei as f32 - 24.0
+                {
+                    let r = rng.random_range(0.0..1000.0);
+                    let angle = rng.random_range(0.0..std::f32::consts::TAU);
+                    enemy_position =
+                        player_translation + Vec3::new(r * angle.sin(), r * angle.cos(), 0.0);
                 }
+
+                // 3. Spawn directly on world — no Commands needed, no borrow conflict
+                let new_entity = world
+                    .spawn((
+                        Enemy {
+                            enemy_type: ev_spawn.enemy_type,
+                            is_dummy: false,
+                            health: match ev_spawn.enemy_type {
+                                EnemyType::Mierda => 50,
+                                EnemyType::Pendejo => 100,
+                                EnemyType::Psychiatrist1 => 5000,
+                                EnemyType::Psychiatrist2 => 5000,
+                            },
+                            move_direction: Vec2::ZERO,
+                            hit_at: None,
+                            marked_for_despawn: false,
+                        },
+                        Transform::from_translation(enemy_position).with_scale(Vec3::ONE * 0.5),
+                    ))
+                    .id();
+
+                // Add as child of parent
+                world.entity_mut(parent_entity).add_child(new_entity);
+
+                // 4. EntityCloner has exclusive world access — no conflict
+                EntityCloner::build_opt_out(world).clone_entity(dummy_entity, new_entity);
             }
         }
     }

@@ -13,6 +13,6 @@ pub fn ui_score_text(mut text_query: Query<(&mut Text, &UIHighscore)>, score: Re
     }
 
     for (mut text, _tag) in text_query.iter_mut() {
-        text.0[0].value = format!("SCORE: {}", score.score);
+        text.0 = format!("SCORE: {}", score.score);
     }
 }

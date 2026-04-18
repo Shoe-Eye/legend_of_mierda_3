@@ -110,93 +110,116 @@ pub struct SpawnItemEvent {
 
 pub fn event_spawn_item(world: &mut World) {
     type Params<'w, 's> = (
-        Commands<'w, 's>,
         MessageReader<'w, 's, SpawnItemEvent>,
         Res<'w, LevelSelection>,
-        Query<'w, 's, (Entity, &'w LevelIid)>,
-        Query<'w, 's, &'w LdtkProjectHandle>,
+        Query<'w, 's, (Entity, &'static LevelIid)>,
+        Query<'w, 's, &'static LdtkProjectHandle>,
         Res<'w, Assets<LdtkProject>>,
-        Query<'w, 's, (Entity, &'w ChildOf, &'w Item)>,
-        Query<'w, 's, (&'w Player, &'w Transform)>,
+        Query<'w, 's, (Entity, &'static ChildOf, &'static Item)>,
+        Query<'w, 's, (&'static Player, &'static Transform)>,
     );
 
     let mut state: SystemState<Params> = SystemState::new(world);
 
-    let events_read = {
-        let (_, ev_spawn_item, _, _, _, _, _, _) = state.get(world);
-        let spawns: Vec<SpawnItemEvent> = ev_spawn_item.read().cloned().collect();
-        spawns
+    // 1. Drain events into owned data
+    let events: Vec<SpawnItemEvent> = {
+        let (mut ev, ..) = state.get_mut(world);
+        ev.read().cloned().collect()
     };
 
-    if events_read.is_empty() {
+    if events.is_empty() {
         return;
     }
 
     let mut rng = ThreadRng::default();
 
-    for ev_spawn in events_read {
-        let (mut commands, _, level_selection, levels, projects, project_assets, q_items, q_player_query) = state.get_mut(world);
+    for ev_spawn in &events {
+        // 2. Read all query data into owned values, drop borrow completely
+        let (player_translation, level_bounds, dummy_candidates) = {
+            let (_, level_selection, levels, projects, project_assets, q_items, players) =
+                state.get(world);
 
-        if let Some((_, player_transform)) = q_player_query.iter().next() {
-            let player_translation = player_transform.translation;
+            let player_translation = match players.iter().next() {
+                Some((_, t)) => t.translation,
+                None => continue,
+            };
 
-            for (_, level_iid) in levels.iter() {
-                let project = match project_assets.get(projects.iter().next().unwrap()) {
-                    Some(p) => p,
-                    None => continue,
-                };
-                let level = match project.get_raw_level_by_iid(level_iid.get()) {
-                    Some(l) => l,
-                    None => continue,
-                };
+            let project_handle = match projects.iter().next() {
+                Some(h) => h,
+                None => continue,
+            };
+            let project = match project_assets.get(project_handle) {
+                Some(p) => p,
+                None => continue,
+            };
 
-                if !level_selection.is_match(&LevelIndices { level: 0, ..default() }, level) {
-                    continue;
-                }
-
-                let max_level_dimension = level.px_wid.max(level.px_hei) as f32;
-
-                for _ in 0..ev_spawn.count {
-                    let (item_entity, item_parent, item_transform) = {
-                        let mut found: Option<(Entity, Entity, Transform)> = None;
-                        for (e, child_of, item, transform) in q_items.iter() {
-                            if item.is_dummy && item.item_type == ev_spawn.item_type {
-                                found = Some((e, child_of.parent(), *transform));
-                                break;
-                            }
-                        }
-                        match found {
-                            Some(f) => f,
-                            None => continue,
-                        }
-                    };
-
-                    let mut item_position = player_translation;
-                    while (player_translation - item_position).length()
-                        < max_level_dimension / 3.0
-                        || item_position.x < 24.0
-                        || item_position.x > (level.px_wid as f32) - 24.0
-                        || item_position.y < 24.0
-                        || item_position.y > (level.px_hei as f32) - 24.0
-                    {
-                        let r = rng.random_range(0.0..1000.0);
-                        let angle = rng.random_range(0.0..std::f32::consts::TAU);
-                        item_position = player_translation
-                            + Vec3::new(r * angle.sin(), r * angle.cos(), 0.0);
+            let level_bounds: Vec<(i32, i32)> = levels
+                .iter()
+                .filter_map(|(_, iid)| {
+                    let level = project.get_raw_level_by_iid(iid.get())?;
+                    if level_selection.is_match(
+                        &LevelIndices {
+                            level: 0,
+                            ..default()
+                        },
+                        level,
+                    ) {
+                        Some((level.px_wid, level.px_hei))
+                    } else {
+                        None
                     }
+                })
+                .collect();
 
-                    let new_entity = commands.spawn_empty().id();
-                    let transform = Transform::from_translation(item_position).with_scale(Vec3::ONE * 0.5);
+            let dummy_candidates: Vec<(Entity, Entity)> = q_items
+                .iter()
+                .filter(|(_, _, item)| item.is_dummy && item.item_type == ev_spawn.item_type)
+                .map(|(e, child_of, _)| (e, child_of.parent()))
+                .collect();
 
-                    commands.entity(item_parent).add_child(new_entity);
-                    commands.entity(new_entity).insert(Item {
-                        is_dummy: false,
-                        item_type: ev_spawn.item_type,
-                    });
-                    commands.entity(new_entity).insert(transform);
+            (player_translation, level_bounds, dummy_candidates)
+        }; // <-- ALL state borrows dropped here
 
-                    EntityCloner::build_opt_out(world).clone_entity(item_entity, new_entity);
+        for (px_wid, px_hei) in &level_bounds {
+            let px_wid = *px_wid;
+            let px_hei = *px_hei;
+            let max_level_dimension = px_wid.max(px_hei) as f32;
+
+            for _ in 0..ev_spawn.count {
+                let (item_entity, parent_entity) = match dummy_candidates.first() {
+                    Some(&d) => d,
+                    None => continue,
+                };
+
+                // Generate position
+                let mut item_position = player_translation;
+                while (player_translation - item_position).length() < max_level_dimension / 3.0
+                    || item_position.x < 24.0
+                    || item_position.x > px_wid as f32 - 24.0
+                    || item_position.y < 24.0
+                    || item_position.y > px_hei as f32 - 24.0
+                {
+                    let r = rng.random_range(0.0..1000.0);
+                    let angle = rng.random_range(0.0..std::f32::consts::TAU);
+                    item_position =
+                        player_translation + Vec3::new(r * angle.sin(), r * angle.cos(), 0.0);
                 }
+
+                // 3. Spawn directly on world — entity is real immediately, no Commands needed
+                let new_entity = world
+                    .spawn((
+                        Item {
+                            is_dummy: false,
+                            item_type: ev_spawn.item_type,
+                        },
+                        Transform::from_translation(item_position).with_scale(Vec3::ONE * 0.5),
+                    ))
+                    .id();
+
+                world.entity_mut(parent_entity).add_child(new_entity);
+
+                // 4. No borrow conflict — world is fully free here
+                EntityCloner::build_opt_out(world).clone_entity(item_entity, new_entity);
             }
         }
     }
