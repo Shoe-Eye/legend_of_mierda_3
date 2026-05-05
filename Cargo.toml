@@ -1,11 +1,11 @@
 [package]
-name = "legend_of_mierda"
+name = "legend_of_mierda_3"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-bevy = { version = "0.18" }
+bevy = { version = "0.18", features = ["default", "jpeg"] }
 bevy_kira_audio = "0.25"
 bevy_asset_loader = "0.26"
 bevy_tweening = "0.15"

@@ -89,24 +89,34 @@ pub fn update_level_selection(
 
 #[allow(clippy::type_complexity)]
 pub fn camera_fit_inside_current_level(
-    mut camera_query: Query<(&mut Camera, &mut Transform), With<Camera>>,
-    player_query: Query<&GlobalTransform, With<Player>>,
-    level_query: Query<(&Transform, &LevelIid), Without<Player>>,
+    mut params: ParamSet<(
+        Query<(&mut Camera, &mut Transform), With<Camera>>,
+        Query<&GlobalTransform, With<Player>>,
+        Query<(&Transform, &LevelIid), Without<Player>>,
+    )>,
     level_selection: Res<LevelSelection>,
     projects: Query<&LdtkProjectHandle>,
     project_assets: Res<Assets<LdtkProject>>,
 ) {
-    if player_query.is_empty() {
+    if params.p1().is_empty() {
         return;
     }
 
+    let player_translation = params.p1().single().unwrap().translation();
+
     let project = project_assets.get(projects.single().unwrap().id()).unwrap();
 
-    let player_translation = player_query.single().unwrap().translation();
+    // Collect level data first so we hold no borrow on params
+    let level_data: Vec<(Transform, LevelIid)> = params
+        .p2()
+        .iter()
+        .map(|(t, iid)| (*t, iid.clone()))
+        .collect();
 
+    let mut camera_query = params.p0();
     let (_camera, mut camera_transform) = camera_query.single_mut().unwrap();
 
-    for (level_transform, level_iid) in level_query.iter() {
+    for (level_transform, level_iid) in &level_data {
         if let Some(ldtk_level) = project.get_raw_level_by_iid(level_iid.get()) {
             let level = &ldtk_level;
             if level_selection.is_match(
@@ -118,7 +128,6 @@ pub fn camera_fit_inside_current_level(
             ) {
                 let level_ratio = level.px_wid as f32 / ldtk_level.px_hei as f32;
                 if level_ratio > ASPECT_RATIO {
-                    // level is wider than the screen
                     let height = (level.px_hei as f32 / 9.).round() * 9.;
                     let width = height * ASPECT_RATIO;
                     camera_transform.translation.x =
@@ -126,13 +135,10 @@ pub fn camera_fit_inside_current_level(
                             .clamp(0., level.px_wid as f32 - width);
                     camera_transform.translation.y = 0.;
                 } else {
-                    // level is taller than the screen
                     let mut width = (level.px_wid as f32 / 16.).round() * 16.;
                     let mut height = width / ASPECT_RATIO;
-
                     width *= 0.7;
                     height *= 0.7;
-
                     camera_transform.translation.y =
                         (player_translation.y - level_transform.translation.y - height / 2.)
                             .clamp(0., level.px_hei as f32 - height);
@@ -140,7 +146,6 @@ pub fn camera_fit_inside_current_level(
                         (player_translation.x - level_transform.translation.x - width / 2.)
                             .clamp(0., level.px_wid as f32 - width);
                 }
-
                 camera_transform.translation.x += level_transform.translation.x;
                 camera_transform.translation.y += level_transform.translation.y;
             }

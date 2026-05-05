@@ -137,6 +137,8 @@ impl FromWorld for MaterialAssets {
             .get_resource_mut::<Assets<StandardMaterial>>()
             .unwrap();
 
+        println!("loaded materials");
+
         MaterialAssets {
             black: materials_asset.add(bevy::prelude::Color::srgb(0., 0.1, 0.1)),
             white: materials_asset.add(bevy::prelude::Color::srgb(1., 0.9, 0.9)),
