@@ -44,6 +44,7 @@ fn main() {
     .init_state::<GameState>()
     .add_plugins(AudioPlugin)
     .add_plugins((HookPlugin, PecsPlugin, TweeningPlugin))
+    .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
     .add_plugins((
         LoadingPlugin,
         MenuPlugin,
@@ -53,7 +54,6 @@ fn main() {
     .add_plugins(InternalAudioPlugin)
     .add_plugins(EguiPlugin::default())
     .add_plugins(WorldInspectorPlugin::default().run_if(input_toggle_active(true, KeyCode::Escape)))
-    .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
     .add_plugins(LdtkPlugin)
     .insert_resource(LdtkSettings {
         level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation {

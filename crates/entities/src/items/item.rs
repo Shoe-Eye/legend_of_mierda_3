@@ -230,11 +230,14 @@ pub fn event_spawn_item(world: &mut World) {
 // -------
 
 pub fn handle_player_item_collision(
-    mut collision_events: MessageReader<CollisionEvent>,
+    collision_events: Option<MessageReader<CollisionEvent>>,
     mut q_items: Query<(Entity, &Item)>,
     q_player: Query<(Entity, &mut Player)>,
     mut ev_item_step_over: MessageWriter<ItemStepOverEvent>,
 ) {
+    let Some(mut collision_events) = collision_events else {
+        return;
+    };
     for (player_entity, _) in q_player.iter() {
         for event in collision_events.read() {
             for (e_item, item) in q_items.iter_mut() {

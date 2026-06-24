@@ -175,11 +175,14 @@ pub fn event_player_hit(
 // -------
 
 pub fn handle_player_enemy_collisions(
-    mut collision_events: MessageReader<CollisionEvent>,
+    collision_events: Option<MessageReader<CollisionEvent>>,
     q_player: Query<(Entity, &mut Player)>,
     q_enemies: Query<(Entity, &Enemy)>,
     mut ev_player_hit: MessageWriter<PlayerHitEvent>,
 ) {
+    let Some(mut collision_events) = collision_events else {
+        return;
+    };
     for event in collision_events.read() {
         if let CollisionEvent::Started(e1, e2, _) = event {
             let contact_1_player = q_player.get(*e1);

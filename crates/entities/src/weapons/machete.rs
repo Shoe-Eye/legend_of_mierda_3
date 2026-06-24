@@ -125,7 +125,9 @@ pub struct MachetePlugin;
 
 impl Plugin for MachetePlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<MacheteTimer>().add_systems(
+        app.add_message::<ControlEvent>()
+            .init_resource::<MacheteTimer>()
+            .add_systems(
             Update,
             (
                 inject_machete_indicator.run_if(in_state(GameState::GamePlay)),

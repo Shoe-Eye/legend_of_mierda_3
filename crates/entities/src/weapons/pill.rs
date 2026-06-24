@@ -300,11 +300,14 @@ fn handle_trail_timers(
 // -------
 
 pub fn handle_pill_player_collisions(
-    mut collision_events: MessageReader<CollisionEvent>,
+    collision_events: Option<MessageReader<CollisionEvent>>,
     q_players: Query<(Entity, &Player)>,
     q_arrows: Query<(Entity, &Pill)>,
     mut ev_player_hit: MessageWriter<PlayerHitEvent>,
 ) {
+    let Some(mut collision_events) = collision_events else {
+        return;
+    };
     for event in collision_events.read() {
         // println!("collision event: {:?}", event);
         if let CollisionEvent::Started(e1, e2, _) = event {

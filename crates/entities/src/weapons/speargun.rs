@@ -275,11 +275,14 @@ fn handle_trail_timers(
 // -------
 
 pub fn handle_arrow_enemy_collisions(
-    mut collision_events: MessageReader<CollisionEvent>,
+    collision_events: Option<MessageReader<CollisionEvent>>,
     q_enemies: Query<(Entity, &Enemy)>,
     q_arrows: Query<(Entity, &SpeargunArrow)>,
     mut ev_enemy_hit: MessageWriter<EnemyHitEvent>,
 ) {
+    let Some(mut collision_events) = collision_events else {
+        return;
+    };
     for event in collision_events.read() {
         // println!("collision event: {:?}", event);
         if let CollisionEvent::Started(e1, e2, _) = event {
@@ -363,6 +366,10 @@ fn control_speargun_with_mouse(
     q_players: Query<(Entity, &GlobalTransform, &Player)>,
     q_speargun: Query<(&mut Transform, &mut Sprite, &Speargun), Without<Player>>,
 ) {
+    if q_camera.single().is_err() {
+        return;
+    }
+
     let (camera, camera_transform) = q_camera.single().unwrap();
     let window = q_window.single().unwrap();
 

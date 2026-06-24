@@ -9,7 +9,7 @@ bevy = { version = "0.18", features = ["default", "jpeg"] }
 bevy_kira_audio = "0.25"
 bevy_asset_loader = "0.26"
 bevy_tweening = "0.15"
-bevy_rapier2d = "0.33.0"
+bevy_rapier2d = "0.34"
 pecs = { git = "https://github.com/stillonearth/pecs.git", rev = "0b274c9" }
 bevy_ecs_ldtk = { version = "0.14", features = [
     "default",
