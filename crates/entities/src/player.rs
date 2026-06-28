@@ -28,6 +28,7 @@ pub struct PlayerBundle {
     pub character_animation: CharacterAnimation,
     pub animation_timer: AnimationTimer,
     pub player: Player,
+    pub ldtk_player: lom_ldtk::ldtk::Player,
     pub animated_character_sprite: AnimatedCharacterSprite,
     pub collider_bundle: ColliderBundle,
     pub active_events: ActiveEvents,
@@ -77,6 +78,7 @@ impl LdtkEntity for PlayerBundle {
             collider_bundle,
             active_events: ActiveEvents::COLLISION_EVENTS,
             player: Player { health: 100 },
+            ldtk_player: lom_ldtk::ldtk::Player,
             animated_character_sprite: AnimatedCharacterSprite {
                 animated_character_type: AnimatedCharacterType::Player,
             },

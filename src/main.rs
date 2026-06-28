@@ -100,9 +100,5 @@ impl Plugin for LegendOfMierda3Plugin {
 }
 
 fn setup_camera(mut commands: Commands) {
-    commands.spawn((
-        Name::new("Camera"),
-        Camera3d::default(),
-        Transform::from_xyz(-2.0, 2.5, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
-    ));
+    commands.spawn((Name::new("Camera"), Camera2d));
 }

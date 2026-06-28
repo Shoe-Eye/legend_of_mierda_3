@@ -5,18 +5,13 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-bevy = { version = "0.18", features = ["default", "jpeg"] }
+bevy = { version = "0.18", features = ["default", "jpeg", "bevy_sprite"] }
 bevy_kira_audio = "0.25"
 bevy_asset_loader = "0.26"
 bevy_tweening = "0.15"
 bevy_rapier2d = "0.34"
 pecs = { git = "https://github.com/stillonearth/pecs.git", rev = "0b274c9" }
-bevy_ecs_ldtk = { version = "0.14", features = [
-    "default",
-    "derive",
-    "atlas",
-    "render",
-] }
+bevy_ecs_ldtk = { version = "0.14"}
 lom_assets = { path = "crates/assets" }
 lom_audio = { path = "crates/audio" }
 lom_cutscene = { path = "crates/cutscene" }

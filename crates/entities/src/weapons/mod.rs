@@ -11,9 +11,9 @@ impl Plugin for WeaponsPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((
             // weapon_arrow::WeaponArrowPlugin,
-            speargun::WeaponSpeargunPlugin,
-            pill::WeaponPillPlugin,
-            machete::MachetePlugin,
+            // speargun::WeaponSpeargunPlugin,
+            // pill::WeaponPillPlugin,
+            // machete::MachetePlugin,
         ));
     }
 }

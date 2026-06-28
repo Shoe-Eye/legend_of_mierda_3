@@ -11,7 +11,7 @@ impl Plugin for LoadingPlugin {
     fn build(&self, app: &mut App) {
         app.add_loading_state(
             LoadingState::new(GameState::Loading)
-                .continue_to_state(GameState::Splash)
+                .continue_to_state(GameState::GamePlay)
                 .load_collection::<AudioAssets>()
                 .load_collection::<TextureAssets>()
                 .load_collection::<AvatarAssets>()
@@ -136,8 +136,6 @@ impl FromWorld for MaterialAssets {
         let mut materials_asset = world
             .get_resource_mut::<Assets<StandardMaterial>>()
             .unwrap();
-
-        println!("loaded materials");
 
         MaterialAssets {
             black: materials_asset.add(bevy::prelude::Color::srgb(0., 0.1, 0.1)),

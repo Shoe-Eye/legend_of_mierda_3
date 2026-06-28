@@ -13,7 +13,7 @@ pub const LEVEL_1_IID: &str = "d53f9950-c640-11ed-8430-4942c04951ff";
 
 // Events
 
-#[derive(Component)]
+#[derive(Component, Default)]
 pub struct Player;
 
 #[derive(Message, Clone)]
@@ -383,7 +383,7 @@ pub fn fix_missing_ldtk_entities(
 
 pub fn spawn_game_world(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(LdtkWorldBundle {
-        ldtk_handle: LdtkProjectHandle::from(asset_server.load("levels/example.ldtk")),
+        ldtk_handle: LdtkProjectHandle::from(asset_server.load("levels/main.ldtk")),
         ..Default::default()
     });
 
