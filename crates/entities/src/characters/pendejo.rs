@@ -81,7 +81,7 @@ pub fn pendejo_activity(time: Res<Time>, mut los_pendejos: Query<(&mut Velocity,
                 pendejo.hit_at = None;
             }
         }
-        v.linvel = Vec2::new(
+        v.linear = Vec2::new(
             pendejo.move_direction.x * rotation_angle.cos()
                 - pendejo.move_direction.y * rotation_angle.sin(),
             pendejo.move_direction.x * rotation_angle.sin()

@@ -199,8 +199,8 @@ fn handle_pill_throw_event(
                         density: ColliderMassProperties::Density(105.0),
                         rotation_constraints: LockedAxes::ROTATION_LOCKED_X,
                         velocity: Velocity {
-                            linvel: pill_velocity * throw_vector,
-                            angvel: 0.0,
+                            linear: pill_velocity * throw_vector,
+                            angular: 0.0,
                         },
                         ..default()
                     },
@@ -262,7 +262,7 @@ fn handle_arrow_timers(
                 parent.spawn((
                     PillTrailBundle {
                         sprite: Sprite {
-image: static_sprite_assets.pill.clone(),
+                            image: static_sprite_assets.pill.clone(),
                             color: Color::srgba(0.3, 0.0, 0.0, 0.5),
                             ..default()
                         },

@@ -47,6 +47,14 @@ fn main() {
     )
     .init_state::<GameState>()
     .add_plugins(AudioPlugin)
+    .add_plugins(LdtkPlugin)
+    .insert_resource(LdtkSettings {
+        level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation {
+            load_level_neighbors: true,
+        },
+        set_clear_color: SetClearColor::FromLevelBackground,
+        ..Default::default()
+    })
     .add_plugins((HookPlugin, PecsPlugin, TweeningPlugin))
     .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
     .add_plugins((
@@ -58,14 +66,6 @@ fn main() {
     .add_plugins(InternalAudioPlugin)
     .add_plugins(EguiPlugin::default())
     .add_plugins(WorldInspectorPlugin::default().run_if(input_toggle_active(true, KeyCode::Escape)))
-    .add_plugins(LdtkPlugin)
-    .insert_resource(LdtkSettings {
-        level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation {
-            load_level_neighbors: true,
-        },
-        set_clear_color: SetClearColor::FromLevelBackground,
-        ..Default::default()
-    })
     .insert_resource(LevelSelection::iid(LEVEL_1_IID))
     .register_ldtk_int_cell::<WallBundle>(1);
 

@@ -3,9 +3,9 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 use bevy_rapier2d::prelude::*;
 
+use lom_assets::sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation};
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;
-use lom_assets::sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation};
 
 use crate::player::Player;
 
@@ -131,7 +131,7 @@ pub fn psychiatrist_activity(
                 psychiatrist.hit_at = None;
             }
         }
-        v.linvel = Vec2::new(
+        v.linear = Vec2::new(
             psychiatrist.move_direction.x * rotation_angle.cos()
                 - psychiatrist.move_direction.y * rotation_angle.sin(),
             psychiatrist.move_direction.x * rotation_angle.sin()
@@ -165,7 +165,8 @@ pub fn update_psychiatrists_move_direction(
     {
         direction_update_timer.timer.tick(time.delta());
 
-        if direction_update_timer.timer.just_finished() || psychiatrist.move_direction == Vec2::ZERO {
+        if direction_update_timer.timer.just_finished() || psychiatrist.move_direction == Vec2::ZERO
+        {
             let mierda_position = psychiatrist_position.translation;
             psychiatrist.move_direction = Vec2::new(
                 player_position.x - mierda_position.x,

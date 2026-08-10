@@ -341,8 +341,8 @@ pub fn handle_enemy_hit(
                 enemies.get_mut(event.entity).unwrap();
             let enemy_position = mierda_transform.translation;
             let vector_attack = (enemy_position - player_position).normalize();
-            enemy_velocity.linvel.x += vector_attack.x * 500.;
-            enemy_velocity.linvel.y += vector_attack.y * 500.;
+            enemy_velocity.linear.x += vector_attack.x * 500.;
+            enemy_velocity.linear.y += vector_attack.y * 500.;
 
             let damage = match enemy.enemy_type {
                 EnemyType::Mierda => (1.0 * event.damage as f32) as u16,

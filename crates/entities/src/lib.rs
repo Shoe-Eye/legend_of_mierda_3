@@ -17,6 +17,8 @@ pub use lom_game::GameState;
 pub use lom_ldtk::physics;
 pub use lom_ui as ui;
 
+use crate::controls::ControlEvent;
+
 pub struct EntitiesPlugin;
 
 impl Plugin for EntitiesPlugin {
@@ -30,6 +32,12 @@ impl Plugin for EntitiesPlugin {
             level_objects::light::LightPlugin,
         ))
         .add_message::<GameOverEvent>()
-        .add_message::<GameWinEvent>();
+        .add_message::<GameWinEvent>()
+        .add_message::<ControlEvent>()
+        .add_systems(
+            Update,
+            (controls::keyboard_controls, controls::control_character)
+                .run_if(in_state(GameState::GamePlay)),
+        );
     }
 }

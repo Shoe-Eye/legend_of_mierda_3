@@ -3,9 +3,9 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 use bevy_rapier2d::prelude::*;
 
+use lom_assets::sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation};
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;
-use lom_assets::sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation};
 
 use crate::player::Player;
 
@@ -79,7 +79,7 @@ pub fn mierda_activity(time: Res<Time>, mut los_mierdas: Query<(&mut Velocity, &
                 mierda.hit_at = None;
             }
         }
-        v.linvel = Vec2::new(
+        v.linear = Vec2::new(
             mierda.move_direction.x * rotation_angle.cos()
                 - mierda.move_direction.y * rotation_angle.sin(),
             mierda.move_direction.x * rotation_angle.sin()

@@ -172,12 +172,12 @@ fn handle_speargun_attack_event(
                                 density: ColliderMassProperties::Density(105.0),
                                 rotation_constraints: LockedAxes::ROTATION_LOCKED_X,
                                 velocity: Velocity {
-                                    linvel: arrow_velocity
+                                    linear: arrow_velocity
                                         * Vec2 {
                                             x: z_rot.cos(),
                                             y: z_rot.sin(),
                                         },
-                                    angvel: 0.0,
+                                    angular: 0.0,
                                 },
                                 ..default()
                             },

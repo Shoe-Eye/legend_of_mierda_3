@@ -33,6 +33,7 @@ pub struct PlayerBundle {
     pub collider_bundle: ColliderBundle,
     pub active_events: ActiveEvents,
     pub name: Name,
+    pub sprite: Sprite,
 }
 
 // ----
@@ -62,7 +63,7 @@ impl LdtkEntity for PlayerBundle {
             ..Default::default()
         };
 
-        let _atlas_handle = load_texture_atlas(
+        let layout = load_texture_atlas(
             PLAYER_ASSET_SHEET_1.to_string(),
             asset_server,
             SHEET_1_COLUMNS as u32,
@@ -71,6 +72,7 @@ impl LdtkEntity for PlayerBundle {
             Vec2::ONE * 64.,
             texture_atlasses,
         );
+        let image = asset_server.load(PLAYER_ASSET_SHEET_1.to_string());
 
         PlayerBundle {
             character_animation: CharacterAnimation { ..default() },
@@ -83,7 +85,13 @@ impl LdtkEntity for PlayerBundle {
                 animated_character_type: AnimatedCharacterType::Player,
             },
             name: Name::new("Player"),
-            // machete_timer: MacheteTimer(Timer::from_seconds(1.0, TimerMode::Repeating)),
+            sprite: Sprite::from_atlas_image(
+                image,
+                TextureAtlas {
+                    layout: layout,
+                    index: 0,
+                },
+            ),
         }
     }
 }

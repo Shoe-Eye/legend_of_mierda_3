@@ -59,21 +59,21 @@ pub fn control_character(
                 let up = if control.up { 1. } else { 0. };
                 let down = if control.down { 1. } else { 0. };
 
-                velocity.linvel.x = right - left;
-                velocity.linvel.y = up - down;
+                velocity.linear.x = right - left;
+                velocity.linear.y = up - down;
 
-                velocity.linvel = velocity.linvel.normalize_or_zero() * 100.;
+                velocity.linear = velocity.linear.normalize_or_zero() * 100.;
 
-                let linvel_norm = velocity.linvel.distance(Vec2::ZERO);
+                let linear_norm = velocity.linear.distance(Vec2::ZERO);
 
                 if char_animation.animation_type == AnimationType::Walk {
-                    if velocity.linvel.x > 0. {
+                    if velocity.linear.x > 0. {
                         char_animation.direction = AnimationDirection::Right;
-                    } else if velocity.linvel.x < 0. {
+                    } else if velocity.linear.x < 0. {
                         char_animation.direction = AnimationDirection::Left;
-                    } else if velocity.linvel.y > 0. {
+                    } else if velocity.linear.y > 0. {
                         char_animation.direction = AnimationDirection::Up;
-                    } else if velocity.linvel.y < 0. {
+                    } else if velocity.linear.y < 0. {
                         char_animation.direction = AnimationDirection::Down;
                     }
                 }
@@ -85,7 +85,7 @@ pub fn control_character(
                         }
                     }
 
-                    if linvel_norm == 0.0 {
+                    if linear_norm == 0.0 {
                         char_animation.animation_type = AnimationType::Stand;
                     } else {
                         char_animation.animation_type = AnimationType::Walk;
