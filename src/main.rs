@@ -1,8 +1,7 @@
 #![allow(clippy::too_many_arguments, clippy::type_complexity)]
 
-use bevy::post_process::bloom::Bloom;
-use bevy::window::WindowResolution;
-use bevy::{input::common_conditions::input_toggle_active, prelude::*, window::PresentMode};
+use bevy::window::*;
+use bevy::{input::common_conditions::input_toggle_active, prelude::*};
 use bevy_ecs_ldtk::prelude::*;
 use bevy_inspector_egui::bevy_egui::EguiPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
@@ -27,19 +26,24 @@ fn main() {
     let mut app = App::new();
 
     app.add_plugins(
-        DefaultPlugins, // .set(WindowPlugin {
-                        //     primary_window: Some(Window {
-                        //         title: "Legend of Mierda".into(),
-                        //         resolution: WindowResolution::new(700, 700),
-                        //         present_mode: PresentMode::AutoVsync,
-                        //         fit_canvas_to_parent: true,
-                        //         prevent_default_event_handling: false,
-                        //         resizable: false,
-                        //         ..default()
-                        //     }),
-                        //     ..default()
-                        // })
-                        // .set(ImagePlugin::default_nearest()),
+        DefaultPlugins
+            .set(ImagePlugin::default_nearest())
+            .set(WindowPlugin {
+                primary_window: Some(Window {
+                    resolution: (800, 800).into(),
+                    present_mode: PresentMode::AutoVsync,
+                    fit_canvas_to_parent: true,
+                    prevent_default_event_handling: false,
+                    window_theme: Some(WindowTheme::Dark),
+                    enabled_buttons: bevy::window::EnabledButtons {
+                        maximize: false,
+                        ..Default::default()
+                    },
+                    visible: false,
+                    ..default()
+                }),
+                ..default()
+            }),
     )
     .init_state::<GameState>()
     .add_plugins(AudioPlugin)

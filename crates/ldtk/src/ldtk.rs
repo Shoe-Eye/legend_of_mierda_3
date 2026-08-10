@@ -98,6 +98,8 @@ pub fn camera_fit_inside_current_level(
     projects: Query<&LdtkProjectHandle>,
     project_assets: Res<Assets<LdtkProject>>,
 ) {
+    // return;
+
     if params.p1().is_empty() {
         return;
     }
@@ -137,8 +139,9 @@ pub fn camera_fit_inside_current_level(
                 } else {
                     let mut width = (level.px_wid as f32 / 16.).round() * 16.;
                     let mut height = width / ASPECT_RATIO;
-                    width *= 0.7;
-                    height *= 0.7;
+                    // no sure what these numbers do
+                    width *= 0.0;
+                    height *= 0.0;
                     camera_transform.translation.y =
                         (player_translation.y - level_transform.translation.y - height / 2.)
                             .clamp(0., level.px_hei as f32 - height);
