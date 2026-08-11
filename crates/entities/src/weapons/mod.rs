@@ -13,7 +13,7 @@ impl Plugin for WeaponsPlugin {
             // weapon_arrow::WeaponArrowPlugin,
             // speargun::WeaponSpeargunPlugin,
             // pill::WeaponPillPlugin,
-            // machete::MachetePlugin,
+            machete::MachetePlugin,
         ));
     }
 }

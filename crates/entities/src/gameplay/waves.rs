@@ -142,6 +142,7 @@ pub fn event_on_level_change(
     mut ew_wave: MessageWriter<WaveEvent>,
 ) {
     for event in er_on_level_change.read() {
+        println!("here");
         match event.level_id() {
             1 => {
                 let waves = get_level_1_waves();

@@ -7,6 +7,11 @@ use bevy_rapier2d::prelude::*;
 
 use crate::physics::ColliderBundle;
 use bevy::ecs::relationship::Relationship;
+use lom_assets::sprites::MIERDA_ASSET_SHEET;
+use lom_assets::sprites::*;
+use lom_assets::load_texture_atlas;
+use std::time::Duration;
+use rand::seq::slice::IndexedRandom;
 
 const ASPECT_RATIO: f32 = 1.0;
 pub const LEVEL_1_IID: &str = "d53f9950-c640-11ed-8430-4942c04951ff";
@@ -67,7 +72,7 @@ pub fn update_level_selection(
                 let player_within_x_bounds = player_transform.translation().x < level_bounds.max.x
                     && player_transform.translation().x > level_bounds.min.x;
 
-                let player_within_y_bounds = player_transform.translation().y < level_bounds.max.y
+                let player_within_y_bounds = player_transform.translation(game).y < level_bounds.max.y
                     && player_transform.translation().y > level_bounds.min.y;
 
                 if player_within_x_bounds && player_within_y_bounds {
@@ -311,10 +316,13 @@ pub fn spawn_wall_collision(
     }
 }
 
-#[derive(Component)]
-pub struct Enemy {
-    pub is_dummy: bool,
-    pub enemy_type: i32,
+#[derive(Clone, Copy, PartialEq, Debug, Default, Component, Reflect)]
+pub enum EnemyType {
+    #[default]
+    Mierda,
+    Pendejo,
+    Psychiatrist1,
+    Psychiatrist2,
 }
 
 #[derive(Component)]
@@ -323,7 +331,18 @@ pub struct Item {
     pub item_type: i32,
 }
 
+#[derive(Clone, PartialEq, Debug, Default, Component, Reflect)]
+pub struct Enemy {
+    pub enemy_type: EnemyType,
+    pub move_direction: Vec2,
+    pub health: u16,
+    pub hit_at: Option<Timer>,
+    pub is_dummy: bool,
+    pub marked_for_despawn: bool,
+}
+
 pub struct EnemyBundle {
+    pub sprite: Sprite,
     pub collider_bundle: ColliderBundle,
     pub direction_update_time: f32,
     pub animated_character_sprite: (),
@@ -336,17 +355,117 @@ pub struct ItemBundle {
 }
 
 pub fn create_enemy_bundle(
-    _asset_server: &AssetServer,
-    _texture_atlasses: &Assets<TextureAtlasLayout>,
-    _is_dummy: bool,
-    _enemy_type: i32,
+    asset_server: &AssetServer,
+    texture_atlasses: &mut Assets<TextureAtlas>,
+    is_dummy: bool,
+    enemy_type: EnemyType,
 ) -> EnemyBundle {
+    let rotation_constraints = LockedAxes::ROTATION_LOCKED;
+
+    let collider_bundle = ColliderBundle {
+        collider: Collider::cuboid(8., 26.),
+        rigid_body: RigidBody::Dynamic,
+        friction: Friction {
+            coefficient: 0.0,
+            combine_rule: CoefficientCombineRule::Min,
+        },
+        rotation_constraints,
+        ..Default::default()
+    };
+
+    let (atlas_handle, spritesheet_type) = match enemy_type {
+        EnemyType::Mierda => (
+            load_texture_atlas(
+                MIERDA_ASSET_SHEET.to_string(),
+                asset_server,
+                5,
+                1,
+                None,
+                Vec2::ONE * 16.,
+                texture_atlasses,
+            ),
+            AnimatedCharacterType::NotAnimated,
+        ),
+        EnemyType::Pendejo => {
+            let (spritesheet_path, spritesheet_type) = PENDEJO_SPRITE_SHEETS
+                .choose(&mut rand::thread_rng())
+                .unwrap();
+
+            (
+                load_texture_atlas(
+                    spritesheet_path.to_string(),
+                    asset_server,
+                    SHEET_1_COLUMNS,
+                    SHEET_1_ROWS,
+                    None,
+                    Vec2::ONE * 64.,
+                    texture_atlasses,
+                ),
+                *spritesheet_type,
+            )
+        }
+        EnemyType::Psychiatrist1 => (
+            load_texture_atlas(
+                PSYCHIATRIST_1_ASSET_SHEET.to_string(),
+                asset_server,
+                1,
+                1,
+                None,
+                128. * Vec2::ONE,
+                texture_atlasses,
+            ),
+            AnimatedCharacterType::NotAnimated,
+        ),
+        EnemyType::Psychiatrist2 => (
+            load_texture_atlas(
+                PSYCHIATRIST_2_ASSET_SHEET.to_string(),
+                asset_server,
+                1,
+                1,
+                None,
+                128. * Vec2::ONE,
+                texture_atlasses,
+            ),
+            AnimatedCharacterType::NotAnimated,
+        ),
+    };
+
+    let sprite_bundle = SpriteSheetBundle {
+        texture_atlas: atlas_handle,
+        sprite: TextureAtlasSprite::new(0),
+        ..default()
+    };
+
+    let enemy = Enemy {
+        health: 100,
+        enemy_type,
+        move_direction: Vec2 {
+            x: rand::random::<f32>() * 2.0 - 1.0,
+            y: rand::random::<f32>() * 2.0 - 1.0,
+        }
+        .normalize(),
+        hit_at: None,
+        is_dummy,
+        marked_for_despawn: false,
+    };
+
     EnemyBundle {
-        collider_bundle: ColliderBundle::default(),
-        direction_update_time: 0.0,
-        animated_character_sprite: (),
-        character_animation: (),
-        animation_timer: (),
+        character_animation: CharacterAnimation {
+            state: AnimationState::default(),
+            direction: AnimationDirection::Right,
+            animation_type: AnimationType::Walk,
+        },
+        animation_timer: AnimationTimer(Timer::from_seconds(0.2, TimerMode::Repeating)),
+        spritesheet_bundle: sprite_bundle,
+        collider_bundle,
+        active_events: ActiveEvents::COLLISION_EVENTS,
+        // enemy,
+        direction_update_time: DirectionUpdateTime {
+            timer: Timer::new(Duration::from_secs(5), TimerMode::Once),
+        },
+        animated_character_sprite: AnimatedCharacterSprite {
+            animated_character_type: spritesheet_type,
+        },
     }
 }
 

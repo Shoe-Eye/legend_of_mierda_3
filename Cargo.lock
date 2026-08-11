@@ -4815,7 +4815,7 @@ dependencies = [
  "lom_ldtk",
  "lom_ui",
  "pecs",
- "rand 0.10.1",
+ "rand 0.10.2",
 ]
 
 [[package]]
@@ -4832,6 +4832,8 @@ dependencies = [
  "bevy",
  "bevy_ecs_ldtk",
  "bevy_rapier2d",
+ "lom_assets",
+ "rand 0.10.2",
 ]
 
 [[package]]
@@ -5753,7 +5755,6 @@ checksum = "1e91099d4268b0e11973f036e885d652fb0b21fedcf69738c627f94db6a44f42"
 [[package]]
 name = "pecs"
 version = "0.8.0"
-source = "git+https://github.com/stillonearth/pecs.git?rev=0b274c9#0b274c990f3e40a0f2669a8b5bbe8a0fa94a37e7"
 dependencies = [
  "bevy",
  "pecs_core",
@@ -5764,7 +5765,6 @@ dependencies = [
 [[package]]
 name = "pecs_core"
 version = "0.8.0"
-source = "git+https://github.com/stillonearth/pecs.git?rev=0b274c9#0b274c990f3e40a0f2669a8b5bbe8a0fa94a37e7"
 dependencies = [
  "bevy",
  "pecs_macro",
@@ -5773,7 +5773,6 @@ dependencies = [
 [[package]]
 name = "pecs_http"
 version = "0.8.0"
-source = "git+https://github.com/stillonearth/pecs.git?rev=0b274c9#0b274c990f3e40a0f2669a8b5bbe8a0fa94a37e7"
 dependencies = [
  "bevy",
  "ehttp",
@@ -5784,7 +5783,6 @@ dependencies = [
 [[package]]
 name = "pecs_macro"
 version = "0.4.0"
-source = "git+https://github.com/stillonearth/pecs.git?rev=0b274c9#0b274c990f3e40a0f2669a8b5bbe8a0fa94a37e7"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -6063,9 +6061,9 @@ dependencies = [
 
 [[package]]
 name = "rand"
-version = "0.10.1"
+version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2e8e8bcc7961af1fdac401278c6a831614941f6164ee3bf4ce61b7edb162207"
+checksum = "c7f5fa3a058cd35567ef9bfa5e75732bee0f9e4c55fa90477bef2dfcdbc4be80"
 dependencies = [
  "chacha20",
  "getrandom 0.4.2",
@@ -7300,7 +7298,7 @@ checksum = "ddd74a9687298c6858e9b88ec8935ec45d22e8fd5e6394fa1bd4e99a87789c76"
 dependencies = [
  "getrandom 0.4.2",
  "js-sys",
- "rand 0.10.1",
+ "rand 0.10.2",
  "serde_core",
  "wasm-bindgen",
 ]

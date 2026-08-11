@@ -262,6 +262,7 @@ pub fn handle_spawn_enemy(world: &mut World) {
             (player_translation, level_bounds, dummy_candidates)
         }; // <-- ALL state borrows dropped here
 
+
         for (px_wid, px_hei, _) in &level_bounds {
             let px_wid = *px_wid;
             let px_hei = *px_hei;
@@ -272,6 +273,7 @@ pub fn handle_spawn_enemy(world: &mut World) {
                     Some(&d) => d,
                     None => continue,
                 };
+
 
                 // Generate position
                 let mut enemy_position = player_translation;

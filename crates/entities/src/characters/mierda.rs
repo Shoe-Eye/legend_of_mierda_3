@@ -24,6 +24,7 @@ pub struct MierdaBundle {
     pub active_events: ActiveEvents,
     pub direction_update_time: DirectionUpdateTime,
     pub animated_character_sprite: AnimatedCharacterSprite,
+    pub sprite: Sprite,
 }
 
 // ----
@@ -54,6 +55,13 @@ impl LdtkEntity for MierdaBundle {
             active_events: enemy_bundle.active_events,
             direction_update_time: enemy_bundle.direction_update_time,
             animated_character_sprite: enemy_bundle.animated_character_sprite,
+            sprite: Sprite::from_atlas_image(
+                image,
+                TextureAtlas {
+                    layout: layout,
+                    index: 0,
+                },
+            ),
         }
     }
 }

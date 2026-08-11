@@ -18,6 +18,7 @@ use lom_entities::sprites;
 use lom_game::GameState;
 use lom_ldtk::ldtk::{self, LevelChangeEvent};
 use lom_ldtk::ldtk::{WallBundle, LEVEL_1_IID};
+use lom_ldtk::physics;
 use lom_splashscreen::SplashscreenPlugin;
 use lom_ui::menu::MenuPlugin;
 use pecs::prelude::*;
@@ -79,6 +80,7 @@ impl Plugin for LegendOfMierda3Plugin {
         app.add_plugins((entities::EntitiesPlugin, GameplayPlugin, SplashscreenPlugin))
             .add_systems(OnEnter(GameState::GamePlay), ldtk::spawn_game_world)
             .add_systems(OnExit(GameState::GamePlay), ldtk::despawn_game_world)
+            .add_systems(Startup, physics::setup_gravity)
             .add_systems(
                 Update,
                 (

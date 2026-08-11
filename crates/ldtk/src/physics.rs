@@ -31,3 +31,8 @@ impl From<&EntityInstance> for ColliderBundle {
         }
     }
 }
+
+pub fn setup_gravity(mut rapier_config: Query<&mut RapierConfiguration>) {
+    let mut rapier_config = rapier_config.single_mut().unwrap();
+    rapier_config.gravity = Vec2::ZERO;
+}

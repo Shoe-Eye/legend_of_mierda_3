@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use crate::controls::ControlEvent;
 use crate::player::Player;
 use bevy::prelude::*;
@@ -46,7 +48,6 @@ fn inject_machete_indicator(
     mut q_machate_indicator: ParamSet<(Query<(&mut Transform, &Machete), Without<Player>>,)>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    mut machete_timer: ResMut<MacheteTimer>,
 ) {
     for (player_entity, _, player_transform, _) in q_players.iter() {
         if q_machate_indicator.p0().iter().count() > 0 {
@@ -66,7 +67,10 @@ fn inject_machete_indicator(
                 MacheteIndictorBundle {
                     machete_indicator: Machete {},
                     machete_indicator_material: MacheteIndicatorMaterial(material_handle),
-                    timer_activation: machete_timer.clone(),
+                    timer_activation: MacheteTimer(Timer::new(
+                        Duration::from_secs(1),
+                        TimerMode::Repeating,
+                    )),
                 },
                 ZIndex(103),
                 Name::new("machete radius indicator"),
@@ -125,7 +129,7 @@ pub struct MachetePlugin;
 
 impl Plugin for MachetePlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<MacheteTimer>().add_systems(
+        app.add_systems(
             Update,
             (
                 inject_machete_indicator.run_if(in_state(GameState::GamePlay)),

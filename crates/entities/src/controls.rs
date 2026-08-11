@@ -42,17 +42,16 @@ pub fn control_character(
                     atlas.index = indices.first;
                 }
 
-                commands
-                    .promise(|| entity)
-                    .then(asyn!(state => {
+                commands.promise(|| entity).then(asyn!(state => {
                         state.asyn().timeout(0.3)
-                    }))
-                    .then(
-                        asyn!(state, mut ev_attack: MessageWriter<PlayerAttackEvent> => {
-                                    let event = PlayerAttackEvent { entity: state.value };
-                        ev_attack.write(event);
-                                }),
-                    );
+                    }
+                ));
+                // .then(
+                //     asyn!(state, mut ev_attack: MessageWriter<PlayerAttackEvent> => {
+                //     //             let event = PlayerAttackEvent { entity: state.value };
+                //     // ev_attack.write(event);
+                //             }),
+                // );
             } else {
                 let right = if control.right { 1. } else { 0. };
                 let left = if control.left { 1. } else { 0. };
