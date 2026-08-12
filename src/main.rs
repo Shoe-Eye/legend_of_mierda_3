@@ -48,10 +48,10 @@ fn main() {
                 ..default()
             }),
     )
+    .add_plugins(AsyncPlugin::default_settings())
     .init_state::<GameState>()
     .add_plugins(AudioPlugin)
     .add_plugins(LdtkPlugin)
-    .add_plugins(AsyncPlugin::default_settings())
     .insert_resource(LdtkSettings {
         level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation {
             load_level_neighbors: true,
@@ -70,7 +70,9 @@ fn main() {
     ))
     .add_plugins(InternalAudioPlugin)
     .add_plugins(EguiPlugin::default())
-    .add_plugins(WorldInspectorPlugin::default().run_if(input_toggle_active(true, KeyCode::Escape)))
+    .add_plugins(
+        WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Escape)),
+    )
     .insert_resource(LevelSelection::iid(LEVEL_1_IID))
     .register_ldtk_int_cell::<WallBundle>(1);
 

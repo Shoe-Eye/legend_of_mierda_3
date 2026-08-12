@@ -82,7 +82,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                         margin: UiRect::top(Val::VMin(5.)),
                         ..default()
                     },
-                    // BackgroundColor(Color::Srgba(Srgba::RED)),
+                    BackgroundColor(Color::Srgba(Srgba::RED)),
                 ))
                 .insert(UIPlayerHealth);
         });

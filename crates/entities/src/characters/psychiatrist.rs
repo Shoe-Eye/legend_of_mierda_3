@@ -47,19 +47,14 @@ impl LdtkEntity for Psychiatrist1Bundle {
         _: &LayerInstance,
         _: Option<&Handle<Image>>,
         _: Option<&TilesetDefinition>,
-        asset_server: &AssetServer,
-        texture_atlasses: &mut Assets<TextureAtlasLayout>,
+        _: &AssetServer,
+        _: &mut Assets<TextureAtlasLayout>,
     ) -> Psychiatrist1Bundle {
         let is_dummy = *entity_instance
             .get_bool_field("is_dummy")
             .expect("expected entity to have non-nullable name string field");
 
-        let enemy_bundle = create_enemy_bundle(
-            asset_server,
-            texture_atlasses,
-            is_dummy,
-            EnemyType::Psychiatrist1,
-        );
+        let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Psychiatrist1);
 
         Psychiatrist1Bundle {
             character_animation: enemy_bundle.character_animation,
@@ -79,19 +74,14 @@ impl LdtkEntity for Psychiatrist2Bundle {
         _: &LayerInstance,
         _: Option<&Handle<Image>>,
         _: Option<&TilesetDefinition>,
-        asset_server: &AssetServer,
-        texture_atlasses: &mut Assets<TextureAtlasLayout>,
+        _: &AssetServer,
+        _: &mut Assets<TextureAtlasLayout>,
     ) -> Psychiatrist2Bundle {
         let is_dummy = *entity_instance
             .get_bool_field("is_dummy")
             .expect("expected entity to have non-nullable name string field");
 
-        let enemy_bundle = create_enemy_bundle(
-            asset_server,
-            texture_atlasses,
-            is_dummy,
-            EnemyType::Psychiatrist2,
-        );
+        let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Psychiatrist2);
 
         Psychiatrist2Bundle {
             character_animation: enemy_bundle.character_animation,

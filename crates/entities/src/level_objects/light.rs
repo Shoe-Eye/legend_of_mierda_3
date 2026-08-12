@@ -25,18 +25,10 @@ pub fn create_lantern_bundle(
     asset_server: &AssetServer,
     texture_atlasses: &mut Assets<TextureAtlasLayout>,
 ) -> LanternBundle {
-    let atlas_handle = load_texture_atlas_layout(
-        LANTERN_ASSET_SHEET.to_string(),
-        asset_server,
-        1,
-        1,
-        Vec2::ONE * 32.,
-    );
+    let atlas_handle = load_texture_atlas_layout(1, 1, Vec2::ONE * 32.);
 
     LanternBundle {
-        sprite: Sprite {
-            ..default()
-        },
+        sprite: Sprite { ..default() },
         transform: Transform::default(),
         lantern: Lantern,
     }

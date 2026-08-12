@@ -62,20 +62,8 @@ pub fn create_item_bundle(
     };
 
     let _atlas_handle = match item_type {
-        ItemType::Pizza => load_texture_atlas_layout(
-            PIZZA_ASSET_SHEET.to_string(),
-            asset_server,
-            1,
-            1,
-            Vec2::ONE * 16.,
-        ),
-        ItemType::Biboran => load_texture_atlas_layout(
-            BIBORAN_ASSET_SHEET.to_string(),
-            asset_server,
-            1,
-            1,
-            Vec2::ONE * 32.,
-        ),
+        ItemType::Pizza => load_texture_atlas_layout(1, 1, Vec2::ONE * 16.),
+        ItemType::Biboran => load_texture_atlas_layout(1, 1, Vec2::ONE * 32.),
     };
 
     ItemBundle {

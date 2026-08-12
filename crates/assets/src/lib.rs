@@ -29,15 +29,12 @@ pub fn load_texture_atlas(
 }
 
 pub fn load_texture_atlas_layout(
-    path: String,
-    asset_server: &bevy::asset::AssetServer,
     sheet_columns: usize,
     sheet_rows: usize,
     sprite_size: bevy::math::Vec2,
 ) -> bevy::image::TextureAtlasLayout {
     use bevy::image::TextureAtlasLayout;
     use bevy::math::UVec2;
-    let _texture_handle: bevy::asset::Handle<bevy::image::Image> = asset_server.load(path);
     TextureAtlasLayout::from_grid(
         UVec2::splat(sprite_size.x as u32),
         sheet_columns as u32,

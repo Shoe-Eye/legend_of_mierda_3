@@ -30,6 +30,7 @@ pub fn control_character(
         With<Player>,
     >,
     spritesheets: Res<CharacterSpritesheets>,
+    mut mw_player_attack: MessageWriter<PlayerAttackEvent>,
 ) {
     for control in ev_control.read() {
         for (entity, mut velocity, mut char_animation, mut sprite, _player) in &mut query {
@@ -47,7 +48,7 @@ pub fn control_character(
                 let en = entity.clone();
 
                 commands.spawn_task(move || async move {
-                    AsyncWorld.sleep(300.0).await;
+                    AsyncWorld.sleep(0.3).await;
                     let _ = AsyncWorld.write_message(PlayerAttackEvent { entity: en });
                     Ok(())
                 });

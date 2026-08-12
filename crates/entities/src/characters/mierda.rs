@@ -47,8 +47,7 @@ impl LdtkEntity for MierdaBundle {
             .get_bool_field("is_dummy")
             .expect("expected entity to have non-nullable name string field");
 
-        let enemy_bundle =
-            create_enemy_bundle(asset_server, texture_atlasses, is_dummy, EnemyType::Mierda);
+        let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Mierda);
 
         let layout = load_texture_atlas(
             MIERDA_ASSET_SHEET.to_string(),
@@ -73,7 +72,7 @@ impl LdtkEntity for MierdaBundle {
                 image,
                 TextureAtlas {
                     layout: layout,
-                    index: 0,
+                    index: 3,
                 },
             ),
         }

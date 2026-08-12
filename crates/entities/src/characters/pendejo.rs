@@ -45,8 +45,7 @@ impl LdtkEntity for PendejoBundle {
             .get_bool_field("is_dummy")
             .expect("expected entity to have non-nullable name string field");
 
-        let enemy_bundle =
-            create_enemy_bundle(asset_server, texture_atlasses, is_dummy, EnemyType::Pendejo);
+        let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Pendejo);
 
         PendejoBundle {
             character_animation: enemy_bundle.character_animation,

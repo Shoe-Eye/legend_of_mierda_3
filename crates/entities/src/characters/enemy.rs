@@ -1,5 +1,6 @@
 use crate::gameplay::scoring::Score;
 use bevy::prelude::*;
+use bevy_defer::{AsyncCommandsExtension, AsyncWorld};
 use bevy_ecs::entity::EntityCloner;
 use bevy_ecs::system::SystemState;
 use bevy_ecs_ldtk::prelude::*;
@@ -66,12 +67,7 @@ pub struct EnemyBundle {
 // LDTK
 // ----
 
-pub fn create_enemy_bundle(
-    asset_server: &AssetServer,
-    texture_atlasses: &mut Assets<TextureAtlasLayout>,
-    is_dummy: bool,
-    enemy_type: EnemyType,
-) -> EnemyBundle {
+pub fn create_enemy_bundle(is_dummy: bool, enemy_type: EnemyType) -> EnemyBundle {
     let rotation_constraints = LockedAxes::ROTATION_LOCKED;
 
     let collider_bundle = ColliderBundle {
@@ -87,13 +83,7 @@ pub fn create_enemy_bundle(
 
     let (atlas_handle, spritesheet_type) = match enemy_type {
         EnemyType::Mierda => (
-            load_texture_atlas_layout(
-                MIERDA_ASSET_SHEET.to_string(),
-                asset_server,
-                5,
-                1,
-                Vec2::ONE * 16.,
-            ),
+            load_texture_atlas_layout(5, 1, Vec2::ONE * 16.),
             AnimatedCharacterType::NotAnimated,
         ),
         EnemyType::Pendejo => {
@@ -103,8 +93,6 @@ pub fn create_enemy_bundle(
 
             (
                 load_texture_atlas_layout(
-                    spritesheet_path.to_string(),
-                    asset_server,
                     SHEET_1_COLUMNS as usize,
                     SHEET_1_ROWS as usize,
                     Vec2::ONE * 64.,
@@ -113,23 +101,11 @@ pub fn create_enemy_bundle(
             )
         }
         EnemyType::Psychiatrist1 => (
-            load_texture_atlas_layout(
-                PSYCHIATRIST_1_ASSET_SHEET.to_string(),
-                asset_server,
-                1,
-                1,
-                128. * Vec2::ONE,
-            ),
+            load_texture_atlas_layout(1, 1, 128. * Vec2::ONE),
             AnimatedCharacterType::NotAnimated,
         ),
         EnemyType::Psychiatrist2 => (
-            load_texture_atlas_layout(
-                PSYCHIATRIST_2_ASSET_SHEET.to_string(),
-                asset_server,
-                1,
-                1,
-                128. * Vec2::ONE,
-            ),
+            load_texture_atlas_layout(1, 1, 128. * Vec2::ONE),
             AnimatedCharacterType::NotAnimated,
         ),
     };
@@ -395,17 +371,13 @@ pub fn despawn_dead_enemies(
             EnemyType::Pendejo => 50,
         };
 
-        // commands
-        //     .promise(|| e)
-        //     .then(asyn!(state => {
-        //         state.asyn().timeout(0.3)
-        //     }))
-        //     .then(asyn!(state, mut commands: Commands => {
-        //         if commands.get_entity(state.value).is_err() {
-        //             return;
-        //         }
-        //         commands.entity(state.value).despawn();
-        //     }));
+        let entity: Entity = e.clone();
+        commands.spawn_task(move || async move {
+            AsyncWorld.sleep(0.3).await;
+            AsyncWorld.entity(entity).despawn();
+
+            Ok(())
+        });
     }
 }
 
