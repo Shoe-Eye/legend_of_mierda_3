@@ -3,7 +3,10 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 use bevy_rapier2d::prelude::*;
 
-use lom_assets::sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation};
+use lom_assets::{
+    load_texture_atlas,
+    sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation, MIERDA_ASSET_SHEET},
+};
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;
 
@@ -46,6 +49,17 @@ impl LdtkEntity for MierdaBundle {
 
         let enemy_bundle =
             create_enemy_bundle(asset_server, texture_atlasses, is_dummy, EnemyType::Mierda);
+
+        let layout = load_texture_atlas(
+            MIERDA_ASSET_SHEET.to_string(),
+            asset_server,
+            5,
+            1,
+            None,
+            Vec2::ONE * 16.,
+            texture_atlasses,
+        );
+        let image = asset_server.load(MIERDA_ASSET_SHEET.to_string());
 
         MierdaBundle {
             character_animation: enemy_bundle.character_animation,

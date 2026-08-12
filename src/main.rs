@@ -2,6 +2,7 @@
 
 use bevy::window::*;
 use bevy::{input::common_conditions::input_toggle_active, prelude::*};
+use bevy_defer::AsyncPlugin;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_inspector_egui::bevy_egui::EguiPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
@@ -20,7 +21,8 @@ use lom_ldtk::ldtk::{self, LevelChangeEvent};
 use lom_ldtk::ldtk::{WallBundle, LEVEL_1_IID};
 use lom_ldtk::physics;
 use lom_splashscreen::SplashscreenPlugin;
-use lom_ui::menu::MenuPlugin;
+use lom_ui::game::GameUIPlugin;
+use lom_ui::menu::MainMenuPlugin;
 use pecs::prelude::*;
 
 fn main() {
@@ -49,6 +51,7 @@ fn main() {
     .init_state::<GameState>()
     .add_plugins(AudioPlugin)
     .add_plugins(LdtkPlugin)
+    .add_plugins(AsyncPlugin::default_settings())
     .insert_resource(LdtkSettings {
         level_spawn_behavior: LevelSpawnBehavior::UseWorldTranslation {
             load_level_neighbors: true,
@@ -60,7 +63,8 @@ fn main() {
     .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
     .add_plugins((
         LoadingPlugin,
-        MenuPlugin,
+        MainMenuPlugin,
+        GameUIPlugin,
         CutscenePlugin,
         LegendOfMierda3Plugin,
     ))

@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy::ui::Val;
 use bevy_color::{Color, Srgba};
+use lom_game::GameState;
 
 #[derive(Component)]
 pub struct UIPlayerHealth;
@@ -37,7 +38,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_items: AlignItems::FlexStart,
                 ..default()
             },
-            BackgroundColor(Color::Srgba(Srgba::NONE)),
+            // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
             Name::new("ui face"),
         ))
@@ -49,7 +50,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                     margin: UiRect::top(Val::VMin(5.)),
                     ..default()
                 },
-                BackgroundColor(Color::Srgba(Srgba::WHITE)),
+                // BackgroundColor(Color::Srgba(Srgba::WHITE)),
                 ImageNode::new(asset_server.load("avatars/alextime.png")),
             ));
         });
@@ -68,7 +69,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_items: AlignItems::FlexStart,
                 ..default()
             },
-            BackgroundColor(Color::Srgba(Srgba::NONE)),
+            // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
             Name::new("ui healthbar"),
         ))
@@ -81,7 +82,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                         margin: UiRect::top(Val::VMin(5.)),
                         ..default()
                     },
-                    BackgroundColor(Color::Srgba(Srgba::RED)),
+                    // BackgroundColor(Color::Srgba(Srgba::RED)),
                 ))
                 .insert(UIPlayerHealth);
         });
@@ -100,7 +101,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_items: AlignItems::FlexStart,
                 ..default()
             },
-            BackgroundColor(Color::Srgba(Srgba::NONE)),
+            // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
             Name::new("Weapon gun image"),
         ))
@@ -111,7 +112,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                     height: Val::Px(22.5),
                     ..default()
                 },
-                BackgroundColor(Color::Srgba(Srgba::WHITE)),
+                // BackgroundColor(Color::Srgba(Srgba::WHITE)),
                 ImageNode::new(asset_server.load("sprites/speargun.png")),
             ));
         });
@@ -130,7 +131,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_items: AlignItems::FlexStart,
                 ..default()
             },
-            BackgroundColor(Color::Srgba(Srgba::NONE)),
+            // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
             Name::new("Weapon name"),
         ))
@@ -161,7 +162,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_items: AlignItems::FlexStart,
                 ..default()
             },
-            BackgroundColor(Color::Srgba(Srgba::NONE)),
+            // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
             Name::new("Weapon machete  image"),
         ))
@@ -172,7 +173,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                     height: Val::Px(22.5),
                     ..default()
                 },
-                BackgroundColor(Color::Srgba(Srgba::WHITE)),
+                // // BackgroundColor(Color::Srgba(Srgba::WHITE)),
                 ImageNode::new(asset_server.load("sprites/machete.png")),
             ));
         });
@@ -191,7 +192,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_items: AlignItems::FlexStart,
                 ..default()
             },
-            BackgroundColor(Color::Srgba(Srgba::NONE)),
+            // // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
             Name::new("Weapon name"),
         ))
@@ -219,7 +220,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_items: AlignItems::FlexStart,
                 ..default()
             },
-            BackgroundColor(Color::Srgba(Srgba::NONE)),
+            // // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
             Name::new("Wave Text"),
         ))
@@ -247,7 +248,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 align_items: AlignItems::FlexStart,
                 ..default()
             },
-            BackgroundColor(Color::Srgba(Srgba::NONE)),
+            // // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
             Name::new("Wave Text"),
         ))
@@ -263,4 +264,13 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
                 UIHighscore,
             ));
         });
+}
+
+pub struct GameUIPlugin;
+
+impl Plugin for GameUIPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(OnEnter(GameState::GamePlay), draw_ui)
+            .add_systems(OnExit(GameState::GamePlay), despawn_ui);
+    }
 }

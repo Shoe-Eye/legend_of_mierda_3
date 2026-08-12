@@ -131,6 +131,8 @@ pub fn animate_player_sprite(
                         index: current_index,
                         layout: spritesheet,
                     });
+
+                    sprite.image = spritesheets.player_sprite_1.clone();
                 }
 
                 if character_animation.animation_type == AnimationType::Stand {

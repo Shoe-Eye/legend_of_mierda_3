@@ -152,10 +152,19 @@ impl FromWorld for MaterialAssets {
 #[derive(Resource)]
 pub struct CharacterSpritesheets {
     pub player_atlas_1: Handle<TextureAtlasLayout>,
+    pub player_sprite_1: Handle<Image>,
+
     pub player_atlas_2: Handle<TextureAtlasLayout>,
+    pub player_sprite_2: Handle<Image>,
+
     pub mierda_atlas: Handle<TextureAtlasLayout>,
+    pub mierda_sprite: Handle<Image>,
+
     pub pendejo_atlas_1: Handle<TextureAtlasLayout>,
+    pub pendejo_sprite_1: Handle<Image>,
+
     pub pendejo_atlas_2: Handle<TextureAtlasLayout>,
+    pub pendejo_sprite_2: Handle<Image>,
 }
 
 impl FromWorld for CharacterSpritesheets {
@@ -166,65 +175,61 @@ impl FromWorld for CharacterSpritesheets {
             .get_resource_mut::<Assets<TextureAtlasLayout>>()
             .unwrap();
 
-        let player_atlas_1 = layouts.add(load_texture_atlas_layout(
-            PLAYER_ASSET_SHEET_1.to_string(),
-            &asset_server,
+        let player_atlas_1_layout = layouts.add(build_texture_atlas_layout(
             SHEET_1_COLUMNS,
             SHEET_1_ROWS,
             Vec2::ONE * 64.,
         ));
+        let player_sprite_1 = asset_server.load(PLAYER_ASSET_SHEET_1.to_string());
 
-        let pendejo_atlas_1 = layouts.add(load_texture_atlas_layout(
-            PENDEJO_SPRITE_SHEETS[0].0.to_string(),
-            &asset_server,
-            SHEET_1_COLUMNS,
-            SHEET_1_ROWS,
-            Vec2::ONE * 64.,
-        ));
-
-        let pendejo_atlas_2 = layouts.add(load_texture_atlas_layout(
-            PENDEJO_SPRITE_SHEETS[1].0.to_string(),
-            &asset_server,
-            SHEET_1_COLUMNS,
-            SHEET_1_ROWS,
-            Vec2::ONE * 64.,
-        ));
-
-        let player_atlas_2 = layouts.add(load_texture_atlas_layout(
-            PLAYER_ASSET_SHEET_2.to_string(),
-            &asset_server,
+        let player_atlas_2 = layouts.add(build_texture_atlas_layout(
             SHEET_2_COLUMNS,
             SHEET_2_ROWS,
             Vec2::ONE * 64. * 3.,
         ));
+        let player_sprite_2 = asset_server.load(PLAYER_ASSET_SHEET_2.to_string());
 
-        let mierda_atlas = layouts.add(load_texture_atlas_layout(
-            MIERDA_ASSET_SHEET.to_string(),
-            &asset_server,
-            5,
-            1,
-            Vec2::ONE * 16.0,
+        let pendejo_atlas_1 = layouts.add(build_texture_atlas_layout(
+            SHEET_1_COLUMNS,
+            SHEET_1_ROWS,
+            Vec2::ONE * 64.,
         ));
+        let pendejo_sprite_1 = asset_server.load(PENDEJO_SPRITE_SHEETS[0].0.to_string());
+
+        let pendejo_atlas_2 = layouts.add(build_texture_atlas_layout(
+            SHEET_1_COLUMNS,
+            SHEET_1_ROWS,
+            Vec2::ONE * 64.,
+        ));
+        let pendejo_sprite_2 = asset_server.load(PENDEJO_SPRITE_SHEETS[1].0.to_string());
+
+        let mierda_atlas = layouts.add(build_texture_atlas_layout(5, 1, Vec2::ONE * 16.0));
+        let mierda_sprite = asset_server.load(MIERDA_ASSET_SHEET.to_string());
 
         CharacterSpritesheets {
-            player_atlas_1,
+            player_atlas_1: player_atlas_1_layout,
+            player_sprite_1,
+
             player_atlas_2,
+            player_sprite_2,
+
             mierda_atlas,
+            mierda_sprite,
+
             pendejo_atlas_1,
+            pendejo_sprite_1,
+
             pendejo_atlas_2,
+            pendejo_sprite_2,
         }
     }
 }
 
-pub fn load_texture_atlas_layout(
-    path: String,
-    asset_server: &AssetServer,
+pub fn build_texture_atlas_layout(
     sheet_columns: usize,
     sheet_rows: usize,
     sprite_size: Vec2,
 ) -> TextureAtlasLayout {
-    let _texture_handle: Handle<Image> = asset_server.load(path);
-
     TextureAtlasLayout::from_grid(
         UVec2::splat(sprite_size.x as u32),
         sheet_columns as u32,

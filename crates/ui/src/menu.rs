@@ -3,9 +3,9 @@ use lom_assets::loading::CutsceneAssets;
 use lom_assets::loading::FontAssets;
 use lom_game::GameState;
 
-pub struct MenuPlugin;
+pub struct MainMenuPlugin;
 
-impl Plugin for MenuPlugin {
+impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             OnExit(GameState::Menu),

@@ -24,6 +24,7 @@ lom_ui = { path = "crates/ui" }
 bevy-inspector-egui = "0.36.0"
 bevy_particle_systems = "0.13.0"
 bevy-scene-hook = { git = "https://github.com/stillonearth/bevy-scene-hook.git", rev ="663cab4" }
+bevy_defer = "0.17.0"
 
 [profile.dev.package."*"]
 opt-level = 3

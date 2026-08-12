@@ -10,7 +10,6 @@ use lom_assets::sprites::*;
 use lom_assets::{load_texture_atlas_layout, loading::AudioAssets};
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;
-use pecs::prelude::*;
 use rand::rngs::ThreadRng;
 use rand::seq::IndexedRandom;
 use rand::RngExt;
@@ -262,7 +261,6 @@ pub fn handle_spawn_enemy(world: &mut World) {
             (player_translation, level_bounds, dummy_candidates)
         }; // <-- ALL state borrows dropped here
 
-
         for (px_wid, px_hei, _) in &level_bounds {
             let px_wid = *px_wid;
             let px_hei = *px_hei;
@@ -273,7 +271,6 @@ pub fn handle_spawn_enemy(world: &mut World) {
                     Some(&d) => d,
                     None => continue,
                 };
-
 
                 // Generate position
                 let mut enemy_position = player_translation;
@@ -290,30 +287,32 @@ pub fn handle_spawn_enemy(world: &mut World) {
                 }
 
                 // 3. Spawn directly on world — no Commands needed, no borrow conflict
-                let new_entity = world
-                    .spawn((
-                        Enemy {
-                            enemy_type: ev_spawn.enemy_type,
-                            is_dummy: false,
-                            health: match ev_spawn.enemy_type {
-                                EnemyType::Mierda => 50,
-                                EnemyType::Pendejo => 100,
-                                EnemyType::Psychiatrist1 => 5000,
-                                EnemyType::Psychiatrist2 => 5000,
-                            },
-                            move_direction: Vec2::ZERO,
-                            hit_at: None,
-                            marked_for_despawn: false,
-                        },
-                        Transform::from_translation(enemy_position).with_scale(Vec3::ONE * 0.5),
-                    ))
-                    .id();
+
+                let enemy = Enemy {
+                    enemy_type: ev_spawn.enemy_type,
+                    is_dummy: false,
+                    health: match ev_spawn.enemy_type {
+                        EnemyType::Mierda => 50,
+                        EnemyType::Pendejo => 100,
+                        EnemyType::Psychiatrist1 => 5000,
+                        EnemyType::Psychiatrist2 => 5000,
+                    },
+                    move_direction: Vec2::ZERO,
+                    hit_at: None,
+                    marked_for_despawn: false,
+                };
+
+                let new_entity = world.spawn_empty().id();
 
                 // Add as child of parent
                 world.entity_mut(parent_entity).add_child(new_entity);
 
                 // 4. EntityCloner has exclusive world access — no conflict
                 EntityCloner::build_opt_out(world).clone_entity(dummy_entity, new_entity);
+                world.entity_mut(new_entity).insert((
+                    enemy,
+                    Transform::from_translation(enemy_position).with_scale(Vec3::ONE * 0.5),
+                ));
             }
         }
     }
@@ -396,17 +395,17 @@ pub fn despawn_dead_enemies(
             EnemyType::Pendejo => 50,
         };
 
-        commands
-            .promise(|| e)
-            .then(asyn!(state => {
-                state.asyn().timeout(0.3)
-            }))
-            .then(asyn!(state, mut commands: Commands => {
-                if commands.get_entity(state.value).is_err() {
-                    return;
-                }
-                commands.entity(state.value).despawn();
-            }));
+        // commands
+        //     .promise(|| e)
+        //     .then(asyn!(state => {
+        //         state.asyn().timeout(0.3)
+        //     }))
+        //     .then(asyn!(state, mut commands: Commands => {
+        //         if commands.get_entity(state.value).is_err() {
+        //             return;
+        //         }
+        //         commands.entity(state.value).despawn();
+        //     }));
     }
 }
 

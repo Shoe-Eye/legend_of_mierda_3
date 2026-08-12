@@ -1,6 +1,6 @@
 use bevy::prelude::*;
+use bevy_defer::{AsyncCommandsExtension, AsyncWorld};
 use bevy_rapier2d::prelude::*;
-use pecs::prelude::*;
 
 use lom_assets::loading::CharacterSpritesheets;
 use lom_assets::sprites::*;
@@ -40,18 +40,17 @@ pub fn control_character(
                     get_animation_indices(char_animation.animation_type, char_animation.direction);
                 if let Some(ref mut atlas) = sprite.texture_atlas {
                     atlas.index = indices.first;
+                    atlas.layout = spritesheets.player_atlas_2.clone();
                 }
+                sprite.image = spritesheets.player_sprite_2.clone();
 
-                commands.promise(|| entity).then(asyn!(state => {
-                        state.asyn().timeout(0.3)
-                    }
-                ));
-                // .then(
-                //     asyn!(state, mut ev_attack: MessageWriter<PlayerAttackEvent> => {
-                //     //             let event = PlayerAttackEvent { entity: state.value };
-                //     // ev_attack.write(event);
-                //             }),
-                // );
+                let en = entity.clone();
+
+                commands.spawn_task(move || async move {
+                    AsyncWorld.sleep(300.0).await;
+                    let _ = AsyncWorld.write_message(PlayerAttackEvent { entity: en });
+                    Ok(())
+                });
             } else {
                 let right = if control.right { 1. } else { 0. };
                 let left = if control.left { 1. } else { 0. };
