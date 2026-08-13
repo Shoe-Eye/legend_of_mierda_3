@@ -164,7 +164,7 @@ pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
             },
             // BackgroundColor(Color::Srgba(Srgba::NONE)),
             UIGamePlay,
-            Name::new("Weapon machete  image"),
+            Name::new("Weapon machete image"),
         ))
         .with_children(|parent| {
             parent.spawn((

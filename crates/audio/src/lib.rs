@@ -10,7 +10,7 @@ impl Plugin for InternalAudioPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Menu), setup_menu_music)
             .add_systems(OnExit(GameState::Menu), stop_main_menu_music)
-            // .add_systems(OnEnter(GameState::GamePlay), setup_gameplay_music)
+            .add_systems(OnEnter(GameState::GamePlay), setup_gameplay_music)
             .add_systems(OnExit(GameState::GamePlay), stop_gameplay_music);
     }
 }

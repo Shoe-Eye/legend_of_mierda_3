@@ -88,10 +88,7 @@ pub(crate) fn draw_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
             Name::new("ui game over"),
         ))
         .with_children(|parent| {
-            parent.spawn((
-                Text::from("  JUEGO\nTERMINADO"),
-                UIGameOverText,
-            ));
+            parent.spawn((Text::from("  JUEGO\nTERMINADO"), UIGameOverText));
 
             parent
                 .spawn((
@@ -109,9 +106,23 @@ pub(crate) fn draw_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
                     UIGameOverButton,
                 ))
                 .with_children(|button| {
-                    button.spawn((
-                        Text::from("REINICIAR"),
-                    ));
+                    button.spawn((Text::from("REINICIAR"),));
                 });
         });
+}
+
+pub struct GameOverPlugin;
+
+impl Plugin for GameOverPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(OnEnter(GameState::GameOver), draw_ui)
+            .add_systems(OnExit(GameState::GameOver), despawn_ui)
+            .add_systems(
+                Update,
+                (
+                    event_game_over.run_if(in_state(GameState::GamePlay)),
+                    event_game_win.run_if(in_state(GameState::GamePlay)),
+                ),
+            );
+    }
 }

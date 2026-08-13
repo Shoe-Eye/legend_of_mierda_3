@@ -4,6 +4,7 @@ use bevy_kira_audio::prelude::*;
 // use bevy_particle_systems::*;
 
 use bevy_rapier2d::prelude::*;
+use lom_ui::game::UIPlayerHealth;
 
 use crate::gameplay::gameover::GameOverEvent;
 use lom_assets::load_texture_atlas;
@@ -157,8 +158,7 @@ pub fn event_player_hit(
     mut commands: Commands,
     mut ev_player_hit_reader: MessageReader<PlayerHitEvent>,
     mut ev_game_over: MessageWriter<GameOverEvent>,
-    mut q_player: Query<(Entity, &GlobalTransform, &mut Player)>,
-    asset_server: Res<AssetServer>,
+    mut q_player: Query<(Entity, &mut Player)>,
     audio: Res<Audio>,
     audio_assets: Res<AudioAssets>,
 ) {
@@ -167,15 +167,15 @@ pub fn event_player_hit(
             continue;
         }
 
-        let (_, player_transform, mut player) = q_player.get_mut(ev.entity).unwrap();
+        let (_, mut player) = q_player.get_mut(ev.entity).unwrap();
 
-        // audio.play(audio_assets.hurt.clone()).with_volume(0.5);
+        audio.play(audio_assets.hurt.clone()).with_volume(0.5);
 
         if player.health == 0 {
             ev_game_over.write(GameOverEvent);
             continue;
         } else {
-            player.health -= 1;
+            player.health -= 5;
         }
     }
 }
@@ -185,15 +185,14 @@ pub fn event_player_hit(
 // -------
 
 pub fn handle_player_enemy_collisions(
-    collision_events: Option<MessageReader<CollisionEvent>>,
-    q_player: Query<(Entity, &mut Player)>,
+    mut collision_events: MessageReader<CollisionEvent>,
+    q_player: Query<(Entity, &Player)>,
     q_enemies: Query<(Entity, &Enemy)>,
     mut ev_player_hit: MessageWriter<PlayerHitEvent>,
 ) {
-    let Some(mut collision_events) = collision_events else {
-        return;
-    };
     for event in collision_events.read() {
+        // println!("collsion event");
+
         if let CollisionEvent::Started(e1, e2, _) = event {
             let contact_1_player = q_player.get(*e1);
             let contact_2_player = q_player.get(*e2);
@@ -219,6 +218,25 @@ pub fn handle_player_enemy_collisions(
     }
 }
 
+pub fn adjust_healthbar(
+    mut commands: Commands,
+    mut ev_player_hit_reader: MessageReader<PlayerHitEvent>,
+    mut q_player: Query<(Entity, &mut Player)>,
+    mut q_ui_healthbar: Query<(Entity, &mut Node, &UIPlayerHealth)>,
+) {
+    for ev in ev_player_hit_reader.read() {
+        if !commands.get_entity(ev.entity).is_ok() {
+            continue;
+        }
+
+        let (_, player) = q_player.get_mut(ev.entity).unwrap();
+
+        for (_, mut style, _) in q_ui_healthbar.iter_mut() {
+            style.width = Val::Percent(player.health as f32);
+        }
+    }
+}
+
 // ------
 // Plugin
 // ------
@@ -235,10 +253,14 @@ impl Plugin for PlayerPlugin {
             .add_systems(
                 Update,
                 (
+                    handle_player_enemy_collisions.run_if(in_state(GameState::GamePlay)),
                     event_player_attack.run_if(in_state(GameState::GamePlay)),
                     event_player_hit.run_if(in_state(GameState::GamePlay)),
-                    handle_player_enemy_collisions.run_if(in_state(GameState::GamePlay)),
                 ),
+            )
+            .add_systems(
+                Update,
+                adjust_healthbar.run_if(in_state(GameState::GamePlay)),
             );
     }
 }

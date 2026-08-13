@@ -94,10 +94,10 @@ pub fn handle_machete_attack(
         machete_timer.0.tick(time.delta());
 
         if machete_timer.0.just_finished() {
-            ev_control.write(ControlEvent {
-                attack: true,
-                ..Default::default()
-            });
+            // ev_control.write(ControlEvent {
+            //     attack: true,
+            //     ..Default::default()
+            // });
         }
     }
 }

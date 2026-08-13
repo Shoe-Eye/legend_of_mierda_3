@@ -14,6 +14,7 @@ use lom_assets::loading::LoadingPlugin;
 use lom_audio::InternalAudioPlugin;
 use lom_cutscene::CutscenePlugin;
 use lom_entities as entities;
+use lom_entities::gameplay::gameover::GameOverPlugin;
 use lom_entities::gameplay::GameplayPlugin;
 use lom_entities::sprites;
 use lom_game::GameState;
@@ -67,6 +68,7 @@ fn main() {
         GameUIPlugin,
         CutscenePlugin,
         LegendOfMierda3Plugin,
+        GameOverPlugin,
     ))
     .add_plugins(InternalAudioPlugin)
     .add_plugins(EguiPlugin::default())
