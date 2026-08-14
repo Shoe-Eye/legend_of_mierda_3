@@ -5,6 +5,7 @@ use crate::{physics::ColliderBundle, player::Player};
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
+use lom_assets::{load_texture_atlas, sprites::PIZZA_ASSET_SHEET};
 
 #[derive(Clone, PartialEq, Debug, Default, Component, Reflect)]
 pub struct Pizza {
@@ -16,6 +17,7 @@ pub struct PizzaBundle {
     pub item: Item,
     pub collider_bundle: ColliderBundle,
     pub sensor: Sensor,
+    pub sprite: Sprite,
 }
 
 impl LdtkEntity for PizzaBundle {
@@ -32,10 +34,28 @@ impl LdtkEntity for PizzaBundle {
             .expect("expected entity to have non-nullable name string field");
         let bundle = create_item_bundle(asset_server, texture_atlasses, is_dummy, ItemType::Pizza);
 
+        let layout = load_texture_atlas(
+            PIZZA_ASSET_SHEET.to_string(),
+            asset_server,
+            1,
+            1,
+            None,
+            Vec2::ONE * 16.,
+            texture_atlasses,
+        );
+        let image = asset_server.load(PIZZA_ASSET_SHEET.clone());
+
         PizzaBundle {
             collider_bundle: bundle.collider_bundle,
             item: bundle.item,
             sensor: bundle.sensor,
+            sprite: Sprite::from_atlas_image(
+                image,
+                TextureAtlas {
+                    layout: layout,
+                    index: 0,
+                },
+            ),
         }
     }
 }

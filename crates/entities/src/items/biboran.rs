@@ -14,7 +14,7 @@ use bevy_rapier2d::prelude::*;
 
 use std::f32::consts::PI;
 
-use lom_assets::AudioAssets;
+use lom_assets::{load_texture_atlas, sprites::BIBORAN_ASSET_SHEET, AudioAssets};
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;
 
@@ -45,6 +45,7 @@ pub struct BiboranBundle {
     pub item: Item,
     pub collider_bundle: ColliderBundle,
     pub sensor: Sensor,
+    pub sprite: Sprite,
 }
 
 impl LdtkEntity for BiboranBundle {
@@ -61,10 +62,29 @@ impl LdtkEntity for BiboranBundle {
             .expect("expected entity to have non-nullable name string field");
         let bundle =
             create_item_bundle(asset_server, texture_atlasses, is_dummy, ItemType::Biboran);
+
+        let layout = load_texture_atlas(
+            BIBORAN_ASSET_SHEET.to_string(),
+            asset_server,
+            1,
+            1,
+            None,
+            Vec2::ONE * 64.,
+            texture_atlasses,
+        );
+        let image = asset_server.load(BIBORAN_ASSET_SHEET.clone());
+
         BiboranBundle {
             collider_bundle: bundle.collider_bundle,
             item: bundle.item,
             sensor: bundle.sensor,
+            sprite: Sprite::from_atlas_image(
+                image,
+                TextureAtlas {
+                    layout: layout,
+                    index: 0,
+                },
+            ),
         }
     }
 }
