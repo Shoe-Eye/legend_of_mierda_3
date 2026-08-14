@@ -3,7 +3,13 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 use bevy_rapier2d::prelude::*;
 
-use lom_assets::sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation};
+use lom_assets::{
+    load_texture_atlas,
+    sprites::{
+        AnimatedCharacterSprite, AnimationTimer, CharacterAnimation, PSYCHIATRIST_1_ASSET_SHEET,
+        PSYCHIATRIST_2_ASSET_SHEET,
+    },
+};
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;
 
@@ -24,6 +30,7 @@ pub struct Psychiatrist1Bundle {
     pub active_events: ActiveEvents,
     pub direction_update_time: DirectionUpdateTime,
     pub animated_character_sprite: AnimatedCharacterSprite,
+    pub sprite: Sprite,
 }
 
 #[derive(Default, Bundle, Clone)]
@@ -35,6 +42,7 @@ pub struct Psychiatrist2Bundle {
     pub active_events: ActiveEvents,
     pub direction_update_time: DirectionUpdateTime,
     pub animated_character_sprite: AnimatedCharacterSprite,
+    pub sprite: Sprite,
 }
 
 // ----
@@ -47,14 +55,25 @@ impl LdtkEntity for Psychiatrist1Bundle {
         _: &LayerInstance,
         _: Option<&Handle<Image>>,
         _: Option<&TilesetDefinition>,
-        _: &AssetServer,
-        _: &mut Assets<TextureAtlasLayout>,
+        asset_server: &AssetServer,
+        texture_atlasses: &mut Assets<TextureAtlasLayout>,
     ) -> Psychiatrist1Bundle {
         let is_dummy = *entity_instance
             .get_bool_field("is_dummy")
             .expect("expected entity to have non-nullable name string field");
 
         let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Psychiatrist1);
+
+        let layout = load_texture_atlas(
+            PSYCHIATRIST_1_ASSET_SHEET.to_string(),
+            asset_server,
+            1,
+            1,
+            None,
+            128. * Vec2::ONE,
+            texture_atlasses,
+        );
+        let image = asset_server.load(PSYCHIATRIST_1_ASSET_SHEET.clone());
 
         Psychiatrist1Bundle {
             character_animation: enemy_bundle.character_animation,
@@ -64,6 +83,13 @@ impl LdtkEntity for Psychiatrist1Bundle {
             active_events: enemy_bundle.active_events,
             direction_update_time: enemy_bundle.direction_update_time,
             animated_character_sprite: enemy_bundle.animated_character_sprite,
+            sprite: Sprite::from_atlas_image(
+                image,
+                TextureAtlas {
+                    layout: layout,
+                    index: 0,
+                },
+            ),
         }
     }
 }
@@ -74,14 +100,25 @@ impl LdtkEntity for Psychiatrist2Bundle {
         _: &LayerInstance,
         _: Option<&Handle<Image>>,
         _: Option<&TilesetDefinition>,
-        _: &AssetServer,
-        _: &mut Assets<TextureAtlasLayout>,
+        asset_server: &AssetServer,
+        texture_atlasses: &mut Assets<TextureAtlasLayout>,
     ) -> Psychiatrist2Bundle {
         let is_dummy = *entity_instance
             .get_bool_field("is_dummy")
             .expect("expected entity to have non-nullable name string field");
 
         let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Psychiatrist2);
+
+        let layout = load_texture_atlas(
+            PSYCHIATRIST_2_ASSET_SHEET.to_string(),
+            asset_server,
+            1,
+            1,
+            None,
+            128. * Vec2::ONE,
+            texture_atlasses,
+        );
+        let image = asset_server.load(PSYCHIATRIST_2_ASSET_SHEET.clone());
 
         Psychiatrist2Bundle {
             character_animation: enemy_bundle.character_animation,
@@ -91,6 +128,13 @@ impl LdtkEntity for Psychiatrist2Bundle {
             active_events: enemy_bundle.active_events,
             direction_update_time: enemy_bundle.direction_update_time,
             animated_character_sprite: enemy_bundle.animated_character_sprite,
+            sprite: Sprite::from_atlas_image(
+                image,
+                TextureAtlas {
+                    layout: layout,
+                    index: 0,
+                },
+            ),
         }
     }
 }

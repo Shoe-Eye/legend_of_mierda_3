@@ -231,6 +231,9 @@ pub fn flash_sprite(
 
         if timer.timer.just_finished() {
             timer_sprite.color = Color::srgba(1.0, 1.0, 1.0, 1.0);
+            if commands.get_entity(timer_e).is_err() {
+                continue;
+            }
             commands.entity(timer_e).remove::<FlashingTimer>();
         }
     }

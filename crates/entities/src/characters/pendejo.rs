@@ -2,12 +2,16 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 use bevy_rapier2d::prelude::*;
-
-use lom_assets::sprites::{
-    AnimatedCharacterSprite, AnimationDirection, AnimationTimer, CharacterAnimation,
+use lom_assets::{
+    load_texture_atlas,
+    sprites::{
+        AnimatedCharacterSprite, AnimationDirection, AnimationTimer, CharacterAnimation,
+        PENDEJO_SPRITE_SHEETS, SHEET_1_COLUMNS, SHEET_1_ROWS,
+    },
 };
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;
+use rand::RngExt;
 
 use crate::player::Player;
 
@@ -26,6 +30,7 @@ pub struct PendejoBundle {
     pub active_events: ActiveEvents,
     pub direction_update_time: DirectionUpdateTime,
     pub animated_character_sprite: AnimatedCharacterSprite,
+    pub sprite: Sprite,
 }
 
 // ----
@@ -46,6 +51,18 @@ impl LdtkEntity for PendejoBundle {
             .expect("expected entity to have non-nullable name string field");
 
         let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Pendejo);
+        let pendgeo_image_file = PENDEJO_SPRITE_SHEETS[0].0.to_string();
+
+        let layout = load_texture_atlas(
+            pendgeo_image_file.clone(),
+            asset_server,
+            SHEET_1_COLUMNS as u32,
+            SHEET_1_ROWS as u32,
+            None,
+            Vec2::ONE * 64.,
+            texture_atlasses,
+        );
+        let image = asset_server.load(pendgeo_image_file.clone());
 
         PendejoBundle {
             character_animation: enemy_bundle.character_animation,
@@ -55,6 +72,13 @@ impl LdtkEntity for PendejoBundle {
             active_events: enemy_bundle.active_events,
             direction_update_time: enemy_bundle.direction_update_time,
             animated_character_sprite: enemy_bundle.animated_character_sprite,
+            sprite: Sprite::from_atlas_image(
+                image,
+                TextureAtlas {
+                    layout: layout,
+                    index: 0,
+                },
+            ),
         }
     }
 }

@@ -16,7 +16,7 @@ bevy_kira_audio = "0.25"
 bevy_rapier2d = "0.34"
 # pecs = { git = "https://github.com/stillonearth/pecs.git", rev = "0b274c9" }
 # pecs = {path = "/home/cwiz/code/gamedev/pecs" }
-rand = "0.10.1"
+rand = "0.10"
 bevy_ecs_ldtk = { version = "0.14", features = [
     "default",
     "derive",

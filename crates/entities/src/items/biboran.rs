@@ -187,8 +187,7 @@ pub fn setup_biboran_scene(
             order: -1,
             ..default()
         },
-        Transform::from_xyz(5.0, 5.0, 5.0)
-            .looking_at(Vec3::new(0.0, 0.0, 0.0), Vec3::Y),
+        Transform::from_xyz(5.0, 5.0, 5.0).looking_at(Vec3::new(0.0, 0.0, 0.0), Vec3::Y),
     ));
 
     // Light
@@ -197,24 +196,21 @@ pub fn setup_biboran_scene(
             shadows_enabled: true,
             ..default()
         },
-        Transform::from_rotation(Quat::from_euler(
-            EulerRot::ZYX,
-            0.0,
-            1.0,
-            -PI / 4.,
-        )),
+        Transform::from_rotation(Quat::from_euler(EulerRot::ZYX, 0.0, 1.0, -PI / 4.)),
     ));
 
     // Biboran
     let scene_handle: Handle<Scene> = asset_server.load("models/biboran.glb#Scene0");
     let entity = commands.spawn_empty().id();
     commands.entity(entity).insert(BiboranBookScene);
-    commands.entity(entity).insert(Transform::from_rotation(Quat::from_euler(
-        EulerRot::ZYX,
-        0.0,
-        1.0,
-        -PI / 4.,
-    )));
+    commands
+        .entity(entity)
+        .insert(Transform::from_rotation(Quat::from_euler(
+            EulerRot::ZYX,
+            0.0,
+            1.0,
+            -PI / 4.,
+        )));
     let _ = scene_handle; // Suppress unused warning
 }
 
@@ -265,6 +261,10 @@ fn biboran_holy_effect(
             let timer = Timer::new(std::time::Duration::from_millis(200), TimerMode::Once);
             enemy.hit_at = Some(timer.clone());
             enemy.health -= u16::min(damage, enemy.health);
+
+            if commands.get_entity(enemy_entity).is_err() {
+                continue;
+            }
 
             commands.entity(enemy_entity).insert(FlashingTimer {
                 timer: timer.clone(),

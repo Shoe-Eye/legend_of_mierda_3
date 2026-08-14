@@ -51,7 +51,7 @@ pub fn event_spawn_text_indicator(
     font_assets: Res<FontAssets>,
 ) {
     for ev in ev_spawn_text_indicator.read() {
-        let timer = Timer::from_seconds(2.0, TimerMode::Once);
+        let timer = Timer::from_seconds(2000.0, TimerMode::Once);
 
         let text_indicator = TextIndicator { timer };
 
@@ -60,16 +60,11 @@ pub fn event_spawn_text_indicator(
         }
 
         commands.entity(ev.entity).with_children(|parent| {
-            // let text_style = TextStyle {
-            //     font: font_assets.pixeloid_mono.clone(),
-            //     font_size: 10.0,
-            //     color: Color::WHITE,
-            // };
-
             parent.spawn((
+                Name::new("text indicator"),
                 Text::new(ev.text.clone()),
                 // text_style.clone(),
-                Transform::from_translation(Vec3::new(0.0, 0.0, 1.0)),
+                Transform::from_translation(Vec3::new(0.0, 0.0, 6.0)),
                 text_indicator,
             ));
         });

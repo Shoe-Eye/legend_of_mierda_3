@@ -337,7 +337,7 @@ pub fn handle_enemy_hit(
                 hit_sound_played = true;
             }
 
-            commands.entity(enemy_entity).insert(FlashingTimer {
+            let _ = commands.entity(enemy_entity).insert(FlashingTimer {
                 timer: timer.clone(),
             });
 
@@ -400,7 +400,9 @@ impl Plugin for EnemyPlugin {
             )
             .add_systems(
                 Update,
-                despawn_dead_enemies.run_if(in_state(GameState::GamePlay)),
+                despawn_dead_enemies
+                    .after(handle_enemy_hit)
+                    .run_if(in_state(GameState::GamePlay)),
             )
             .add_systems(
                 Update,
