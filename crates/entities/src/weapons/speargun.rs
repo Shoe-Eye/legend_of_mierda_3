@@ -275,16 +275,12 @@ fn handle_trail_timers(
 // -------
 
 pub fn handle_arrow_enemy_collisions(
-    collision_events: Option<MessageReader<CollisionEvent>>,
+    mut collision_events: MessageReader<CollisionEvent>,
     q_enemies: Query<(Entity, &Enemy)>,
     q_arrows: Query<(Entity, &SpeargunArrow)>,
     mut ev_enemy_hit: MessageWriter<EnemyHitEvent>,
 ) {
-    let Some(mut collision_events) = collision_events else {
-        return;
-    };
     for event in collision_events.read() {
-        // println!("collision event: {:?}", event);
         if let CollisionEvent::Started(e1, e2, _) = event {
             let contact_1_enemy = q_enemies.get(*e1);
             let contact_2_enemy = q_enemies.get(*e2);
@@ -302,6 +298,8 @@ pub fn handle_arrow_enemy_collisions(
                 true => contact_1_enemy.unwrap().0,
                 false => contact_2_enemy.unwrap().0,
             };
+
+            // println!("enemy collision");
 
             ev_enemy_hit.write(EnemyHitEvent {
                 entity: enemy_entity,

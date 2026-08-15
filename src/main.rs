@@ -24,7 +24,6 @@ use lom_ldtk::physics;
 use lom_splashscreen::SplashscreenPlugin;
 use lom_ui::game::GameUIPlugin;
 use lom_ui::menu::MainMenuPlugin;
-use pecs::prelude::*;
 
 fn main() {
     let mut app = App::new();
@@ -50,7 +49,6 @@ fn main() {
             }),
     )
     .add_plugins(AsyncPlugin::default_settings())
-    .init_state::<GameState>()
     .add_plugins(AudioPlugin)
     .add_plugins(LdtkPlugin)
     .insert_resource(LdtkSettings {
@@ -60,8 +58,9 @@ fn main() {
         set_clear_color: SetClearColor::FromLevelBackground,
         ..Default::default()
     })
-    .add_plugins((HookPlugin, PecsPlugin, TweeningPlugin))
+    .add_plugins((HookPlugin, TweeningPlugin))
     .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+    .init_state::<GameState>()
     .add_plugins((
         LoadingPlugin,
         MainMenuPlugin,
@@ -96,11 +95,6 @@ impl Plugin for LegendOfMierda3Plugin {
                     ldtk::camera_fit_inside_current_level,
                     ldtk::update_level_selection,
                 )
-                    .run_if(in_state(GameState::GamePlay)),
-            )
-            .add_systems(
-                Update,
-                (ldtk::hide_dummy_entities, ldtk::fix_missing_ldtk_entities)
                     .run_if(in_state(GameState::GamePlay)),
             )
             .add_systems(

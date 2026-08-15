@@ -49,7 +49,7 @@ pub fn control_character(
 
                 commands.spawn_task(move || async move {
                     AsyncWorld.sleep(0.3).await;
-                    let _ = AsyncWorld.write_message(PlayerAttackEvent { entity: en });
+                    // let _ = AsyncWorld.write_message(PlayerAttackEvent { entity: en });
                     Ok(())
                 });
             } else {

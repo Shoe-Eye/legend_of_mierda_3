@@ -12,7 +12,7 @@ impl Plugin for WeaponsPlugin {
         app.add_plugins((
             // weapon_arrow::WeaponArrowPlugin,
             speargun::WeaponSpeargunPlugin,
-            // pill::WeaponPillPlugin,
+            pill::WeaponPillPlugin,
             machete::MachetePlugin,
         ));
     }

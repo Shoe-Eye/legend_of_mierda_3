@@ -193,13 +193,14 @@ pub fn event_spawn_item(world: &mut World) {
                         player_translation + Vec3::new(r * angle.sin(), r * angle.cos(), 0.0);
                 }
 
+                let item = Item {
+                    is_dummy: false,
+                    item_type: ev_spawn.item_type,
+                };
                 // 3. Spawn directly on world — entity is real immediately, no Commands needed
                 let new_entity = world
                     .spawn((
-                        Item {
-                            is_dummy: false,
-                            item_type: ev_spawn.item_type,
-                        },
+                        item.clone(),
                         Transform::from_translation(item_position).with_scale(Vec3::ONE * 0.5),
                     ))
                     .id();
@@ -208,6 +209,12 @@ pub fn event_spawn_item(world: &mut World) {
 
                 // 4. No borrow conflict — world is fully free here
                 EntityCloner::build_opt_out(world).clone_entity(item_entity, new_entity);
+
+                world.entity_mut(new_entity).insert((
+                    item.clone(),
+                    Transform::from_translation(item_position).with_scale(Vec3::ONE * 0.5),
+                    Visibility::Visible,
+                ));
             }
         }
     }

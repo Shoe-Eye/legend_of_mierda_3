@@ -365,6 +365,7 @@ pub struct BiboranPlugin;
 
 impl Plugin for BiboranPlugin {
     fn build(&self, app: &mut App) {
+        return;
         app.register_ldtk_entity::<BiboranBundle>("Biboran")
             .init_resource::<BiboranRenderImage>()
             .init_resource::<BiboranTimer>()

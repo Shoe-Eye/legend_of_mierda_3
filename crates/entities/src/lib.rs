@@ -4,6 +4,7 @@ pub mod characters;
 pub mod controls;
 pub mod gameplay;
 pub mod items;
+pub mod ldtk;
 pub mod level_objects;
 pub mod player;
 pub mod text_indicator;
@@ -37,6 +38,11 @@ impl Plugin for EntitiesPlugin {
         .add_systems(
             Update,
             (controls::keyboard_controls, controls::control_character)
+                .run_if(in_state(GameState::GamePlay)),
+        )
+        .add_systems(
+            Update,
+            (ldtk::hide_dummy_entities, ldtk::fix_missing_ldtk_entities)
                 .run_if(in_state(GameState::GamePlay)),
         );
     }

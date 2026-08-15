@@ -283,11 +283,25 @@ pub fn handle_spawn_enemy(world: &mut World) {
                 // Add as child of parent
                 world.entity_mut(parent_entity).add_child(new_entity);
 
+                let rotation_constraints = LockedAxes::ROTATION_LOCKED;
+                let collider_bundle = ColliderBundle {
+                    collider: Collider::cuboid(8., 26.),
+                    rigid_body: RigidBody::Dynamic,
+                    friction: Friction {
+                        coefficient: 0.0,
+                        combine_rule: CoefficientCombineRule::Min,
+                    },
+                    rotation_constraints,
+                    ..Default::default()
+                };
+
                 // 4. EntityCloner has exclusive world access — no conflict
                 EntityCloner::build_opt_out(world).clone_entity(dummy_entity, new_entity);
                 world.entity_mut(new_entity).insert((
                     enemy,
                     Transform::from_translation(enemy_position).with_scale(Vec3::ONE * 0.5),
+                    Visibility::Visible,
+                    collider_bundle,
                 ));
             }
         }

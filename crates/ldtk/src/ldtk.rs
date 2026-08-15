@@ -113,6 +113,7 @@ pub fn camera_fit_inside_current_level(
         .collect();
 
     let mut camera_query = params.p0();
+
     let (_camera, mut camera_transform) = camera_query.single_mut().unwrap();
 
     for (level_transform, level_iid) in &level_data {
@@ -317,7 +318,7 @@ pub fn fix_missing_ldtk_entities() {}
 pub fn spawn_game_world(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(LdtkWorldBundle {
         ldtk_handle: LdtkProjectHandle::from(asset_server.load("levels/main.ldtk")),
-        transform: Transform::from_translation(Vec3::ZERO).with_scale(Vec3::ONE * 1.8),
+        // transform: Transform::from_translation(Vec3::ZERO).with_scale(Vec3::ONE * 1.8),
         ..Default::default()
     });
 
