@@ -5,7 +5,7 @@ use bevy_rapier2d::prelude::*;
 use lom_assets::loading::CharacterSpritesheets;
 use lom_assets::sprites::*;
 
-use crate::player::{Player, PlayerAttackEvent};
+use crate::player::{Player, PlayerUseToolEvent};
 
 #[derive(Message, Copy, Clone, Reflect, Debug, PartialEq, Eq, Default)]
 pub struct ControlEvent {
@@ -13,7 +13,7 @@ pub struct ControlEvent {
     pub down: bool,
     pub left: bool,
     pub right: bool,
-    pub attack: bool,
+    pub use_tool: bool,
 }
 
 pub fn control_character(
@@ -30,28 +30,18 @@ pub fn control_character(
         With<Player>,
     >,
     spritesheets: Res<CharacterSpritesheets>,
-    mut mw_player_attack: MessageWriter<PlayerAttackEvent>,
+    mut mw_player_use_tool: MessageWriter<PlayerUseToolEvent>,
 ) {
     for control in ev_control.read() {
         for (entity, mut velocity, mut char_animation, mut sprite, _player) in &mut query {
-            if control.attack {
-                char_animation.animation_type = AnimationType::Attack;
+            if control.use_tool {
+                char_animation.animation_type = AnimationType::UseTool;
 
                 let indices =
                     get_animation_indices(char_animation.animation_type, char_animation.direction);
                 if let Some(ref mut atlas) = sprite.texture_atlas {
                     atlas.index = indices.first;
-                    atlas.layout = spritesheets.player_atlas_2.clone();
                 }
-                sprite.image = spritesheets.player_sprite_2.clone();
-
-                let en = entity.clone();
-
-                commands.spawn_task(move || async move {
-                    AsyncWorld.sleep(0.3).await;
-                    // let _ = AsyncWorld.write_message(PlayerAttackEvent { entity: en });
-                    Ok(())
-                });
             } else {
                 let right = if control.right { 1. } else { 0. };
                 let left = if control.left { 1. } else { 0. };
@@ -77,7 +67,7 @@ pub fn control_character(
                     }
                 }
 
-                if char_animation.animation_type != AnimationType::Attack {
+                if char_animation.animation_type != AnimationType::UseTool {
                     if char_animation.animation_type != AnimationType::Walk {
                         if let Some(ref mut atlas) = sprite.texture_atlas {
                             atlas.layout = spritesheets.player_atlas_1.clone();
@@ -105,6 +95,14 @@ pub fn keyboard_controls(
     control.left = input.pressed(KeyCode::KeyA);
     control.up = input.pressed(KeyCode::KeyW);
     control.down = input.pressed(KeyCode::KeyS);
+    control.use_tool = input.pressed(KeyCode::Space);
+
+    if control.use_tool {
+        control.right = false;
+        control.left = false;
+        control.up = false;
+        control.down = false;
+    }
 
     ev_control.write(control);
 }

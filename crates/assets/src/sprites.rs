@@ -7,7 +7,7 @@ pub const SHEET_1_ROWS: usize = 54;
 pub const SHEET_2_COLUMNS: usize = 6;
 pub const SHEET_2_ROWS: usize = 4;
 pub const N_FRAMES_WALK: usize = 8;
-pub const N_FRAMES_ATTACK: usize = 5;
+pub const N_FRAMES_USE_TOOL: usize = 7;
 
 pub const PLAYER_ASSET_SHEET_1: &str = "sprites/alextime-1.png";
 pub const PLAYER_ASSET_SHEET_2: &str = "sprites/alextime-2.png";
@@ -66,7 +66,7 @@ pub enum AnimationType {
     Walk,
     #[default]
     Stand,
-    Attack,
+    UseTool,
 }
 
 #[derive(Component, Clone, Default, Debug, Reflect)]
@@ -117,7 +117,7 @@ pub fn animate_player_sprite(
         if timer.just_finished() {
             let current_index = sprite.texture_atlas.as_ref().map(|t| t.index).unwrap_or(0);
             let new_index = if (current_index >= indices.last) || (current_index < indices.first) {
-                if character_animation.animation_type == AnimationType::Attack
+                if character_animation.animation_type == AnimationType::UseTool
                     && (current_index >= indices.last)
                 {
                     let spritesheet = match animated_character_sprite.animated_character_type {
@@ -199,22 +199,23 @@ pub fn get_animation_indices(
         last = first;
     }
 
-    // Attack
-    if animation_type == AnimationType::Attack && animation_direction == AnimationDirection::Right {
-        first = SHEET_2_COLUMNS * 3;
-        last = SHEET_2_COLUMNS * 3 + N_FRAMES_ATTACK;
+    // UseTool
+    if animation_type == AnimationType::UseTool && animation_direction == AnimationDirection::Right
+    {
+        first = SHEET_1_COLUMNS * 7;
+        last = SHEET_1_COLUMNS * 7 + N_FRAMES_USE_TOOL;
     }
-    if animation_type == AnimationType::Attack && animation_direction == AnimationDirection::Left {
-        first = SHEET_2_COLUMNS;
-        last = SHEET_2_COLUMNS + N_FRAMES_ATTACK;
+    if animation_type == AnimationType::UseTool && animation_direction == AnimationDirection::Left {
+        first = SHEET_1_COLUMNS * 5;
+        last = SHEET_1_COLUMNS * 5 + N_FRAMES_USE_TOOL;
     }
-    if animation_type == AnimationType::Attack && animation_direction == AnimationDirection::Up {
-        first = SHEET_2_COLUMNS * 0;
-        last = SHEET_2_COLUMNS * 0 + N_FRAMES_ATTACK;
+    if animation_type == AnimationType::UseTool && animation_direction == AnimationDirection::Up {
+        first = SHEET_1_COLUMNS * 4;
+        last = SHEET_1_COLUMNS * 4 + N_FRAMES_USE_TOOL;
     }
-    if animation_type == AnimationType::Attack && animation_direction == AnimationDirection::Down {
-        first = SHEET_2_COLUMNS * 2;
-        last = SHEET_2_COLUMNS * 2 + N_FRAMES_ATTACK;
+    if animation_type == AnimationType::UseTool && animation_direction == AnimationDirection::Down {
+        first = SHEET_1_COLUMNS * 6;
+        last = SHEET_1_COLUMNS * 6 + N_FRAMES_USE_TOOL;
     }
 
     AnimationIndices { first, last }

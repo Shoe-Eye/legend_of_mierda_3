@@ -95,7 +95,7 @@ pub fn handle_machete_attack(
 
         if machete_timer.0.just_finished() {
             ev_control.write(ControlEvent {
-                attack: true,
+                use_tool: true,
                 ..Default::default()
             });
         }

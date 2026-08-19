@@ -7,6 +7,7 @@ use bevy_rapier2d::prelude::*;
 use lom_ui::game::UIPlayerHealth;
 
 use crate::gameplay::gameover::GameOverEvent;
+use crate::tools::ui::Tool;
 use lom_assets::load_texture_atlas;
 use lom_assets::sprites::*;
 use lom_assets::AudioAssets;
@@ -22,6 +23,7 @@ use super::characters::enemy::{Enemy, EnemyHitEvent};
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component, Reflect)]
 pub struct Player {
     pub health: u16,
+    pub tool: Tool,
 }
 
 #[derive(Default, Bundle)]
@@ -35,6 +37,23 @@ pub struct PlayerBundle {
     pub active_events: ActiveEvents,
     pub name: Name,
     pub sprite: Sprite,
+}
+
+impl Player {
+    pub fn try_choosing_tool(&mut self, tool: Tool) -> bool {
+        if !self.can_choose_tool(tool) {
+            return false;
+        }
+        self.tool = tool;
+        true
+    }
+
+    pub fn can_choose_tool(&mut self, tool: Tool) -> bool {
+        if tool == Tool::Shovel {
+            return true;
+        }
+        false
+    }
 }
 
 // ----
@@ -80,7 +99,10 @@ impl LdtkEntity for PlayerBundle {
             animation_timer: AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
             collider_bundle,
             active_events: ActiveEvents::COLLISION_EVENTS,
-            player: Player { health: 100 },
+            player: Player {
+                health: 100,
+                tool: Tool::Shovel,
+            },
             ldtk_player: lom_ldtk::ldtk::Player,
             animated_character_sprite: AnimatedCharacterSprite {
                 animated_character_type: AnimatedCharacterType::Player,
@@ -102,7 +124,7 @@ impl LdtkEntity for PlayerBundle {
 // ------
 
 #[derive(Message, Clone)]
-pub struct PlayerAttackEvent {
+pub struct PlayerUseToolEvent {
     pub entity: Entity,
 }
 
@@ -117,7 +139,7 @@ pub struct PlayerHitEvent {
 
 pub fn event_player_attack(
     mut commands: Commands,
-    mut ev_player_attack: MessageReader<PlayerAttackEvent>,
+    mut ev_player_attack: MessageReader<PlayerUseToolEvent>,
     mut ev_enemy_hit: MessageWriter<EnemyHitEvent>,
     mut q_player: Query<(Entity, &Transform, &CharacterAnimation), With<Player>>,
     mut q_enemies: Query<(Entity, &Transform, &mut Enemy)>,
@@ -247,7 +269,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.register_ldtk_entity::<PlayerBundle>("Player")
             // Events
-            .add_message::<PlayerAttackEvent>()
+            .add_message::<PlayerUseToolEvent>()
             .add_message::<PlayerHitEvent>()
             // Event Handlers
             .add_systems(
