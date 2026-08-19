@@ -180,14 +180,14 @@ impl FromWorld for CharacterSpritesheets {
             SHEET_1_ROWS,
             Vec2::ONE * 64.,
         ));
-        let player_sprite_1 = asset_server.load(PLAYER_ASSET_SHEET_1.to_string());
+        let player_sprite_1 = asset_server.load(GENNADIJ_ASSET_SHEET.to_string());
 
         let player_atlas_2 = layouts.add(build_texture_atlas_layout(
-            SHEET_2_COLUMNS,
-            SHEET_2_ROWS,
-            Vec2::ONE * 64. * 3.,
+            SHEET_1_COLUMNS,
+            SHEET_1_ROWS,
+            Vec2::ONE * 64.,
         ));
-        let player_sprite_2 = asset_server.load(PLAYER_ASSET_SHEET_2.to_string());
+        let player_sprite_2 = asset_server.load(GENNADIJ_ASSET_SHEET.to_string());
 
         let pendejo_atlas_1 = layouts.add(build_texture_atlas_layout(
             SHEET_1_COLUMNS,

@@ -33,7 +33,7 @@ fn main() {
             .set(ImagePlugin::default_nearest())
             .set(WindowPlugin {
                 primary_window: Some(Window {
-                    resolution: (800, 800).into(),
+                    resolution: (1280, 1080).into(),
                     present_mode: PresentMode::AutoVsync,
                     fit_canvas_to_parent: true,
                     prevent_default_event_handling: false,
@@ -68,6 +68,7 @@ fn main() {
         CutscenePlugin,
         LegendOfMierda3Plugin,
         GameOverPlugin,
+        SplashscreenPlugin,
     ))
     .add_plugins(InternalAudioPlugin)
     .add_plugins(EguiPlugin::default())
@@ -84,26 +85,20 @@ pub struct LegendOfMierda3Plugin;
 
 impl Plugin for LegendOfMierda3Plugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((entities::EntitiesPlugin, GameplayPlugin, SplashscreenPlugin))
-            .add_systems(OnEnter(GameState::GamePlay), ldtk::spawn_game_world)
-            .add_systems(OnExit(GameState::GamePlay), ldtk::despawn_game_world)
-            .add_systems(Startup, physics::setup_gravity)
-            .add_systems(
-                Update,
-                (
-                    ldtk::spawn_wall_collision,
-                    ldtk::camera_fit_inside_current_level,
-                    ldtk::update_level_selection,
-                )
-                    .run_if(in_state(GameState::GamePlay)),
-            )
-            .add_systems(
-                Update,
-                (sprites::animate_player_sprite, sprites::flash_sprite)
-                    .run_if(in_state(GameState::GamePlay)),
-            )
-            .add_systems(Startup, (setup_camera))
-            .add_message::<LevelChangeEvent>();
+        app.add_plugins((
+            lom_ldtk::LomLdtkPlugin,
+            entities::EntitiesPlugin,
+            GameplayPlugin,
+        ))
+        .add_systems(OnEnter(GameState::GamePlay), ldtk::spawn_game_world)
+        .add_systems(OnExit(GameState::GamePlay), ldtk::despawn_game_world)
+        .add_systems(
+            Update,
+            (sprites::animate_player_sprite, sprites::flash_sprite)
+                .run_if(in_state(GameState::GamePlay)),
+        )
+        .add_systems(Startup, (setup_camera))
+        .add_message::<LevelChangeEvent>();
     }
 }
 

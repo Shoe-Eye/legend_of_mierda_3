@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::loading::*;
 
 pub const SHEET_1_COLUMNS: usize = 13;
-pub const SHEET_1_ROWS: usize = 21;
+pub const SHEET_1_ROWS: usize = 54;
 pub const SHEET_2_COLUMNS: usize = 6;
 pub const SHEET_2_ROWS: usize = 4;
 pub const N_FRAMES_WALK: usize = 8;
@@ -11,6 +11,7 @@ pub const N_FRAMES_ATTACK: usize = 5;
 
 pub const PLAYER_ASSET_SHEET_1: &str = "sprites/alextime-1.png";
 pub const PLAYER_ASSET_SHEET_2: &str = "sprites/alextime-2.png";
+pub const GENNADIJ_ASSET_SHEET: &str = "sprites/gennadij.png";
 pub const MIERDA_ASSET_SHEET: &str = "sprites/mierda.png";
 pub const PSYCHIATRIST_1_ASSET_SHEET: &str = "sprites/psychiatrist-1.png";
 pub const PSYCHIATRIST_2_ASSET_SHEET: &str = "sprites/psychiatrist-2.png";

@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-const ASPECT_RATIO: f32 = 1.0;
+const ASPECT_RATIO: f32 = 3.0 / 2.0;
 pub const LEVEL_1_IID: &str = "d53f9950-c640-11ed-8430-4942c04951ff";
 
 // Events
@@ -95,8 +95,6 @@ pub fn camera_fit_inside_current_level(
     projects: Query<&LdtkProjectHandle>,
     project_assets: Res<Assets<LdtkProject>>,
 ) {
-    // return;
-
     if params.p1().is_empty() {
         return;
     }
@@ -126,31 +124,11 @@ pub fn camera_fit_inside_current_level(
                 },
                 level,
             ) {
-                let level_ratio = level.px_wid as f32 / ldtk_level.px_hei as f32;
-                if level_ratio > ASPECT_RATIO {
-                    let height = (level.px_hei as f32 / 9.).round() * 9.;
-                    let width = height * ASPECT_RATIO;
-                    camera_transform.translation.x =
-                        (player_translation.x - level_transform.translation.x - width / 2.)
-                            .clamp(0., level.px_wid as f32 - width);
-                    camera_transform.translation.y = 0.;
-                } else {
-                    let mut width = (level.px_wid as f32 / 16.).round() * 16.;
-                    let mut height = width / ASPECT_RATIO;
-                    // no sure what these numbers do
-                    width *= 0.0;
-                    height *= 0.0;
-                    camera_transform.translation.y =
-                        (player_translation.y - level_transform.translation.y - height / 2.)
-                            .clamp(0., level.px_hei as f32 - height);
-                    camera_transform.translation.x =
-                        (player_translation.x - level_transform.translation.x - width / 2.)
-                            .clamp(0., level.px_wid as f32 - width);
-                }
-                camera_transform.translation.x += level_transform.translation.x;
-                camera_transform.translation.y += level_transform.translation.y;
+                let level_width = level.px_wid as f32;
+                let level_height = level.px_hei as f32;
 
-                // camera_transform.scale = Vec3::ONE * 1.2;
+                camera_transform.translation.x = level_transform.translation.x + level_width / 2.0;
+                camera_transform.translation.y = level_transform.translation.y + level_height / 2.0;
             }
         }
     }

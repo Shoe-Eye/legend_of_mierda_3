@@ -4757,6 +4757,7 @@ dependencies = [
  "bevy_ecs_ldtk",
  "bevy_rapier2d",
  "lom_assets",
+ "lom_game",
  "rand 0.10.2",
 ]
 

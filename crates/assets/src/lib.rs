@@ -24,7 +24,7 @@ pub fn load_texture_atlas(
         Some(UVec2::ZERO),
     );
     let handle = texture_atlasses.add(layout);
-    let _img: bevy::asset::Handle<bevy::image::Image> = asset_server.load(path);
+    // let _img: bevy::asset::Handle<bevy::image::Image> = asset_server.load(path);
     handle
 }
 

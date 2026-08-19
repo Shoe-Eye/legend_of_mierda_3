@@ -6,7 +6,6 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 bevy = { version = "0.18" }
-# bevy_magic_light_2d = { git = "https://github.com/TrveSoft/bevy-magic-light-2d.git", rev = "d9f88e2" }
 bevy_rapier2d = "0.34"
 bevy_ecs_ldtk = { version = "0.14", features = [
     "default",
@@ -14,8 +13,10 @@ bevy_ecs_ldtk = { version = "0.14", features = [
     "atlas",
     "render",
 ] }
-lom_assets = { path = "../assets" }
 rand = "0.10.2"
+
+lom_assets = { path = "../assets" }
+lom_game = { path = "../game" }
 
 [profile.dev.package."*"]
 opt-level = 3

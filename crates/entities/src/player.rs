@@ -65,7 +65,7 @@ impl LdtkEntity for PlayerBundle {
         };
 
         let layout = load_texture_atlas(
-            PLAYER_ASSET_SHEET_1.to_string(),
+            GENNADIJ_ASSET_SHEET.to_string(),
             asset_server,
             SHEET_1_COLUMNS as u32,
             SHEET_1_ROWS as u32,
@@ -73,7 +73,7 @@ impl LdtkEntity for PlayerBundle {
             Vec2::ONE * 64.,
             texture_atlasses,
         );
-        let image = asset_server.load(PLAYER_ASSET_SHEET_1.to_string());
+        let image = asset_server.load(GENNADIJ_ASSET_SHEET.to_string());
 
         PlayerBundle {
             character_animation: CharacterAnimation { ..default() },
