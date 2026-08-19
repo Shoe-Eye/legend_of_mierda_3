@@ -4729,6 +4729,7 @@ name = "lom_entities"
 version = "0.2.0"
 dependencies = [
  "bevy",
+ "bevy_color 0.18.1",
  "bevy_defer",
  "bevy_ecs 0.18.1",
  "bevy_ecs_ldtk",

@@ -8,6 +8,7 @@ pub mod ldtk;
 pub mod level_objects;
 pub mod player;
 pub mod text_indicator;
+pub mod tools;
 pub mod weapons;
 
 pub use gameplay::gameover::{GameOverEvent, GameWinEvent};
@@ -31,6 +32,7 @@ impl Plugin for EntitiesPlugin {
             // weapons::WeaponsPlugin,
             text_indicator::TextIndicatorPlugin,
             level_objects::light::LightPlugin,
+            tools::ui::ToolUIPlugin,
         ))
         .add_message::<GameOverEvent>()
         .add_message::<GameWinEvent>()

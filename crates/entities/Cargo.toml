@@ -11,6 +11,7 @@ lom_game = { path = "../game" }
 lom_assets = { path = "../assets" }
 lom_ldtk = { path = "../ldtk" }
 lom_ui = { path = "../ui" }
+bevy_color = "0.18"
 bevy_tweening = "0.15"
 bevy_kira_audio = "0.25"
 bevy_rapier2d = "0.34"
