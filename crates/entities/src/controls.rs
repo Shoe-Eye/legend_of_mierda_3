@@ -5,7 +5,7 @@ use bevy_rapier2d::prelude::*;
 use lom_assets::loading::CharacterSpritesheets;
 use lom_assets::sprites::*;
 
-use crate::player::{Player, PlayerUseToolEvent};
+use crate::player::{Player, PlayerToolUseEvent};
 
 #[derive(Message, Copy, Clone, Reflect, Debug, PartialEq, Eq, Default)]
 pub struct ControlEvent {
@@ -30,17 +30,23 @@ pub fn control_character(
         With<Player>,
     >,
     spritesheets: Res<CharacterSpritesheets>,
-    mut mw_player_use_tool: MessageWriter<PlayerUseToolEvent>,
 ) {
     for control in ev_control.read() {
-        for (entity, mut velocity, mut char_animation, mut sprite, _player) in &mut query {
+        for (entity, mut velocity, mut char_animation, mut sprite, _) in &mut query {
+            if char_animation.state == AnimationState::ToolUse {
+                return;
+            }
+
             if control.use_tool {
                 char_animation.animation_type = AnimationType::UseTool;
+                char_animation.state = AnimationState::ToolUse;
+
+                velocity.linear = Vec2::ZERO;
 
                 let indices =
                     get_animation_indices(char_animation.animation_type, char_animation.direction);
-                if let Some(ref mut atlas) = sprite.texture_atlas {
-                    atlas.index = indices.first;
+                if let Some(ref mut texture_atlas) = sprite.texture_atlas {
+                    texture_atlas.index = indices.first;
                 }
             } else {
                 let right = if control.right { 1. } else { 0. };
@@ -76,6 +82,7 @@ pub fn control_character(
 
                     if linear_norm == 0.0 {
                         char_animation.animation_type = AnimationType::Stand;
+                        char_animation.state = AnimationState::Normal;
                     } else {
                         char_animation.animation_type = AnimationType::Walk;
                     }

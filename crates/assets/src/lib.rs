@@ -6,11 +6,8 @@ pub use loading::{AudioAssets, FontAssets, StaticSpriteAssets};
 pub type TextureAtlasHandle = bevy::asset::Handle<bevy::image::TextureAtlasLayout>;
 
 pub fn load_texture_atlas(
-    path: String,
-    asset_server: &bevy::asset::AssetServer,
     columns: u32,
     rows: u32,
-    _padding: Option<bevy::math::Vec2>,
     sprite_size: bevy::math::Vec2,
     texture_atlasses: &mut bevy::asset::Assets<bevy::image::TextureAtlasLayout>,
 ) -> TextureAtlasHandle {
@@ -24,7 +21,6 @@ pub fn load_texture_atlas(
         Some(UVec2::ZERO),
     );
     let handle = texture_atlasses.add(layout);
-    // let _img: bevy::asset::Handle<bevy::image::Image> = asset_server.load(path);
     handle
 }
 

@@ -64,15 +64,7 @@ impl LdtkEntity for Psychiatrist1Bundle {
 
         let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Psychiatrist1);
 
-        let layout = load_texture_atlas(
-            PSYCHIATRIST_1_ASSET_SHEET.to_string(),
-            asset_server,
-            1,
-            1,
-            None,
-            128. * Vec2::ONE,
-            texture_atlasses,
-        );
+        let layout = load_texture_atlas(1, 1, 128. * Vec2::ONE, texture_atlasses);
         let image = asset_server.load(PSYCHIATRIST_1_ASSET_SHEET.clone());
 
         Psychiatrist1Bundle {
@@ -109,15 +101,7 @@ impl LdtkEntity for Psychiatrist2Bundle {
 
         let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Psychiatrist2);
 
-        let layout = load_texture_atlas(
-            PSYCHIATRIST_2_ASSET_SHEET.to_string(),
-            asset_server,
-            1,
-            1,
-            None,
-            128. * Vec2::ONE,
-            texture_atlasses,
-        );
+        let layout = load_texture_atlas(1, 1, 128. * Vec2::ONE, texture_atlasses);
         let image = asset_server.load(PSYCHIATRIST_2_ASSET_SHEET.clone());
 
         Psychiatrist2Bundle {

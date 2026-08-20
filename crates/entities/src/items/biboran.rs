@@ -14,14 +14,17 @@ use bevy_rapier2d::prelude::*;
 
 use std::f32::consts::PI;
 
-use lom_assets::{load_texture_atlas, sprites::BIBORAN_ASSET_SHEET, AudioAssets};
+use lom_assets::{
+    load_texture_atlas,
+    sprites::{FlashingTimer, BIBORAN_ASSET_SHEET},
+    AudioAssets,
+};
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;
 
 use crate::characters::enemy::Enemy;
 use crate::items::item::{Item, ItemStepOverEvent, ItemType};
 use crate::player::Player;
-use crate::sprites::FlashingTimer;
 use crate::text_indicator::SpawnTextIndicatorEvent;
 
 use super::item::create_item_bundle;
@@ -63,15 +66,7 @@ impl LdtkEntity for BiboranBundle {
         let bundle =
             create_item_bundle(asset_server, texture_atlasses, is_dummy, ItemType::Biboran);
 
-        let layout = load_texture_atlas(
-            BIBORAN_ASSET_SHEET.to_string(),
-            asset_server,
-            1,
-            1,
-            None,
-            Vec2::ONE * 64.,
-            texture_atlasses,
-        );
+        let layout = load_texture_atlas(1, 1, Vec2::ONE * 64., texture_atlasses);
         let image = asset_server.load(BIBORAN_ASSET_SHEET.clone());
 
         BiboranBundle {

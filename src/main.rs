@@ -11,6 +11,7 @@ use bevy_rapier2d::prelude::*;
 use bevy_scene_hook::HookPlugin;
 use bevy_tweening::TweeningPlugin;
 use lom_assets::loading::LoadingPlugin;
+use lom_assets::sprites::flash_sprite;
 use lom_audio::InternalAudioPlugin;
 use lom_cutscene::CutscenePlugin;
 use lom_entities as entities;
@@ -94,7 +95,7 @@ impl Plugin for LegendOfMierda3Plugin {
         .add_systems(OnExit(GameState::GamePlay), ldtk::despawn_game_world)
         .add_systems(
             Update,
-            (sprites::animate_player_sprite, sprites::flash_sprite)
+            (sprites::animate_character_sprtire, flash_sprite)
                 .run_if(in_state(GameState::GamePlay)),
         )
         .add_systems(Startup, (setup_camera))

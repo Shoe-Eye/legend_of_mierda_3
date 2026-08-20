@@ -54,11 +54,8 @@ impl LdtkEntity for PendejoBundle {
         let pendgeo_image_file = PENDEJO_SPRITE_SHEETS[0].0.to_string();
 
         let layout = load_texture_atlas(
-            pendgeo_image_file.clone(),
-            asset_server,
             SHEET_1_COLUMNS as u32,
             SHEET_1_ROWS as u32,
-            None,
             Vec2::ONE * 64.,
             texture_atlasses,
         );

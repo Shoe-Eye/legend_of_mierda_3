@@ -49,15 +49,7 @@ impl LdtkEntity for MierdaBundle {
 
         let enemy_bundle = create_enemy_bundle(is_dummy, EnemyType::Mierda);
 
-        let layout = load_texture_atlas(
-            MIERDA_ASSET_SHEET.to_string(),
-            asset_server,
-            5,
-            1,
-            None,
-            Vec2::ONE * 16.,
-            texture_atlasses,
-        );
+        let layout = load_texture_atlas(5, 1, Vec2::ONE * 16., texture_atlasses);
         let image = asset_server.load(MIERDA_ASSET_SHEET.to_string());
 
         MierdaBundle {

@@ -84,11 +84,8 @@ impl LdtkEntity for PlayerBundle {
         };
 
         let layout = load_texture_atlas(
-            GENNADIJ_ASSET_SHEET.to_string(),
-            asset_server,
             SHEET_1_COLUMNS as u32,
             SHEET_1_ROWS as u32,
-            None,
             Vec2::ONE * 64.,
             texture_atlasses,
         );
@@ -124,8 +121,9 @@ impl LdtkEntity for PlayerBundle {
 // ------
 
 #[derive(Message, Clone)]
-pub struct PlayerUseToolEvent {
+pub struct PlayerToolUseEvent {
     pub entity: Entity,
+    pub tool: Tool,
 }
 
 #[derive(Message, Clone)]
@@ -139,7 +137,7 @@ pub struct PlayerHitEvent {
 
 pub fn event_player_attack(
     mut commands: Commands,
-    mut ev_player_attack: MessageReader<PlayerUseToolEvent>,
+    mut ev_player_attack: MessageReader<PlayerToolUseEvent>,
     mut ev_enemy_hit: MessageWriter<EnemyHitEvent>,
     mut q_player: Query<(Entity, &Transform, &CharacterAnimation), With<Player>>,
     mut q_enemies: Query<(Entity, &Transform, &mut Enemy)>,
@@ -213,8 +211,6 @@ pub fn handle_player_enemy_collisions(
     mut ev_player_hit: MessageWriter<PlayerHitEvent>,
 ) {
     for event in collision_events.read() {
-        // println!("collsion event");
-
         if let CollisionEvent::Started(e1, e2, _) = event {
             let contact_1_player = q_player.get(*e1);
             let contact_2_player = q_player.get(*e2);
@@ -269,14 +265,14 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.register_ldtk_entity::<PlayerBundle>("Player")
             // Events
-            .add_message::<PlayerUseToolEvent>()
+            .add_message::<PlayerToolUseEvent>()
             .add_message::<PlayerHitEvent>()
             // Event Handlers
             .add_systems(
                 Update,
                 (
                     handle_player_enemy_collisions.run_if(in_state(GameState::GamePlay)),
-                    event_player_attack.run_if(in_state(GameState::GamePlay)),
+                    // event_player_attack.run_if(in_state(GameState::GamePlay)),
                     event_player_hit.run_if(in_state(GameState::GamePlay)),
                 ),
             )

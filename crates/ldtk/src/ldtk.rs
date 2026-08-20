@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-const ASPECT_RATIO: f32 = 3.0 / 2.0;
+const _ASPECT_RATIO: f32 = 3.0 / 2.0;
 pub const LEVEL_1_IID: &str = "d53f9950-c640-11ed-8430-4942c04951ff";
 
 // Events
@@ -99,7 +99,7 @@ pub fn camera_fit_inside_current_level(
         return;
     }
 
-    let player_translation = params.p1().single().unwrap().translation();
+    let _player_translation = params.p1().single().unwrap().translation();
 
     let project = project_assets.get(projects.single().unwrap().id()).unwrap();
 
@@ -288,10 +288,6 @@ pub fn spawn_wall_collision(
         }
     }
 }
-
-pub fn hide_dummy_entities() {}
-
-pub fn fix_missing_ldtk_entities() {}
 
 pub fn spawn_game_world(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(LdtkWorldBundle {

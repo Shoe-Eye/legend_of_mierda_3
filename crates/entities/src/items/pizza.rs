@@ -34,15 +34,7 @@ impl LdtkEntity for PizzaBundle {
             .expect("expected entity to have non-nullable name string field");
         let bundle = create_item_bundle(asset_server, texture_atlasses, is_dummy, ItemType::Pizza);
 
-        let layout = load_texture_atlas(
-            PIZZA_ASSET_SHEET.to_string(),
-            asset_server,
-            1,
-            1,
-            None,
-            Vec2::ONE * 16.,
-            texture_atlasses,
-        );
+        let layout = load_texture_atlas(1, 1, Vec2::ONE * 16., texture_atlasses);
         let image = asset_server.load(PIZZA_ASSET_SHEET.clone());
 
         PizzaBundle {
