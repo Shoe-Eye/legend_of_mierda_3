@@ -76,7 +76,7 @@ pub fn control_character(
                 if char_animation.animation_type != AnimationType::UseTool {
                     if char_animation.animation_type != AnimationType::Walk {
                         if let Some(ref mut atlas) = sprite.texture_atlas {
-                            atlas.layout = spritesheets.player_atlas_1.clone();
+                            atlas.layout = spritesheets.character_atlas_layout.clone();
                         }
                     }
 

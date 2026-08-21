@@ -35,9 +35,6 @@ pub struct DirectionUpdateTime {
 pub enum EnemyType {
     #[default]
     Mierda,
-    Pendejo,
-    Psychiatrist1,
-    Psychiatrist2,
 }
 
 #[derive(Clone, PartialEq, Debug, Default, Component, Reflect)]
@@ -84,28 +81,6 @@ pub fn create_enemy_bundle(is_dummy: bool, enemy_type: EnemyType) -> EnemyBundle
     let (atlas_handle, spritesheet_type) = match enemy_type {
         EnemyType::Mierda => (
             load_texture_atlas_layout(5, 1, Vec2::ONE * 16.),
-            AnimatedCharacterType::NotAnimated,
-        ),
-        EnemyType::Pendejo => {
-            let mut rng = ThreadRng::default();
-            let (spritesheet_path, spritesheet_type) =
-                PENDEJO_SPRITE_SHEETS.choose(&mut rng).unwrap();
-
-            (
-                load_texture_atlas_layout(
-                    SHEET_1_COLUMNS as usize,
-                    SHEET_1_ROWS as usize,
-                    Vec2::ONE * 64.,
-                ),
-                *spritesheet_type,
-            )
-        }
-        EnemyType::Psychiatrist1 => (
-            load_texture_atlas_layout(1, 1, 128. * Vec2::ONE),
-            AnimatedCharacterType::NotAnimated,
-        ),
-        EnemyType::Psychiatrist2 => (
-            load_texture_atlas_layout(1, 1, 128. * Vec2::ONE),
             AnimatedCharacterType::NotAnimated,
         ),
     };
@@ -269,9 +244,6 @@ pub fn handle_spawn_enemy(world: &mut World) {
                     is_dummy: false,
                     health: match ev_spawn.enemy_type {
                         EnemyType::Mierda => 50,
-                        EnemyType::Pendejo => 100,
-                        EnemyType::Psychiatrist1 => 5000,
-                        EnemyType::Psychiatrist2 => 5000,
                     },
                     move_direction: Vec2::ZERO,
                     hit_at: None,
@@ -337,9 +309,6 @@ pub fn handle_enemy_hit(
 
             let damage = match enemy.enemy_type {
                 EnemyType::Mierda => (1.0 * event.damage as f32) as u16,
-                EnemyType::Pendejo => (0.5 * event.damage as f32) as u16,
-                EnemyType::Psychiatrist1 => (1.0 * event.damage as f32) as u16,
-                EnemyType::Psychiatrist2 => (1.0 * event.damage as f32) as u16,
             };
 
             let timer = Timer::new(std::time::Duration::from_millis(200), TimerMode::Once);
@@ -380,9 +349,6 @@ pub fn despawn_dead_enemies(
         enemy.marked_for_despawn = true;
         score.score += match enemy.enemy_type {
             EnemyType::Mierda => 100,
-            EnemyType::Psychiatrist1 => 5000,
-            EnemyType::Psychiatrist2 => 5000,
-            EnemyType::Pendejo => 50,
         };
 
         let entity: Entity = e.clone();

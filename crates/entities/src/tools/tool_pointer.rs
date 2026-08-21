@@ -103,7 +103,7 @@ pub fn draw_tool_pointer(
                         Transform::from_translation(Vec3::new(
                             (x * tool_pointer_layer.grid_size) as f32,
                             (y * tool_pointer_layer.grid_size) as f32,
-                            2.0,
+                            0.6,
                         )),
                         Name::new("ground tile"),
                         ToolPointerTile { x, y },

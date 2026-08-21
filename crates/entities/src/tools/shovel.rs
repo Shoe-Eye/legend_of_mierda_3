@@ -4,8 +4,8 @@ use lom_game::GameState;
 
 use crate::{
     level::ground::{Ground, GroundTile},
-    player::{Player, PlayerToolUseEvent},
-    tools::tool_pointer::ToolPointerTile,
+    player::PlayerToolUseEvent,
+    tools::{tool_pointer::ToolPointerTile, Tool},
 };
 
 pub struct ShovelPlugin;
@@ -28,7 +28,7 @@ pub fn handle_shovel_use(
     static_sprite_assets: Res<StaticSpriteAssets>,
 ) {
     for message in mr.read() {
-        if message.tool != super::ui::Tool::Shovel {
+        if message.tool != Tool::Shovel {
             continue;
         }
 
@@ -54,7 +54,7 @@ pub fn handle_shovel_use(
                                 Transform::from_translation(Vec3::new(
                                     (tool_pointer_tile.x * ground.grid_size) as f32,
                                     (tool_pointer_tile.y * ground.grid_size) as f32,
-                                    2.0,
+                                    0.51,
                                 )),
                                 Name::new("ground tile"),
                                 GroundTile {

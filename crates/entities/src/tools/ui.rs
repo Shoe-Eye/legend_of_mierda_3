@@ -1,46 +1,20 @@
 use crate::player::Player;
+use crate::tools::Tool;
 use bevy::color::palettes::basic::*;
 use bevy::prelude::*;
 use bevy::ui::Val;
-use bevy_color::{Color, Srgba};
+use bevy_color::Color;
 use lom_game::GameState;
 use lom_ui::game::UIGamePlay;
-use std::fmt;
 
-const ALIGN_ITEMS_COLOR: Color = Color::srgb(1., 0.066, 0.349);
 const JUSTIFY_CONTENT_COLOR: Color = Color::srgb(0.102, 0.522, 1.);
 const MARGIN: Val = Val::Px(12.);
 
-const NORMAL_BUTTON: Color = Color::srgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::srgb(0.25, 0.25, 0.25);
-const PRESSED_BUTTON: Color = Color::srgb(0.35, 0.75, 0.35);
-
-#[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component, Reflect)]
-pub enum Tool {
-    None,
-    #[default]
-    Shovel,
-    Axe,
-    Hammer,
-    Pickaxe,
-    WateringCan,
-}
-
-impl fmt::Display for Tool {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Tool::Shovel => write!(f, "Shovel"),
-            Tool::Axe => write!(f, "Axe"),
-            Tool::Hammer => write!(f, "Hammer"),
-            Tool::Pickaxe => write!(f, "Pickaxe"),
-            Tool::WateringCan => write!(f, "Wayering Can"),
-            Tool::None => write!(f, "No Tool"),
-        }
-    }
-}
-
 #[derive(Component)]
 pub struct UIToolChoose;
+
+#[derive(Component)]
+pub struct UIHovering;
 
 fn spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font = asset_server.load("fonts/PixeloidMono-d94EV.ttf");
@@ -62,7 +36,6 @@ fn spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetServer
             Name::from("tool_choose::ui"),
         ))
         .with_children(|builder| {
-            // spawn the key
             builder.spawn(Node {
                 flex_direction: FlexDirection::Row,
                 ..default()
@@ -91,6 +64,13 @@ fn spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetServer
                                 builder,
                                 font.clone(),
                                 WHITE.into(),
+                                px(3.0).top(),
+                                Tool::None,
+                            );
+                            spawn_tool_selection_ui_item(
+                                builder,
+                                font.clone(),
+                                JUSTIFY_CONTENT_COLOR,
                                 px(3.0).top(),
                                 Tool::Shovel,
                             );
@@ -156,6 +136,7 @@ fn spawn_tool_selection_ui_item(
 }
 
 fn tool_selection_system(
+    mut commands: Commands,
     mut interaction_query: Query<
         (
             Entity,
@@ -167,29 +148,25 @@ fn tool_selection_system(
         ),
         Changed<Interaction>,
     >,
-    // mut text_query: Query<&mut Text>,
     mut player: Query<&mut Player>,
 ) {
-    for (_, interaction, mut background_color, children, tool, ui_tool_choose) in
+    for (entity, interaction, mut background_color, children, tool, ui_tool_choose) in
         &mut interaction_query
     {
         if player.single().is_err() {
             return;
         }
 
-        // let mut text = text_query.get_mut(children[0]).unwrap();
         let mut player = player.single_mut().unwrap();
 
         match *interaction {
             Interaction::Pressed => {
-                if player.try_choosing_tool(tool.clone()) {
-                    *background_color = BackgroundColor::from(GREEN);
-                }
+                *background_color = BackgroundColor::from(GREEN);
+                player.choose_tool(tool.clone());
             }
             Interaction::Hovered => {
-                if player.can_choose_tool(tool.clone()) {
-                    *background_color = BackgroundColor::from(RED);
-                }
+                *background_color = BackgroundColor::from(RED);
+                commands.entity(entity).insert(UIHovering {});
             }
             Interaction::None => {
                 if player.tool == tool.clone() {
@@ -197,7 +174,26 @@ fn tool_selection_system(
                 } else {
                     *background_color = BackgroundColor::from(JUSTIFY_CONTENT_COLOR);
                 }
+
+                commands.entity(entity).remove::<UIHovering>();
             }
+        }
+    }
+}
+
+fn tool_highlight_system(
+    mut interaction_query: Query<(Entity, &mut BackgroundColor, &Tool), Without<UIHovering>>,
+    player: Query<&Player>,
+) {
+    if player.single().is_err() {
+        return;
+    }
+
+    let player = player.single().unwrap();
+
+    for (_, mut background_color, tool) in interaction_query.iter_mut() {
+        if tool.clone() != player.tool {
+            *background_color = BackgroundColor::from(JUSTIFY_CONTENT_COLOR);
         }
     }
 }
@@ -209,7 +205,17 @@ impl Plugin for ToolUIPlugin {
         app.add_systems(OnEnter(GameState::GamePlay), spawn_tool_selection_ui)
             .add_systems(
                 Update,
-                (tool_selection_system).run_if(in_state(GameState::GamePlay)),
+                (tool_selection_system, tool_highlight_system)
+                    .chain()
+                    .run_if(in_state(GameState::GamePlay)),
+            );
+    }
+}
+ay)),
+            );
+    }
+}
+tate::GamePlay)),
             );
     }
 }

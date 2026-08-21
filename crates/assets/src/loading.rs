@@ -14,10 +14,7 @@ impl Plugin for LoadingPlugin {
                 .continue_to_state(GameState::GamePlay)
                 .load_collection::<AudioAssets>()
                 .load_collection::<TextureAssets>()
-                .load_collection::<AvatarAssets>()
                 .load_collection::<CutsceneAssets>()
-                .load_collection::<SceneAssets>()
-                .load_collection::<AnimationAssets>()
                 .load_collection::<StaticSpriteAssets>(),
         );
 
@@ -47,18 +44,6 @@ pub struct AudioAssets {
 }
 
 #[derive(AssetCollection, Resource)]
-pub struct SceneAssets {
-    #[asset(path = "models/biboran.glb#Scene0")]
-    pub biboran: Handle<Scene>,
-}
-
-#[derive(AssetCollection, Resource, Clone)]
-pub struct AnimationAssets {
-    #[asset(path = "models/biboran.glb#Animation0")]
-    pub biboran: Handle<AnimationClip>,
-}
-
-#[derive(AssetCollection, Resource)]
 pub struct FontAssets {
     pub pixeloid_mono: Handle<Font>,
 }
@@ -83,24 +68,8 @@ pub struct TextureAssets {
 
 #[derive(AssetCollection, Resource)]
 pub struct StaticSpriteAssets {
-    #[asset(path = "sprites/arrow.png")]
-    pub arrow: Handle<Image>,
-    #[asset(path = "sprites/speargun-wide.png")]
-    pub speargun: Handle<Image>,
-    #[asset(path = "sprites/speargun-arrow.png")]
-    pub speargun_arrow: Handle<Image>,
-    #[asset(path = "sprites/pill.png")]
-    pub pill: Handle<Image>,
     #[asset(path = "sprites/earth_1.png")]
     pub earth_1: Handle<Image>,
-}
-
-#[derive(AssetCollection, Resource)]
-pub struct AvatarAssets {
-    #[asset(path = "avatars/alextime.png")]
-    pub alextime: Handle<Image>,
-    #[asset(path = "avatars/gennadiy.png")]
-    pub gennadiy: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -153,20 +122,13 @@ impl FromWorld for MaterialAssets {
 
 #[derive(Resource)]
 pub struct CharacterSpritesheets {
-    pub player_atlas_1: Handle<TextureAtlasLayout>,
-    pub player_sprite_1: Handle<Image>,
-
-    pub player_atlas_2: Handle<TextureAtlasLayout>,
-    pub player_sprite_2: Handle<Image>,
-
-    pub mierda_atlas: Handle<TextureAtlasLayout>,
-    pub mierda_sprite: Handle<Image>,
-
-    pub pendejo_atlas_1: Handle<TextureAtlasLayout>,
-    pub pendejo_sprite_1: Handle<Image>,
-
-    pub pendejo_atlas_2: Handle<TextureAtlasLayout>,
-    pub pendejo_sprite_2: Handle<Image>,
+    pub character_atlas_layout: Handle<TextureAtlasLayout>,
+    pub gennadij_no_tool: Handle<Image>,
+    pub gennadij_axe: Handle<Image>,
+    pub gennadij_hammer: Handle<Image>,
+    pub gennadij_pickaxe: Handle<Image>,
+    pub gennadij_shovel: Handle<Image>,
+    pub gennadij_watering_can: Handle<Image>,
 }
 
 impl FromWorld for CharacterSpritesheets {
@@ -177,52 +139,20 @@ impl FromWorld for CharacterSpritesheets {
             .get_resource_mut::<Assets<TextureAtlasLayout>>()
             .unwrap();
 
-        let player_atlas_1_layout = layouts.add(build_texture_atlas_layout(
+        let character_atlas_layout = layouts.add(build_texture_atlas_layout(
             SHEET_1_COLUMNS,
             SHEET_1_ROWS,
             Vec2::ONE * 64.,
         ));
-        let player_sprite_1 = asset_server.load(GENNADIJ_ASSET_SHEET.to_string());
-
-        let player_atlas_2 = layouts.add(build_texture_atlas_layout(
-            SHEET_1_COLUMNS,
-            SHEET_1_ROWS,
-            Vec2::ONE * 64.,
-        ));
-        let player_sprite_2 = asset_server.load(GENNADIJ_ASSET_SHEET.to_string());
-
-        let pendejo_atlas_1 = layouts.add(build_texture_atlas_layout(
-            SHEET_1_COLUMNS,
-            SHEET_1_ROWS,
-            Vec2::ONE * 64.,
-        ));
-        let pendejo_sprite_1 = asset_server.load(PENDEJO_SPRITE_SHEETS[0].0.to_string());
-
-        let pendejo_atlas_2 = layouts.add(build_texture_atlas_layout(
-            SHEET_1_COLUMNS,
-            SHEET_1_ROWS,
-            Vec2::ONE * 64.,
-        ));
-        let pendejo_sprite_2 = asset_server.load(PENDEJO_SPRITE_SHEETS[1].0.to_string());
-
-        let mierda_atlas = layouts.add(build_texture_atlas_layout(5, 1, Vec2::ONE * 16.0));
-        let mierda_sprite = asset_server.load(MIERDA_ASSET_SHEET.to_string());
 
         CharacterSpritesheets {
-            player_atlas_1: player_atlas_1_layout,
-            player_sprite_1,
-
-            player_atlas_2,
-            player_sprite_2,
-
-            mierda_atlas,
-            mierda_sprite,
-
-            pendejo_atlas_1,
-            pendejo_sprite_1,
-
-            pendejo_atlas_2,
-            pendejo_sprite_2,
+            character_atlas_layout,
+            gennadij_no_tool: asset_server.load(GENNADIJ_ASSET_SHEET.to_string()),
+            gennadij_axe: asset_server.load(GENNADIJ_AXE_ASSET_SHEET.to_string()),
+            gennadij_hammer: asset_server.load(GENNADIJ_HAMMER_ASSET_SHEET.to_string()),
+            gennadij_pickaxe: asset_server.load(GENNADIJ_PICKAXE_ASSET_SHEET.to_string()),
+            gennadij_shovel: asset_server.load(GENNADIJ_SHOVEL_ASSET_SHEET.to_string()),
+            gennadij_watering_can: asset_server.load(GENNADIJ_WATERING_CAN_ASSET_SHEET.to_string()),
         }
     }
 }

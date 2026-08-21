@@ -6,7 +6,6 @@ use rand::RngExt;
 
 use crate::characters::enemy::{Enemy, EnemyType, SpawnEnemyEvent};
 use crate::gameplay::gameover::GameWinEvent;
-use crate::items::item::ItemType;
 use crate::items::item::SpawnItemEvent;
 use lom_game::GameState;
 use lom_ldtk::ldtk::LevelChangeEvent;
@@ -15,10 +14,6 @@ use lom_ui::game::*;
 #[derive(Clone)]
 pub enum WaveEntry {
     Mierda { count: usize },
-    Pizza { count: usize },
-    Pendejo { count: usize },
-    Biboran { count: usize },
-    Boss { count: usize },
 }
 
 #[derive(Clone)]
@@ -203,34 +198,6 @@ pub fn event_wave(
                     enemy_type: EnemyType::Mierda,
                 });
             }
-            WaveEntry::Pendejo { count } => {
-                ev_enemy_spawn.write(SpawnEnemyEvent {
-                    count: count as u32,
-                    enemy_type: EnemyType::Pendejo,
-                });
-            }
-            WaveEntry::Pizza { count } => {
-                ev_item_spawn.write(SpawnItemEvent {
-                    count: count as u32,
-                    item_type: ItemType::Pizza,
-                });
-            }
-            WaveEntry::Biboran { count } => {
-                ev_item_spawn.write(SpawnItemEvent {
-                    count: count as u32,
-                    item_type: ItemType::Biboran,
-                });
-            }
-            WaveEntry::Boss { count } => {
-                ev_enemy_spawn.write(SpawnEnemyEvent {
-                    count: count as u32,
-                    enemy_type: EnemyType::Psychiatrist1,
-                });
-                ev_enemy_spawn.write(SpawnEnemyEvent {
-                    count: count as u32,
-                    enemy_type: EnemyType::Psychiatrist2,
-                });
-            }
         }
 
         gameplay_state.wave_event_timer = Timer::new(
@@ -270,30 +237,11 @@ pub fn get_level_1_waves() -> Vec<Wave> {
         Wave {
             events: vec![
                 WaveEntry::Mierda { count: 100 },
-                WaveEntry::Pizza { count: 5 },
                 WaveEntry::Mierda { count: 100 },
-                WaveEntry::Biboran { count: 5 },
                 WaveEntry::Mierda { count: 100 },
             ],
             event_duration: Duration::from_secs(10),
             wave_duration: Duration::from_secs(40),
-        },
-        Wave {
-            events: vec![
-                WaveEntry::Pendejo { count: 100 },
-                WaveEntry::Pizza { count: 3 },
-                WaveEntry::Pendejo { count: 100 },
-                WaveEntry::Pizza { count: 3 },
-                WaveEntry::Pendejo { count: 100 },
-                WaveEntry::Pizza { count: 3 },
-            ],
-            event_duration: Duration::from_secs(5),
-            wave_duration: Duration::from_secs(60),
-        },
-        Wave {
-            events: vec![WaveEntry::Boss { count: 1 }],
-            event_duration: Duration::from_secs(5),
-            wave_duration: Duration::from_secs(120),
         },
     ]
 }

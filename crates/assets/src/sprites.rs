@@ -7,27 +7,18 @@ pub const SHEET_2_ROWS: usize = 4;
 pub const N_FRAMES_WALK: usize = 8;
 pub const N_FRAMES_USE_TOOL: usize = 7;
 
-pub const PLAYER_ASSET_SHEET_1: &str = "sprites/alextime-1.png";
-pub const PLAYER_ASSET_SHEET_2: &str = "sprites/alextime-2.png";
 pub const GENNADIJ_ASSET_SHEET: &str = "sprites/gennadij.png";
+pub const GENNADIJ_AXE_ASSET_SHEET: &str = "sprites/gennadij_axe.png";
+pub const GENNADIJ_HAMMER_ASSET_SHEET: &str = "sprites/gennadij_hammer.png";
+pub const GENNADIJ_PICKAXE_ASSET_SHEET: &str = "sprites/gennadij_pickaxe.png";
+pub const GENNADIJ_SHOVEL_ASSET_SHEET: &str = "sprites/gennadij_shovel.png";
+pub const GENNADIJ_WATERING_CAN_ASSET_SHEET: &str = "sprites/gennadij_watering_can.png";
 pub const MIERDA_ASSET_SHEET: &str = "sprites/mierda.png";
-pub const PSYCHIATRIST_1_ASSET_SHEET: &str = "sprites/psychiatrist-1.png";
-pub const PSYCHIATRIST_2_ASSET_SHEET: &str = "sprites/psychiatrist-2.png";
-pub const PIZZA_ASSET_SHEET: &str = "sprites/pizza.png";
-pub const LANTERN_ASSET_SHEET: &str = "sprites/lantern.png";
-pub const _SPEARGUN_ASSET_SHEET: &str = "sprites/speargun.png";
-pub const BIBORAN_ASSET_SHEET: &str = "sprites/biboran.png";
-pub const PENDEJO_SPRITE_SHEETS: [(&str, AnimatedCharacterType); 2] = [
-    ("sprites/pendejo-1.png", AnimatedCharacterType::Pendejo1),
-    ("sprites/pendejo-2.png", AnimatedCharacterType::Pendejo2),
-];
 
 #[derive(Copy, Clone, Reflect, Default, Debug, PartialEq, Eq)]
 pub enum AnimatedCharacterType {
     #[default]
     Player,
-    Pendejo1,
-    Pendejo2,
     NotAnimated,
 }
 

@@ -293,7 +293,6 @@ pub fn spawn_wall_collision(
 pub fn spawn_game_world(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(LdtkWorldBundle {
         ldtk_handle: LdtkProjectHandle::from(asset_server.load("levels/main.ldtk")),
-        // transform: Transform::from_translation(Vec3::ZERO).with_scale(Vec3::ONE * 1.8),
         ..Default::default()
     });
 

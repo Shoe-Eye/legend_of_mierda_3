@@ -13,25 +13,6 @@ pub struct ColliderBundle {
     pub density: ColliderMassProperties,
 }
 
-impl From<&EntityInstance> for ColliderBundle {
-    fn from(entity_instance: &EntityInstance) -> ColliderBundle {
-        let rotation_constraints = LockedAxes::ROTATION_LOCKED;
-
-        match entity_instance.identifier.as_ref() {
-            "Wall" => ColliderBundle {
-                collider: Collider::cuboid(8., 8.),
-                rigid_body: RigidBody::Dynamic,
-                rotation_constraints,
-                gravity_scale: GravityScale(1.0),
-                friction: Friction::new(0.5),
-                density: ColliderMassProperties::Density(15.0),
-                ..Default::default()
-            },
-            _ => ColliderBundle::default(),
-        }
-    }
-}
-
 pub fn setup_gravity(mut rapier_config: Query<&mut RapierConfiguration>) {
     let mut rapier_config = rapier_config.single_mut().unwrap();
     rapier_config.gravity = Vec2::ZERO;

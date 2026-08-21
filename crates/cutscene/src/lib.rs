@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use bevy::prelude::*;
-use lom_assets::loading::{AvatarAssets, CutsceneAssets, FontAssets};
+use lom_assets::loading::{CutsceneAssets, FontAssets};
 use lom_game::GameState;
 
 pub struct CutscenePlugin;
@@ -53,7 +53,7 @@ impl Plugin for CutscenePlugin {
 
 fn setup_cutscene(
     mut commands: Commands,
-    avatar_assets: Res<AvatarAssets>,
+    // avatar_assets: Res<AvatarAssets>,
     cutscene_assets: Res<CutsceneAssets>,
     font_assets: Res<FontAssets>,
 ) {
@@ -84,7 +84,7 @@ fn setup_cutscene(
                 },
                 ZIndex(100),
                 BackgroundColor(Color::WHITE),
-                ImageNode::new(avatar_assets.alextime.clone()),
+                // ImageNode::new(avatar_assets.alextime.clone()),
                 Name::new("avatar alextime"),
                 CutsceneAvatarAlextime,
             ));
@@ -99,7 +99,7 @@ fn setup_cutscene(
                 },
                 ZIndex(100),
                 BackgroundColor(Color::WHITE),
-                ImageNode::new(avatar_assets.gennadiy.clone()),
+                // ImageNode::new(avatar_assets.gennadiy.clone()),
                 Name::new("avatar gennadiy"),
                 CutsceneAvatarGennadiy,
             ));

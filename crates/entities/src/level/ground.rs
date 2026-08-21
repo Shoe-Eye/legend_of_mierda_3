@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ecs_ldtk::{assets::LdtkProject, LdtkProjectHandle, LevelEvent, LevelIid};
-use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
-use lom_ldtk::ldtk::{spawn_game_world, LevelChangeEvent};
 
 pub struct GroundPlugin;
 
@@ -57,7 +55,7 @@ pub fn init_ground_layer(
                                     parent.spawn((
                                         Name::new("Ground"),
                                         InheritedVisibility::default(),
-                                        Transform::from_translation(Vec3::new(8.0, 8.0, 1.0)),
+                                        Transform::from_translation(Vec3::new(8.0, 8.0, 0.5)),
                                         Ground {
                                             level_iid: level_id.as_str().to_string(),
                                             width,

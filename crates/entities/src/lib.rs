@@ -6,7 +6,6 @@ pub mod gameplay;
 pub mod items;
 pub mod ldtk;
 pub mod level;
-pub mod level_objects;
 pub mod player;
 pub mod sprites;
 pub mod text_indicator;
@@ -31,7 +30,6 @@ impl Plugin for EntitiesPlugin {
             items::ItemsPlugin,
             // weapons::WeaponsPlugin,
             text_indicator::TextIndicatorPlugin,
-            level_objects::light::LightPlugin,
             tools::ToolsPlugin,
             level::LevelPlugin,
         ))

@@ -5,7 +5,6 @@ use bevy_ecs::system::SystemState;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use lom_assets::load_texture_atlas_layout;
-use lom_assets::sprites::{BIBORAN_ASSET_SHEET, PIZZA_ASSET_SHEET};
 use lom_ldtk::physics::ColliderBundle;
 use rand::rngs::ThreadRng;
 use rand::RngExt;
@@ -59,11 +58,6 @@ pub fn create_item_bundle(
             rotation_constraints,
             ..Default::default()
         },
-    };
-
-    let _atlas_handle = match item_type {
-        ItemType::Pizza => load_texture_atlas_layout(1, 1, Vec2::ONE * 16.),
-        ItemType::Biboran => load_texture_atlas_layout(1, 1, Vec2::ONE * 32.),
     };
 
     ItemBundle {

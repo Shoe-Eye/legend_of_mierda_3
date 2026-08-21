@@ -2,8 +2,6 @@ use bevy::prelude::*;
 
 pub mod enemy;
 pub mod mierda;
-pub mod pendejo;
-pub mod psychiatrist;
 
 pub struct CharactersPlugin;
 
@@ -15,11 +13,6 @@ impl Plugin for CharactersPlugin {
             wr.register::<enemy::Enemy>();
         }
 
-        app.add_plugins((
-            enemy::EnemyPlugin,
-            mierda::MierdaPlugin,
-            pendejo::PendejoPlugin,
-            psychiatrist::PsychiatristPlugin,
-        ));
+        app.add_plugins((enemy::EnemyPlugin, mierda::MierdaPlugin));
     }
 }

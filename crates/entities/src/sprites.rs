@@ -34,19 +34,17 @@ pub fn animate_character_sprtire(
                     && (current_index >= indices.last)
                 {
                     let spritesheet = match animated_character_sprite.animated_character_type {
-                        AnimatedCharacterType::Player => spritesheets.player_atlas_1.clone(),
-                        AnimatedCharacterType::Pendejo1 => spritesheets.pendejo_atlas_1.clone(),
-                        AnimatedCharacterType::Pendejo2 => spritesheets.pendejo_atlas_2.clone(),
+                        AnimatedCharacterType::Player => spritesheets.gennadij_no_tool.clone(),
                         _ => panic!("not implemented"),
                     };
 
                     character_animation.animation_type = AnimationType::Stand;
                     sprite.texture_atlas = Some(TextureAtlas {
                         index: current_index,
-                        layout: spritesheet,
+                        layout: spritesheets.character_atlas_layout.clone(),
                     });
 
-                    sprite.image = spritesheets.player_sprite_1.clone();
+                    sprite.image = spritesheets.gennadij_no_tool.clone();
 
                     if character_animation.state == AnimationState::ToolUse {
                         if let Some((entity, player)) = q_player.iter().next() {
@@ -69,7 +67,6 @@ pub fn animate_character_sprtire(
 
                 indices.first
             } else {
-                // character_animation.state = AnimationState::NewBlocked;
                 current_index + 1
             };
 

@@ -7,7 +7,7 @@ use bevy_rapier2d::prelude::*;
 use lom_ui::game::UIPlayerHealth;
 
 use crate::gameplay::gameover::GameOverEvent;
-use crate::tools::ui::Tool;
+use crate::tools::Tool;
 use lom_assets::load_texture_atlas;
 use lom_assets::sprites::*;
 use lom_assets::AudioAssets;
@@ -26,6 +26,12 @@ pub struct Player {
     pub tool: Tool,
 }
 
+impl Player {
+    pub fn choose_tool(&mut self, tool: Tool) {
+        self.tool = tool;
+    }
+}
+
 #[derive(Default, Bundle)]
 pub struct PlayerBundle {
     pub character_animation: CharacterAnimation,
@@ -37,23 +43,6 @@ pub struct PlayerBundle {
     pub active_events: ActiveEvents,
     pub name: Name,
     pub sprite: Sprite,
-}
-
-impl Player {
-    pub fn try_choosing_tool(&mut self, tool: Tool) -> bool {
-        if !self.can_choose_tool(tool) {
-            return false;
-        }
-        self.tool = tool;
-        true
-    }
-
-    pub fn can_choose_tool(&mut self, tool: Tool) -> bool {
-        if tool == Tool::Shovel {
-            return true;
-        }
-        false
-    }
 }
 
 // ----
@@ -98,7 +87,7 @@ impl LdtkEntity for PlayerBundle {
             active_events: ActiveEvents::COLLISION_EVENTS,
             player: Player {
                 health: 100,
-                tool: Tool::Shovel,
+                tool: Tool::None,
             },
             ldtk_player: lom_ldtk::ldtk::Player,
             animated_character_sprite: AnimatedCharacterSprite {
