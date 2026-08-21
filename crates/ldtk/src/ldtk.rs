@@ -129,6 +129,7 @@ pub fn camera_fit_inside_current_level(
 
                 camera_transform.translation.x = level_transform.translation.x + level_width / 2.0;
                 camera_transform.translation.y = level_transform.translation.y + level_height / 2.0;
+                camera_transform.scale = Vec3::ONE * 0.5;
             }
         }
     }
