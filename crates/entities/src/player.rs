@@ -1,9 +1,10 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_kira_audio::prelude::*;
-// use bevy_particle_systems::*;
-
 use bevy_rapier2d::prelude::*;
+use lom_assets::loading::GENNADIJ_ASSET_SHEET;
+use lom_assets::loading::SHEET_1_COLUMNS;
+use lom_assets::loading::SHEET_1_ROWS;
 use lom_ui::game::UIPlayerHealth;
 
 use crate::gameplay::gameover::GameOverEvent;

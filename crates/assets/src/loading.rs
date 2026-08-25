@@ -5,6 +5,25 @@ use bevy_kira_audio::AudioSource;
 use crate::sprites::*;
 use lom_game::GameState;
 
+pub const SHEET_1_COLUMNS: usize = 13;
+pub const SHEET_1_ROWS: usize = 54;
+pub const SHEET_2_COLUMNS: usize = 10;
+pub const SHEET_2_ROWS: usize = 4;
+pub const N_FRAMES_WALK: usize = 8;
+pub const N_FRAMES_USE_TOOL_SHEET_1: usize = 7;
+pub const N_FRAMES_USE_TOOL_SHEET_2: usize = 9;
+
+pub const GENNADIJ_ASSET_SHEET: &str = "sprites/gennadij.png";
+pub const GENNADIJ_AXE_ASSET_SHEET: &str = "sprites/gennadij_axe.png";
+pub const GENNADIJ_AXE_USE_ASSET_SHEET: &str = "sprites/gennadij_axe_use.png";
+pub const GENNADIJ_HAMMER_ASSET_SHEET: &str = "sprites/gennadij_hammer.png";
+pub const GENNADIJ_HAMMER_USE_ASSET_SHEET: &str = "sprites/gennadij_hammer_use.png";
+pub const GENNADIJ_PICKAXE_ASSET_SHEET: &str = "sprites/gennadij_pickaxe.png";
+pub const GENNADIJ_PICKAXE_USE_ASSET_SHEET: &str = "sprites/gennadij_pickaxe_use.png";
+pub const GENNADIJ_SHOVEL_ASSET_SHEET: &str = "sprites/gennadij_shovel.png";
+pub const GENNADIJ_WATERING_CAN_ASSET_SHEET: &str = "sprites/gennadij_watering_can.png";
+pub const MIERDA_ASSET_SHEET: &str = "sprites/mierda.png";
+
 pub struct LoadingPlugin;
 
 impl Plugin for LoadingPlugin {
@@ -122,10 +141,13 @@ impl FromWorld for MaterialAssets {
 
 #[derive(Resource)]
 pub struct CharacterSpritesheets {
-    pub character_atlas_layout: Handle<TextureAtlasLayout>,
+    pub normal_character_atlas_layout: Handle<TextureAtlasLayout>,
+    pub tool_use_character_atlas_layout: Handle<TextureAtlasLayout>,
     pub gennadij_no_tool: Handle<Image>,
     pub gennadij_axe: Handle<Image>,
+    pub gennadij_axe_use: Handle<Image>,
     pub gennadij_hammer: Handle<Image>,
+    pub gennadij_hammer_use: Handle<Image>,
     pub gennadij_pickaxe: Handle<Image>,
     pub gennadij_shovel: Handle<Image>,
     pub gennadij_watering_can: Handle<Image>,
@@ -139,17 +161,23 @@ impl FromWorld for CharacterSpritesheets {
             .get_resource_mut::<Assets<TextureAtlasLayout>>()
             .unwrap();
 
-        let character_atlas_layout = layouts.add(build_texture_atlas_layout(
+        let normal_character_atlas_layout = layouts.add(build_texture_atlas_layout(
             SHEET_1_COLUMNS,
             SHEET_1_ROWS,
             Vec2::ONE * 64.,
         ));
 
+        let tool_use_character_atlas_layout =
+            layouts.add(build_texture_atlas_layout(10, 4, Vec2::ONE * 128.));
+
         CharacterSpritesheets {
-            character_atlas_layout,
-            gennadij_no_tool: asset_server.load(GENNADIJ_ASSET_SHEET.to_string()),
+            normal_character_atlas_layout: normal_character_atlas_layout,
+            tool_use_character_atlas_layout: tool_use_character_atlas_layout,
             gennadij_axe: asset_server.load(GENNADIJ_AXE_ASSET_SHEET.to_string()),
+            gennadij_axe_use: asset_server.load(GENNADIJ_AXE_USE_ASSET_SHEET.to_string()),
             gennadij_hammer: asset_server.load(GENNADIJ_HAMMER_ASSET_SHEET.to_string()),
+            gennadij_hammer_use: asset_server.load(GENNADIJ_HAMMER_USE_ASSET_SHEET.to_string()),
+            gennadij_no_tool: asset_server.load(GENNADIJ_ASSET_SHEET.to_string()),
             gennadij_pickaxe: asset_server.load(GENNADIJ_PICKAXE_ASSET_SHEET.to_string()),
             gennadij_shovel: asset_server.load(GENNADIJ_SHOVEL_ASSET_SHEET.to_string()),
             gennadij_watering_can: asset_server.load(GENNADIJ_WATERING_CAN_ASSET_SHEET.to_string()),

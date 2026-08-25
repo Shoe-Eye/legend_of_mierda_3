@@ -5,7 +5,8 @@ use bevy_rapier2d::prelude::*;
 
 use lom_assets::{
     load_texture_atlas,
-    sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation, MIERDA_ASSET_SHEET},
+    loading::MIERDA_ASSET_SHEET,
+    sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation},
 };
 use lom_game::GameState;
 use lom_ldtk::physics::ColliderBundle;

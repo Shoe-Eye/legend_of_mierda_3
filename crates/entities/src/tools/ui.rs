@@ -1,5 +1,5 @@
 use crate::player::Player;
-use crate::tools::Tool;
+use crate::tools::{ChooseTool, Tool};
 use bevy::color::palettes::basic::*;
 use bevy::prelude::*;
 use bevy::ui::Val;
@@ -149,6 +149,7 @@ fn tool_selection_system(
         Changed<Interaction>,
     >,
     mut player: Query<&mut Player>,
+    mut ew_choose_tool: MessageWriter<ChooseTool>,
 ) {
     for (entity, interaction, mut background_color, children, tool, ui_tool_choose) in
         &mut interaction_query
@@ -157,12 +158,12 @@ fn tool_selection_system(
             return;
         }
 
-        let mut player = player.single_mut().unwrap();
+        let player = player.single_mut().unwrap();
 
         match *interaction {
             Interaction::Pressed => {
                 *background_color = BackgroundColor::from(GREEN);
-                player.choose_tool(tool.clone());
+                ew_choose_tool.write(ChooseTool { tool: tool.clone() });
             }
             Interaction::Hovered => {
                 *background_color = BackgroundColor::from(RED);
@@ -208,14 +209,6 @@ impl Plugin for ToolUIPlugin {
                 (tool_selection_system, tool_highlight_system)
                     .chain()
                     .run_if(in_state(GameState::GamePlay)),
-            );
-    }
-}
-ay)),
-            );
-    }
-}
-tate::GamePlay)),
             );
     }
 }

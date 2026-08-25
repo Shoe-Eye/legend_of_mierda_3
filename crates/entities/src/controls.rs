@@ -5,7 +5,11 @@ use bevy_rapier2d::prelude::*;
 use lom_assets::loading::CharacterSpritesheets;
 use lom_assets::sprites::*;
 
-use crate::player::{Player, PlayerToolUseEvent};
+use crate::{
+    player::{Player, PlayerToolUseEvent},
+    sprites::get_animation_indices,
+    tools::Tool::{self, Axe},
+};
 
 #[derive(Message, Copy, Clone, Reflect, Debug, PartialEq, Eq, Default)]
 pub struct ControlEvent {
@@ -17,7 +21,6 @@ pub struct ControlEvent {
 }
 
 pub fn control_character(
-    mut commands: Commands,
     mut ev_control: MessageReader<ControlEvent>,
     mut query: Query<
         (
@@ -32,7 +35,7 @@ pub fn control_character(
     spritesheets: Res<CharacterSpritesheets>,
 ) {
     for control in ev_control.read() {
-        for (entity, mut velocity, mut char_animation, mut sprite, _) in &mut query {
+        for (_, mut velocity, mut char_animation, mut sprite, player) in &mut query {
             if char_animation.state == AnimationState::ToolUse {
                 return;
             }
@@ -43,10 +46,29 @@ pub fn control_character(
 
                 velocity.linear = Vec2::ZERO;
 
-                let indices =
-                    get_animation_indices(char_animation.animation_type, char_animation.direction);
-                if let Some(ref mut texture_atlas) = sprite.texture_atlas {
-                    texture_atlas.index = indices.first;
+                match player.tool.clone() {
+                    Axe => {
+                        let indices = get_animation_indices(
+                            char_animation.animation_type,
+                            char_animation.direction,
+                            Some(player.tool.clone()),
+                        );
+                        sprite.image = spritesheets.gennadij_axe_use.clone();
+                        sprite.texture_atlas = Some(TextureAtlas {
+                            index: indices.first,
+                            layout: spritesheets.tool_use_character_atlas_layout.clone(),
+                        });
+                    }
+                    _ => {
+                        let indices = get_animation_indices(
+                            char_animation.animation_type,
+                            char_animation.direction,
+                            None,
+                        );
+                        if let Some(ref mut texture_atlas) = sprite.texture_atlas {
+                            texture_atlas.index = indices.first;
+                        }
+                    }
                 }
             } else {
                 let right = if control.right { 1. } else { 0. };
@@ -76,7 +98,7 @@ pub fn control_character(
                 if char_animation.animation_type != AnimationType::UseTool {
                     if char_animation.animation_type != AnimationType::Walk {
                         if let Some(ref mut atlas) = sprite.texture_atlas {
-                            atlas.layout = spritesheets.character_atlas_layout.clone();
+                            atlas.layout = spritesheets.normal_character_atlas_layout.clone();
                         }
                     }
 
