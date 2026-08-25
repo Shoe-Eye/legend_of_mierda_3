@@ -59,17 +59,19 @@ pub fn animate_character_sprtire(
                 {
                     character_animation.animation_type = AnimationType::Stand;
 
+                    println!("blink");
+
                     match player.tool {
                         Tool::Axe => {
                             sprite.image = spritesheets.gennadij_axe.clone();
                         }
-                        _ => {
-                            sprite.texture_atlas = Some(TextureAtlas {
-                                index: indices.first,
-                                layout: spritesheets.normal_character_atlas_layout.clone(),
-                            });
-                        }
+                        _ => {}
                     }
+
+                    sprite.texture_atlas = Some(TextureAtlas {
+                        index: indices.first,
+                        layout: spritesheets.normal_character_atlas_layout.clone(),
+                    });
 
                     mw_player_use_tool.write(PlayerToolUseEvent {
                         entity: entity.clone(),
