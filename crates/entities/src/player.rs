@@ -8,6 +8,7 @@ use lom_assets::loading::SHEET_1_ROWS;
 use lom_ui::game::UIPlayerHealth;
 
 use crate::gameplay::gameover::GameOverEvent;
+use crate::tools::actions::Action;
 use crate::tools::Tool;
 use lom_assets::load_texture_atlas;
 use lom_assets::sprites::*;
@@ -21,15 +22,21 @@ use super::characters::enemy::{Enemy, EnemyHitEvent};
 // Entities
 // --------
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component, Reflect)]
+#[derive(Clone, Eq, PartialEq, Debug, Default, Component, Reflect)]
 pub struct Player {
     pub health: u16,
     pub tool: Tool,
+    pub action: Option<Action>,
 }
 
 impl Player {
     pub fn choose_tool(&mut self, tool: Tool) {
         self.tool = tool;
+        self.action = None;
+    }
+
+    pub fn choose_action(&mut self, action: Option<Action>) {
+        self.action = action;
     }
 }
 
@@ -89,6 +96,7 @@ impl LdtkEntity for PlayerBundle {
             player: Player {
                 health: 100,
                 tool: Tool::None,
+                action: None,
             },
             ldtk_player: lom_ldtk::ldtk::Player,
             animated_character_sprite: AnimatedCharacterSprite {

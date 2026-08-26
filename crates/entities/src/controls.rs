@@ -8,7 +8,7 @@ use lom_assets::sprites::*;
 use crate::{
     player::{Player, PlayerToolUseEvent},
     sprites::get_animation_indices,
-    tools::Tool::{self, Axe},
+    tools::Tool::{self, Axe, Hammer, Pickaxe},
 };
 
 #[derive(Message, Copy, Clone, Reflect, Debug, PartialEq, Eq, Default)]
@@ -40,7 +40,7 @@ pub fn control_character(
                 return;
             }
 
-            if control.use_tool {
+            if control.use_tool && player.tool != Tool::None && player.action != None {
                 char_animation.animation_type = AnimationType::UseTool;
                 char_animation.state = AnimationState::ToolUse;
 
@@ -54,6 +54,30 @@ pub fn control_character(
                             Some(player.tool.clone()),
                         );
                         sprite.image = spritesheets.gennadij_axe_use.clone();
+                        sprite.texture_atlas = Some(TextureAtlas {
+                            index: indices.first,
+                            layout: spritesheets.tool_use_character_atlas_layout.clone(),
+                        });
+                    }
+                    Hammer => {
+                        let indices = get_animation_indices(
+                            char_animation.animation_type,
+                            char_animation.direction,
+                            Some(player.tool.clone()),
+                        );
+                        sprite.image = spritesheets.gennadij_hammer_use.clone();
+                        sprite.texture_atlas = Some(TextureAtlas {
+                            index: indices.first,
+                            layout: spritesheets.tool_use_character_atlas_layout.clone(),
+                        });
+                    }
+                    Pickaxe => {
+                        let indices = get_animation_indices(
+                            char_animation.animation_type,
+                            char_animation.direction,
+                            Some(player.tool.clone()),
+                        );
+                        sprite.image = spritesheets.gennadij_pickaxe_use.clone();
                         sprite.texture_atlas = Some(TextureAtlas {
                             index: indices.first,
                             layout: spritesheets.tool_use_character_atlas_layout.clone(),

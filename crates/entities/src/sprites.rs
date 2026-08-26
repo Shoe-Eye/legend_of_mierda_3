@@ -42,6 +42,8 @@ pub fn animate_character_sprtire(
 
         let tool = match player.tool {
             Tool::Axe => Some(Tool::Axe),
+            Tool::Hammer => Some(Tool::Hammer),
+            Tool::Pickaxe => Some(Tool::Pickaxe),
             _ => None,
         };
 
@@ -59,11 +61,15 @@ pub fn animate_character_sprtire(
                 {
                     character_animation.animation_type = AnimationType::Stand;
 
-                    println!("blink");
-
                     match player.tool {
                         Tool::Axe => {
                             sprite.image = spritesheets.gennadij_axe.clone();
+                        }
+                        Tool::Hammer => {
+                            sprite.image = spritesheets.gennadij_hammer.clone();
+                        }
+                        Tool::Pickaxe => {
+                            sprite.image = spritesheets.gennadij_pickaxe.clone();
                         }
                         _ => {}
                     }
@@ -146,7 +152,7 @@ pub fn get_animation_indices(
     }
 
     // UseTool
-    if let Some(tool) = tool {
+    if let Some(_) = tool {
         if animation_type == AnimationType::UseTool
             && animation_direction == AnimationDirection::Right
         {

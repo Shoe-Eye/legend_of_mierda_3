@@ -149,6 +149,7 @@ pub struct CharacterSpritesheets {
     pub gennadij_hammer: Handle<Image>,
     pub gennadij_hammer_use: Handle<Image>,
     pub gennadij_pickaxe: Handle<Image>,
+    pub gennadij_pickaxe_use: Handle<Image>,
     pub gennadij_shovel: Handle<Image>,
     pub gennadij_watering_can: Handle<Image>,
 }
@@ -179,6 +180,7 @@ impl FromWorld for CharacterSpritesheets {
             gennadij_hammer_use: asset_server.load(GENNADIJ_HAMMER_USE_ASSET_SHEET.to_string()),
             gennadij_no_tool: asset_server.load(GENNADIJ_ASSET_SHEET.to_string()),
             gennadij_pickaxe: asset_server.load(GENNADIJ_PICKAXE_ASSET_SHEET.to_string()),
+            gennadij_pickaxe_use: asset_server.load(GENNADIJ_PICKAXE_USE_ASSET_SHEET.to_string()),
             gennadij_shovel: asset_server.load(GENNADIJ_SHOVEL_ASSET_SHEET.to_string()),
             gennadij_watering_can: asset_server.load(GENNADIJ_WATERING_CAN_ASSET_SHEET.to_string()),
         }
