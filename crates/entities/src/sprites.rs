@@ -82,6 +82,7 @@ pub fn animate_character_sprtire(
                     mw_player_use_tool.write(PlayerToolUseEvent {
                         entity: entity.clone(),
                         tool: player.tool,
+                        action: player.action,
                     });
                 }
 
@@ -200,6 +201,10 @@ pub fn get_animation_indices(
             first = SHEET_1_COLUMNS * 6;
             last = SHEET_1_COLUMNS * 6 + N_FRAMES_USE_TOOL_SHEET_1;
         }
+    }
+
+    if let Some(Tool::Hammer) = tool {
+        last -= 1;
     }
 
     AnimationIndices { first, last }

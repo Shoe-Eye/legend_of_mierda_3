@@ -122,6 +122,7 @@ impl LdtkEntity for PlayerBundle {
 pub struct PlayerToolUseEvent {
     pub entity: Entity,
     pub tool: Tool,
+    pub action: Option<Action>,
 }
 
 #[derive(Message, Clone)]

@@ -5,7 +5,7 @@ use lom_game::GameState;
 use crate::{
     level::ground::{Ground, GroundTile},
     player::PlayerToolUseEvent,
-    tools::{tool_pointer::ToolPointerTile, Tool},
+    tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
 
 pub struct ShovelPlugin;
@@ -28,7 +28,13 @@ pub fn handle_shovel_use(
     static_sprite_assets: Res<StaticSpriteAssets>,
 ) {
     for message in mr.read() {
-        if message.tool != Tool::Shovel {
+        if message.action.is_none() {
+            continue;
+        }
+
+        let action = message.action.unwrap();
+
+        if !(message.tool == Tool::Shovel && action == Action::Dig) {
             continue;
         }
 

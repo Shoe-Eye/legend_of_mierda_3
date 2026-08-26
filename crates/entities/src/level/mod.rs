@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+pub mod fence;
 pub mod ground;
 pub mod house;
 

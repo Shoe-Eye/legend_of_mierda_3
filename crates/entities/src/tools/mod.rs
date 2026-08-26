@@ -16,6 +16,7 @@ use crate::{
 };
 
 pub mod actions;
+pub mod hammer;
 pub mod shovel;
 pub mod tool_pointer;
 pub mod ui;
@@ -99,6 +100,7 @@ impl Plugin for ToolsPlugin {
         app.add_plugins((
             ui::ToolUIPlugin,
             shovel::ShovelPlugin,
+            hammer::HammerPlugin,
             tool_pointer::ToolPointerPlugin,
         ))
         .add_message::<ChooseTool>()
