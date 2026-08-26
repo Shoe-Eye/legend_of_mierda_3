@@ -69,7 +69,7 @@ impl LdtkEntity for PlayerBundle {
         let rotation_constraints = LockedAxes::ROTATION_LOCKED;
 
         let collider_bundle = ColliderBundle {
-            collider: Collider::cuboid(8., 26.),
+            collider: Collider::cuboid(8., 8.),
             rigid_body: RigidBody::Dynamic,
             friction: Friction {
                 coefficient: 0.0,

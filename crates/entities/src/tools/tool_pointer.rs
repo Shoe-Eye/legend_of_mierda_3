@@ -94,7 +94,8 @@ pub fn draw_tool_pointer(
                     as u32;
             let y =
                 f32::floor(player_transform.translation.y / (tool_pointer_layer.grid_size as f32))
-                    as u32;
+                    as u32
+                    + 1;
 
             commands.entity(tool_pointer_entity).with_children(
                 |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {

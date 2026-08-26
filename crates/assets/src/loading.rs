@@ -41,6 +41,7 @@ impl Plugin for LoadingPlugin {
         app.init_resource::<MaterialAssets>();
         app.init_resource::<MeshAssets>();
         app.init_resource::<CharacterSpritesheets>();
+        app.init_resource::<StaticSpriteTextureAtlasLayoutAssets>();
     }
 }
 
@@ -91,6 +92,30 @@ pub struct StaticSpriteAssets {
     pub earth_1: Handle<Image>,
     #[asset(path = "sprites/fence.png")]
     pub fence: Handle<Image>,
+    #[asset(path = "sprites/farm/Objects/Fence's copiar.png")]
+    pub fence_sheet: Handle<Image>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct StaticSpriteTextureAtlasLayoutAssets {
+    pub fence_sheet_texture_layout: Handle<TextureAtlasLayout>,
+}
+
+impl FromWorld for StaticSpriteTextureAtlasLayoutAssets {
+    fn from_world(world: &mut World) -> Self {
+        let mut layouts = world
+            .get_resource_mut::<Assets<TextureAtlasLayout>>()
+            .unwrap();
+
+        let fence_sheet_texture_layout =
+            layouts.add(build_texture_atlas_layout(3, 5, Vec2::ONE * 16.));
+
+        println!("here  1 {:?}", fence_sheet_texture_layout);
+
+        StaticSpriteTextureAtlasLayoutAssets {
+            fence_sheet_texture_layout: fence_sheet_texture_layout,
+        }
+    }
 }
 
 #[derive(AssetCollection, Resource)]
