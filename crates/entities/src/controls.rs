@@ -13,11 +13,15 @@ use crate::{
 
 #[derive(Message, Copy, Clone, Reflect, Debug, PartialEq, Eq, Default)]
 pub struct ControlEvent {
-    pub up: bool,
-    pub down: bool,
-    pub left: bool,
-    pub right: bool,
+    pub go_up: bool,
+    pub go_down: bool,
+    pub go_left: bool,
+    pub go_right: bool,
     pub use_tool: bool,
+    pub arrow_up: bool,
+    pub arrow_down: bool,
+    pub arrow_left: bool,
+    pub arrow_right: bool,
 }
 
 pub fn control_character(
@@ -95,10 +99,10 @@ pub fn control_character(
                     }
                 }
             } else {
-                let right = if control.right { 1. } else { 0. };
-                let left = if control.left { 1. } else { 0. };
-                let up = if control.up { 1. } else { 0. };
-                let down = if control.down { 1. } else { 0. };
+                let right = if control.go_right { 1. } else { 0. };
+                let left = if control.go_left { 1. } else { 0. };
+                let up = if control.go_up { 1. } else { 0. };
+                let down = if control.go_down { 1. } else { 0. };
 
                 velocity.linear.x = right - left;
                 velocity.linear.y = up - down;
@@ -142,19 +146,27 @@ pub fn keyboard_controls(
     input: Res<ButtonInput<KeyCode>>,
     mut ev_control: MessageWriter<ControlEvent>,
 ) {
-    let mut control = ControlEvent { ..default() };
-
-    control.right = input.pressed(KeyCode::KeyD);
-    control.left = input.pressed(KeyCode::KeyA);
-    control.up = input.pressed(KeyCode::KeyW);
-    control.down = input.pressed(KeyCode::KeyS);
-    control.use_tool = input.pressed(KeyCode::Space);
+    let mut control = ControlEvent {
+        go_right: input.pressed(KeyCode::KeyD),
+        go_left: input.pressed(KeyCode::KeyA),
+        go_up: input.pressed(KeyCode::KeyW),
+        go_down: input.pressed(KeyCode::KeyS),
+        use_tool: input.pressed(KeyCode::Space),
+        arrow_up: input.pressed(KeyCode::ArrowUp),
+        arrow_down: input.pressed(KeyCode::ArrowDown),
+        arrow_left: input.pressed(KeyCode::ArrowLeft),
+        arrow_right: input.pressed(KeyCode::ArrowRight),
+    };
 
     if control.use_tool {
-        control.right = false;
-        control.left = false;
-        control.up = false;
-        control.down = false;
+        control.go_right = false;
+        control.go_left = false;
+        control.go_up = false;
+        control.go_down = false;
+        control.arrow_down = false;
+        control.arrow_left = false;
+        control.arrow_right = false;
+        control.arrow_up = false;
     }
 
     ev_control.write(control);
