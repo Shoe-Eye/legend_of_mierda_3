@@ -87,7 +87,7 @@ pub fn update_level_selection(
 #[allow(clippy::type_complexity)]
 pub fn camera_fit_inside_current_level(
     mut params: ParamSet<(
-        Query<(&mut Camera, &mut Transform), With<Camera>>,
+        Query<(&mut Camera, &mut Transform), With<Camera2d>>,
         Query<&GlobalTransform, With<Player>>,
         Query<(&Transform, &LevelIid), Without<Player>>,
     )>,

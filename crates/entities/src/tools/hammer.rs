@@ -7,6 +7,7 @@ use crate::{
     level::{
         fence::{get_sprite_index, FenceTile},
         ground::Ground,
+        Building,
     },
     player::PlayerToolUseEvent,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
@@ -85,6 +86,10 @@ pub fn handle_hammer_use(
                                     (tool_pointer_tile.y * ground.grid_size) as f32,
                                     0.51,
                                 )),
+                                Building {
+                                    x: tool_pointer_tile.x,
+                                    y: tool_pointer_tile.y,
+                                },
                                 Name::new("fence tile"),
                                 fence,
                                 Collider::cuboid(16., 16.),

@@ -853,6 +853,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_camera_controller"
+version = "0.18.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1f64d812cc9b31d01726ca089843b2491b4b9a11a3e09f7a0d484413a45c2f3b"
+dependencies = [
+ "bevy_app 0.18.1",
+ "bevy_camera",
+ "bevy_ecs 0.18.1",
+ "bevy_input 0.18.1",
+ "bevy_log 0.18.1",
+ "bevy_math 0.18.1",
+ "bevy_time 0.18.1",
+ "bevy_transform 0.18.1",
+ "bevy_window 0.18.1",
+]
+
+[[package]]
 name = "bevy_color"
 version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1498,6 +1515,7 @@ dependencies = [
  "bevy_asset 0.18.1",
  "bevy_audio",
  "bevy_camera",
+ "bevy_camera_controller",
  "bevy_color 0.18.1",
  "bevy_core_pipeline 0.18.1",
  "bevy_derive 0.18.1",
@@ -1707,6 +1725,18 @@ name = "bevy_mikktspace"
 version = "0.17.0-dev"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7ef8e4b7e61dfe7719bb03c884dc270cd46a82efb40f93e9933b990c5c190c59"
+
+[[package]]
+name = "bevy_obj"
+version = "0.18.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b073a19fcbc0ad9c1dbe4a97983d880383d9ae1f84ced60d5e413e73727692d"
+dependencies = [
+ "bevy",
+ "serde",
+ "thiserror 2.0.18",
+ "wobj",
+]
 
 [[package]]
 name = "bevy_particle_systems"
@@ -4578,6 +4608,7 @@ dependencies = [
  "bevy_defer",
  "bevy_ecs_ldtk",
  "bevy_kira_audio",
+ "bevy_obj",
  "bevy_particle_systems",
  "bevy_rapier2d",
  "bevy_tweening",
@@ -4734,6 +4765,7 @@ dependencies = [
  "bevy_ecs 0.18.1",
  "bevy_ecs_ldtk",
  "bevy_kira_audio",
+ "bevy_obj",
  "bevy_rapier2d",
  "bevy_tweening",
  "lom_assets",
@@ -8381,6 +8413,17 @@ dependencies = [
  "serde_json",
  "unicode-xid",
  "wasmparser",
+]
+
+[[package]]
+name = "wobj"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0502c0794b9b6c0c6b1b868c67b2186149f8ca72d256b424180d750c1dc2bae8"
+dependencies = [
+ "ahash",
+ "indexmap",
+ "winnow 1.0.1",
 ]
 
 [[package]]

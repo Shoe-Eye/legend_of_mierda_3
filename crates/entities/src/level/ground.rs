@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ecs_ldtk::{assets::LdtkProject, LdtkProjectHandle, LevelEvent, LevelIid};
+use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
+
+use crate::level::{BuildFoundationMessage, DigGroundMessage, GroundStruct};
 
 pub struct GroundPlugin;
 
@@ -26,6 +29,12 @@ pub struct Ground {
 
 #[derive(Component)]
 pub struct GroundTile {
+    pub x: u32,
+    pub y: u32,
+}
+
+#[derive(Component)]
+pub struct FoundationTile {
     pub x: u32,
     pub y: u32,
 }
@@ -68,6 +77,83 @@ pub fn init_ground_layer(
                         }
                     });
                 }
+            }
+        }
+    }
+}
+
+pub fn handle_build_ground(
+    mut commands: Commands,
+    mut mr_build_foundation: MessageReader<DigGroundMessage>,
+    q_ground: Query<(Entity, &Ground)>,
+    q_ground_tiles: Query<(Entity, &ChildOf, &GroundTile)>,
+    q_foundation_tiles: Query<(Entity, &ChildOf, &FoundationTile)>,
+    static_sprite_assets: Res<StaticSpriteAssets>,
+) {
+    for message in mr_build_foundation.read() {
+        if let Some((ground_entity, ground)) = q_ground.iter().next() {
+            let foundation_does_not_exist = q_foundation_tiles
+                .iter()
+                .filter(|(_, parent, tile)| {
+                    parent.parent() == ground_entity && tile.x == message.x && tile.y == message.y
+                })
+                .count()
+                == 0;
+
+            let ground_not_digged = q_ground_tiles
+                .iter()
+                .filter(|(_, parent, tile)| {
+                    parent.parent() == ground_entity && tile.x == message.x && tile.y == message.y
+                })
+                .count()
+                == 0;
+
+            let ground_digged = !ground_not_digged;
+
+            println!(
+                "~~~ ground_digged {} foundation_does_not_exist {}",
+                ground_digged, foundation_does_not_exist
+            );
+
+            if foundation_does_not_exist && ground_not_digged {
+                println!("~ 1 ~");
+
+                commands.entity(ground_entity).with_children(
+                    |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
+                        parent.spawn((
+                            Sprite::from_image(static_sprite_assets.earth_1.clone()),
+                            Transform::from_translation(Vec3::new(
+                                (message.x * ground.grid_size) as f32,
+                                (message.y * ground.grid_size) as f32,
+                                0.51,
+                            )),
+                            Name::new("ground tile"),
+                            GroundStruct {
+                                x: message.x,
+                                y: message.y,
+                            },
+                            GroundTile {
+                                x: message.x,
+                                y: message.y,
+                            },
+                        ));
+                    },
+                );
+            }
+
+            if foundation_does_not_exist && ground_digged {
+                println!("~ 2 ~");
+
+                let (entity, _, _) = q_ground_tiles
+                    .iter()
+                    .find(|(_, parent, tile)| {
+                        parent.parent() == ground_entity
+                            && tile.x == message.x
+                            && tile.y == message.y
+                    })
+                    .unwrap();
+
+                commands.entity(entity).despawn();
             }
         }
     }

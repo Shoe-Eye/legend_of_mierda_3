@@ -29,9 +29,6 @@ pub(crate) fn despawn_ui(mut commands: Commands, query: Query<Entity, With<UIGam
 }
 
 pub(crate) fn draw_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
-    println!("here");
-
-    // let font = asset_server.load("fonts/PixeloidMono-d94EV.ttf");
     commands
         .spawn((
             Node {

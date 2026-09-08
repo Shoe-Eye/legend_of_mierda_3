@@ -1,0 +1,11 @@
+Model Information:
+* title:	Military styled set of turrets
+* source:	https://sketchfab.com/3d-models/military-styled-set-of-turrets-70599abc45504b749f77df23b2162b6f
+* author:	pldeepblack (https://sketchfab.com/pldeepblack)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Military styled set of turrets" (https://sketchfab.com/3d-models/military-styled-set-of-turrets-70599abc45504b749f77df23b2162b6f) by pldeepblack (https://sketchfab.com/pldeepblack) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

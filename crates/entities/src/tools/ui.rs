@@ -264,7 +264,7 @@ fn tool_highlight_system(
 
 fn tool_action_highlight_system(
     mut interaction_query: Query<
-        (Entity, &mut BackgroundColor, &Tool),
+        (Entity, &mut BackgroundColor, &Action),
         Without<UIToolActionHovering>,
     >,
     player: Query<&Player>,
@@ -275,8 +275,12 @@ fn tool_action_highlight_system(
 
     let player = player.single().unwrap();
 
-    for (_, mut background_color, tool) in interaction_query.iter_mut() {
-        if tool.clone() != player.tool {
+    if player.action.is_none() {
+        return;
+    }
+
+    for (_, mut background_color, action) in interaction_query.iter_mut() {
+        if action.clone() != player.action.unwrap() {
             *background_color = BackgroundColor::from(JUSTIFY_CONTENT_COLOR);
         }
     }

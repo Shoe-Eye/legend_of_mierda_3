@@ -6,6 +6,7 @@ use crate::tools::Tool;
 #[derive(PartialEq, Eq, Debug, Clone, Copy, Reflect, Component)]
 pub enum Action {
     Dig,
+    Foundation,
     Fence,
 }
 
@@ -13,6 +14,7 @@ impl fmt::Display for Action {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Action::Dig => write!(f, "Dig"),
+            Action::Foundation => write!(f, "Foundation"),
             Action::Fence => write!(f, "Fence"),
         }
     }
@@ -21,7 +23,7 @@ impl fmt::Display for Action {
 pub fn get_tool_actions(tool: Tool) -> Vec<Action> {
     match tool {
         Tool::Shovel => {
-            vec![Action::Dig]
+            vec![Action::Dig, Action::Foundation]
         }
         Tool::Hammer => {
             vec![Action::Fence]

@@ -90,6 +90,8 @@ pub struct TextureAssets {
 pub struct StaticSpriteAssets {
     #[asset(path = "sprites/earth_1.png")]
     pub earth_1: Handle<Image>,
+    #[asset(path = "sprites/foundation_1.png")]
+    pub foundation_1: Handle<Image>,
     #[asset(path = "sprites/fence.png")]
     pub fence: Handle<Image>,
     #[asset(path = "sprites/farm/Objects/Fence's copiar.png")]
