@@ -4,10 +4,7 @@ use lom_assets::loading::StaticSpriteTextureAtlasLayoutAssets;
 use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
 
-use crate::{
-    level::{ground::Ground, BuildFenceMessage, Building},
-    tools::tool_pointer::ToolPointerTile,
-};
+use crate::level::{ground::Ground, BuildFenceMessage, Building};
 
 #[derive(Component, Clone, Copy)]
 pub struct FenceTile {

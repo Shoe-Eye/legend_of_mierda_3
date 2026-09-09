@@ -4,6 +4,7 @@ use lom_game::GameState;
 pub mod fence;
 pub mod foundation;
 pub mod ground;
+pub mod turret;
 
 pub struct LevelPlugin;
 
@@ -37,6 +38,12 @@ pub struct BuildFenceMessage {
     pub y: u32,
 }
 
+#[derive(Message, Clone, Copy)]
+pub struct BuildTurret {
+    pub x: u32,
+    pub y: u32,
+}
+
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((ground::GroundPlugin, fence::FencePlugin))
@@ -45,11 +52,13 @@ impl Plugin for LevelPlugin {
                 (
                     foundation::handle_build_foundation,
                     ground::handle_build_ground,
+                    turret::handle_build_turret,
                 )
                     .run_if(in_state(GameState::GamePlay)),
             )
             .add_message::<BuildFoundationMessage>()
             .add_message::<BuildFenceMessage>()
+            .add_message::<BuildTurret>()
             .add_message::<DigGroundMessage>();
     }
 }

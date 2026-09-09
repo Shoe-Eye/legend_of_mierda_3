@@ -7,7 +7,7 @@ use crate::{
     level::{
         fence::{get_sprite_index, FenceTile},
         ground::Ground,
-        BuildFenceMessage, Building,
+        BuildFenceMessage, BuildTurret, Building,
     },
     player::PlayerToolUseEvent,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
@@ -26,7 +26,8 @@ impl Plugin for HammerPlugin {
 
 pub fn handle_hammer_use(
     mut mr: MessageReader<PlayerToolUseEvent>,
-    mut mw: MessageWriter<BuildFenceMessage>,
+    mut mw_fence: MessageWriter<BuildFenceMessage>,
+    mut mw_turret: MessageWriter<BuildTurret>,
     q_tool_pointer_tiles: Query<(Entity, &ToolPointerTile)>,
 ) {
     for message in mr.read() {
@@ -38,7 +39,14 @@ pub fn handle_hammer_use(
 
         if let Some((_, tool_pointer_tile)) = q_tool_pointer_tiles.iter().next() {
             if (message.tool == Tool::Hammer && action == Action::Fence) {
-                mw.write(BuildFenceMessage {
+                mw_fence.write(BuildFenceMessage {
+                    x: tool_pointer_tile.x,
+                    y: tool_pointer_tile.y,
+                });
+            }
+
+            if (message.tool == Tool::Hammer && action == Action::Turret) {
+                mw_turret.write(BuildTurret {
                     x: tool_pointer_tile.x,
                     y: tool_pointer_tile.y,
                 });

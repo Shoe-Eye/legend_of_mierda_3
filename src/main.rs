@@ -81,8 +81,7 @@ fn main() {
         WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Escape)),
     )
     .insert_resource(LevelSelection::iid(LEVEL_1_IID))
-    .register_ldtk_int_cell::<WallBundle>(1)
-    .add_systems(Startup, (load_mesh));
+    .register_ldtk_int_cell::<WallBundle>(1);
 
     app.run();
 }
@@ -131,22 +130,6 @@ fn setup_cameras(mut commands: Commands) {
         //     ..OrthographicProjection::default_3d()
         // }),
     ));
-}
 
-fn load_mesh(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    // Spawn a spinning cube
-    commands.spawn((
-        Mesh3d(asset_server.load("models/turrets/simple.obj")),
-        MeshMaterial3d(materials.add(StandardMaterial {
-            // base_color_texture: Some(asset_server.load("cube.png")),
-            ..default()
-        })),
-        Transform::from_xyz(0.0, 0.0, 0.0).with_rotation(Quat::from_rotation_x(FRAC_PI_4)),
-    ));
-
-    commands.spawn((PointLight::default(), Transform::from_xyz(3.0, 4.0, 3.0)));
+    commands.spawn((PointLight::default(), Transform::from_xyz(0.0, 0.0, 5.0)));
 }

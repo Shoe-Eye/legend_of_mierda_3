@@ -165,7 +165,7 @@ fn tool_selection_system(
     mut player: Query<&mut Player>,
     mut ew_choose_tool: MessageWriter<ChooseTool>,
 ) {
-    for (entity, interaction, mut background_color, children, tool, ui_tool_choose) in
+    for (entity, interaction, mut background_color, _children, tool, _ui_tool_choose) in
         &mut interaction_query
     {
         if player.single().is_err() {
