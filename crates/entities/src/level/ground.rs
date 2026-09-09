@@ -4,7 +4,7 @@ use bevy_ecs_ldtk::{assets::LdtkProject, LdtkProjectHandle, LevelEvent, LevelIid
 use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
 
-use crate::level::{BuildFoundationMessage, DigGroundMessage, GroundStruct};
+use crate::level::{DigGroundMessage, GroundStruct};
 
 pub struct GroundPlugin;
 
@@ -110,14 +110,7 @@ pub fn handle_build_ground(
 
             let ground_digged = !ground_not_digged;
 
-            println!(
-                "~~~ ground_digged {} foundation_does_not_exist {}",
-                ground_digged, foundation_does_not_exist
-            );
-
             if foundation_does_not_exist && ground_not_digged {
-                println!("~ 1 ~");
-
                 commands.entity(ground_entity).with_children(
                     |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
                         parent.spawn((
@@ -142,8 +135,6 @@ pub fn handle_build_ground(
             }
 
             if foundation_does_not_exist && ground_digged {
-                println!("~ 2 ~");
-
                 let (entity, _, _) = q_ground_tiles
                     .iter()
                     .find(|(_, parent, tile)| {

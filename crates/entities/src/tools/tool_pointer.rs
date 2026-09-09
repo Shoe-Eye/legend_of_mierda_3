@@ -19,7 +19,7 @@ pub struct ToolPointerLayer {
     pub grid_size: u32,
 }
 
-#[derive(Default, Clone, Copy)]
+#[derive(Default, Clone, Copy, Debug)]
 enum Direction {
     Left,
     Right,

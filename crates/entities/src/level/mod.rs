@@ -31,6 +31,12 @@ pub struct DigGroundMessage {
     pub y: u32,
 }
 
+#[derive(Message, Clone, Copy)]
+pub struct BuildFenceMessage {
+    pub x: u32,
+    pub y: u32,
+}
+
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((ground::GroundPlugin, fence::FencePlugin))
@@ -43,6 +49,7 @@ impl Plugin for LevelPlugin {
                     .run_if(in_state(GameState::GamePlay)),
             )
             .add_message::<BuildFoundationMessage>()
+            .add_message::<BuildFenceMessage>()
             .add_message::<DigGroundMessage>();
     }
 }

@@ -1,12 +1,8 @@
 use bevy::prelude::*;
-use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
 
 use crate::{
-    level::{
-        ground::{FoundationTile, Ground, GroundTile},
-        BuildFoundationMessage, Building, DigGroundMessage, GroundStruct,
-    },
+    level::{BuildFoundationMessage, Building, DigGroundMessage},
     player::PlayerToolUseEvent,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
@@ -23,11 +19,9 @@ impl Plugin for ShovelPlugin {
 }
 
 pub fn handle_shovel_use(
-    mut commands: Commands,
     mut mr: MessageReader<PlayerToolUseEvent>,
     mut mw_build_foundation: MessageWriter<BuildFoundationMessage>,
     mut mw_dig_ground: MessageWriter<DigGroundMessage>,
-    q_ground_structs: Query<(Entity, &GroundStruct)>,
     q_tool_pointer_tiles: Query<(Entity, &ToolPointerTile)>,
     q_buildings: Query<(Entity, &Building)>,
 ) {
@@ -52,14 +46,6 @@ pub fn handle_shovel_use(
             }
 
             if message.tool == Tool::Shovel {
-                for (entity, ground_struct) in q_ground_structs.iter() {
-                    if ground_struct.x == tool_pointer_tile.x
-                        && ground_struct.y == tool_pointer_tile.y
-                    {
-                        commands.entity(entity).despawn();
-                    }
-                }
-
                 if action == Action::Dig {
                     mw_dig_ground.write(DigGroundMessage {
                         x: tool_pointer_tile.x,

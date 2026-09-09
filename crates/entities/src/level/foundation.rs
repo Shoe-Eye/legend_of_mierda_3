@@ -33,6 +33,8 @@ pub fn handle_build_foundation(
                 .count()
                 == 1;
 
+            let foundation_does_exist = !foundation_does_no_exits;
+
             if foundation_does_no_exits && ground_digged {
                 commands.entity(ground_entity).with_children(
                     |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
@@ -55,6 +57,19 @@ pub fn handle_build_foundation(
                         ));
                     },
                 );
+            }
+
+            if foundation_does_exist && ground_digged {
+                let (entity, _, _) = q_ground_tiles
+                    .iter()
+                    .find(|(_, parent, tile)| {
+                        parent.parent() == ground_entity
+                            && tile.x == message.x
+                            && tile.y == message.y
+                    })
+                    .unwrap();
+
+                commands.entity(entity).despawn();
             }
         }
     }

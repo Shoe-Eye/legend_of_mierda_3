@@ -1,12 +1,11 @@
 use bevy::prelude::*;
-use bevy_defer::{AsyncCommandsExtension, AsyncWorld};
 use bevy_rapier2d::prelude::*;
 
 use lom_assets::loading::CharacterSpritesheets;
 use lom_assets::sprites::*;
 
 use crate::{
-    player::{Player, PlayerToolUseEvent},
+    player::Player,
     sprites::get_animation_indices,
     tools::Tool::{self, Axe, Hammer, Pickaxe},
 };

@@ -24,7 +24,12 @@ pub struct EntitiesPlugin;
 
 impl Plugin for EntitiesPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((
+        app.add_systems(
+            Update,
+            (controls::keyboard_controls, controls::control_character)
+                .run_if(in_state(GameState::GamePlay)),
+        )
+        .add_plugins((
             characters::CharactersPlugin,
             player::PlayerPlugin,
             items::ItemsPlugin,
@@ -36,11 +41,6 @@ impl Plugin for EntitiesPlugin {
         .add_message::<GameOverEvent>()
         .add_message::<GameWinEvent>()
         .add_message::<ControlEvent>()
-        .add_systems(
-            Update,
-            (controls::keyboard_controls, controls::control_character)
-                .run_if(in_state(GameState::GamePlay)),
-        )
         .add_systems(
             Update,
             (ldtk::hide_dummy_entities, ldtk::fix_missing_ldtk_entities)

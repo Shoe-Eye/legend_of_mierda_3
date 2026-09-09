@@ -1,5 +1,13 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
+use lom_assets::loading::StaticSpriteTextureAtlasLayoutAssets;
+use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
+
+use crate::{
+    level::{ground::Ground, BuildFenceMessage, Building},
+    tools::tool_pointer::ToolPointerTile,
+};
 
 #[derive(Component, Clone, Copy)]
 pub struct FenceTile {
@@ -101,13 +109,87 @@ pub fn adjust_fence_sprites(
     }
 }
 
+pub fn handle_build_fence(
+    mut commands: Commands,
+    mut mr: MessageReader<BuildFenceMessage>,
+    q_ground: Query<(Entity, &Ground)>,
+    q_fence_tiles: Query<(Entity, &ChildOf, &FenceTile)>,
+    static_sprite_assets: Res<StaticSpriteAssets>,
+    static_sprite_atlas_assets: Res<StaticSpriteTextureAtlasLayoutAssets>,
+) {
+    for message in mr.read() {
+        let fences: Vec<FenceTile> = q_fence_tiles
+            .iter()
+            .map(|(_, _, fence)| fence.clone())
+            .collect();
+
+        if let Some((ground_entity, ground)) = q_ground.iter().next() {
+            if q_fence_tiles
+                .iter()
+                .filter(|(_, parent, tile)| {
+                    parent.parent() == ground_entity && tile.x == message.x && tile.y == message.y
+                })
+                .count()
+                == 0
+            {
+                commands.entity(ground_entity).with_children(
+                    |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
+                        let fence = FenceTile {
+                            x: message.x,
+                            y: message.y,
+                        };
+
+                        parent.spawn((
+                            Sprite::from_atlas_image(
+                                static_sprite_assets.fence_sheet.clone(),
+                                TextureAtlas {
+                                    layout: static_sprite_atlas_assets
+                                        .fence_sheet_texture_layout
+                                        .clone(),
+                                    index: get_sprite_index(fence.clone(), fences.clone()),
+                                },
+                            ),
+                            Transform::from_translation(Vec3::new(
+                                (message.x * ground.grid_size) as f32,
+                                (message.y * ground.grid_size) as f32,
+                                0.51,
+                            )),
+                            Building {
+                                x: message.x,
+                                y: message.y,
+                            },
+                            Name::new("fence tile"),
+                            fence,
+                            Collider::cuboid(16., 16.),
+                            Friction::new(1.0),
+                            ActiveEvents::COLLISION_EVENTS,
+                        ));
+                    },
+                );
+            } else {
+                let (entity, _, _) = q_fence_tiles
+                    .iter()
+                    .filter(|(_, parent, tile)| {
+                        parent.parent() == ground_entity
+                            && tile.x == message.x
+                            && tile.y == message.y
+                    })
+                    .next()
+                    .unwrap();
+
+                commands.entity(entity).despawn();
+            }
+        }
+    }
+}
+
 pub struct FencePlugin;
 
 impl Plugin for FencePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (adjust_fence_sprites,).run_if(in_state(GameState::GamePlay)),
+            (adjust_fence_sprites, handle_build_fence).run_if(in_state(GameState::GamePlay)),
         );
     }
 }
