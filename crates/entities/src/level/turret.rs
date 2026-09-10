@@ -1,10 +1,11 @@
 use std::f32::consts::FRAC_PI_4;
 
 use bevy::prelude::*;
+use bevy_rapier2d::geometry::{ActiveEvents, Collider, Friction};
 use lom_assets::StaticSpriteAssets;
 
-use crate::level::BuildTurret;
 use crate::level::{ground::Ground, GroundStruct};
+use crate::level::{BuildTurret, Building};
 
 #[derive(Component)]
 pub struct TurretTile {
@@ -30,27 +31,44 @@ pub fn handle_build_turret(
                 .count()
                 == 0;
 
-            let turret_does_exist = !turret_does_not_exist;
-
             if turret_does_not_exist {
                 commands.entity(ground_entity).with_children(
                     |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
-                        parent.spawn((
-                            Transform::from_translation(Vec3::new(
-                                (message.x * ground.grid_size) as f32,
-                                (message.y * ground.grid_size) as f32,
-                                0.51,
-                            )),
-                            Name::new("turret tile"),
-                            GroundStruct {
-                                x: message.x,
-                                y: message.y,
-                            },
-                            TurretTile {
-                                x: message.x,
-                                y: message.y,
-                            },
-                        ));
+                        parent
+                            .spawn((
+                                GroundStruct {
+                                    x: message.x,
+                                    y: message.y,
+                                },
+                                TurretTile {
+                                    x: message.x,
+                                    y: message.y,
+                                },
+                                Building {
+                                    x: message.x,
+                                    y: message.y,
+                                    width: 5,
+                                    height: 5,
+                                },
+                                Transform::IDENTITY,
+                            ))
+                            .with_children(|parent| {
+                                for x in 0..5 {
+                                    for y in 0..5 {
+                                        parent.spawn((
+                                            Transform::from_translation(Vec3::new(
+                                                ((message.x + x) * ground.grid_size) as f32,
+                                                ((message.y + y) * ground.grid_size) as f32,
+                                                0.51,
+                                            )),
+                                            Name::new("turret tile"),
+                                            Collider::cuboid(16., 16.),
+                                            Friction::new(1.0),
+                                            ActiveEvents::COLLISION_EVENTS,
+                                        ));
+                                    }
+                                }
+                            });
                     },
                 );
 

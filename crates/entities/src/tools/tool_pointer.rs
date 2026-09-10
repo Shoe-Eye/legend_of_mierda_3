@@ -1,14 +1,11 @@
-use std::default;
-
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ecs_ldtk::{assets::LdtkProject, LdtkProjectHandle, LevelEvent, LevelIid};
 use lom_assets::sprites::CharacterAnimation;
-use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
-use lom_ldtk::ldtk::{spawn_game_world, LevelChangeEvent};
 
 use crate::controls::ControlEvent;
+use crate::level::Building;
 use crate::player::Player;
 
 #[derive(Component)]
@@ -92,8 +89,9 @@ pub fn init_tool_pointer_layer(
 pub fn draw_tool_pointer(
     mut commands: Commands,
     q_player: Query<(Entity, &Transform, &CharacterAnimation, &Player)>,
-    q_tool_pointer_layer: Query<(Entity, &ToolPointerLayer)>,
+    mut q_tool_pointer_layer: Query<(Entity, &mut ToolPointerLayer)>,
     q_tool_pointer_tiles: Query<(Entity, &ChildOf, &ToolPointerTile)>,
+    q_buildings: Query<(&Building)>,
 ) {
     let mut direction = Direction::default();
 
@@ -103,7 +101,8 @@ pub fn draw_tool_pointer(
     }
 
     for (_, player_transform, _character_animation, _player) in q_player.iter() {
-        if let Some((tool_pointer_entity, tool_pointer_layer)) = q_tool_pointer_layer.iter().next()
+        if let Some((tool_pointer_entity, mut tool_pointer_layer)) =
+            q_tool_pointer_layer.iter_mut().next()
         {
             let mut x =
                 f32::floor(player_transform.translation.x / (tool_pointer_layer.grid_size as f32))
@@ -114,30 +113,74 @@ pub fn draw_tool_pointer(
 
             match direction {
                 Direction::Left => {
-                    if x >= 1 {
-                        x -= 1;
+                    if x >= tool_pointer_layer.pointer_size_x {
+                        x -= tool_pointer_layer.pointer_size_x;
+                    }
+
+                    if y >= tool_pointer_layer.pointer_size_y / 2 {
+                        y -= tool_pointer_layer.pointer_size_y / 2;
                     }
                 }
                 Direction::Right => {
                     x += 1;
+                    if y >= tool_pointer_layer.pointer_size_y / 2 {
+                        y -= tool_pointer_layer.pointer_size_y / 2;
+                    }
                 }
                 Direction::Up => {
                     y += 1;
+                    if x >= tool_pointer_layer.pointer_size_x / 2 {
+                        x -= tool_pointer_layer.pointer_size_x / 2;
+                    }
                 }
                 Direction::Down => {
-                    if y >= 1 {
-                        y -= 1;
+                    if y >= tool_pointer_layer.pointer_size_y {
+                        y -= tool_pointer_layer.pointer_size_y;
+                    }
+
+                    if x >= tool_pointer_layer.pointer_size_x / 2 {
+                        x -= tool_pointer_layer.pointer_size_x / 2;
                     }
                 }
             }
 
+            let buildings: Vec<Building> = q_buildings.iter().map(|e| e.clone()).collect();
+            let building_blocks = |x: u32, y: u32| -> bool {
+                return buildings
+                    .iter()
+                    .filter(|b| {
+                        (x >= b.x && x < (b.x + b.width)) && (y >= b.y && y < (b.y + b.height))
+                    })
+                    .count()
+                    != 0;
+            };
+
+            println!("building {:?}", buildings);
+
+            tool_pointer_layer.enabled = true;
             commands.entity(tool_pointer_entity).with_children(
                 |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
                     for delta_x in 0..tool_pointer_layer.pointer_size_x {
                         for delta_y in 0..tool_pointer_layer.pointer_size_y {
+                            println!("%%");
+                            if building_blocks(x + delta_x, y + delta_y) {
+                                tool_pointer_layer.enabled = false;
+                            }
+                        }
+                    }
+
+                    println!("~~ {} ~~", tool_pointer_layer.enabled);
+
+                    for delta_x in 0..tool_pointer_layer.pointer_size_x {
+                        for delta_y in 0..tool_pointer_layer.pointer_size_y {
+                            println!("pointer: {} {}", x + delta_x, y + delta_y);
+
                             parent.spawn((
                                 Sprite::from_color(
-                                    Color::srgba(1.0, 0.0, 0.0, 0.5),
+                                    match tool_pointer_layer.enabled {
+                                        false => Color::srgba(1.0, 0.0, 0.0, 0.5),
+                                        true => Color::srgba(0.0, 1.0, 0.0, 0.5),
+                                    },
                                     Vec2::new(16.0, 16.0),
                                 ),
                                 Transform::from_translation(Vec3::new(
@@ -150,6 +193,8 @@ pub fn draw_tool_pointer(
                             ));
                         }
                     }
+
+                    println!("~~~");
                 },
             );
         }

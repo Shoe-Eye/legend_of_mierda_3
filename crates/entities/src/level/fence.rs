@@ -154,6 +154,8 @@ pub fn handle_build_fence(
                             Building {
                                 x: message.x,
                                 y: message.y,
+                                width: 1,
+                                height: 1,
                             },
                             Name::new("fence tile"),
                             fence,
