@@ -1,5 +1,6 @@
 use crate::player::Player;
 use crate::tools::actions::Action;
+use crate::tools::tool_pointer::ToolPointerLayer;
 use crate::tools::{ChooseAction, ChooseTool, Tool};
 use bevy::color::palettes::basic::*;
 use bevy::prelude::*;
@@ -163,6 +164,7 @@ fn tool_selection_system(
         Changed<Interaction>,
     >,
     mut player: Query<&mut Player>,
+
     mut ew_choose_tool: MessageWriter<ChooseTool>,
 ) {
     for (entity, interaction, mut background_color, _children, tool, _ui_tool_choose) in

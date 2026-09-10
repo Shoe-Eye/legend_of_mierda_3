@@ -4,11 +4,7 @@ use lom_assets::{loading::StaticSpriteTextureAtlasLayoutAssets, StaticSpriteAsse
 use lom_game::GameState;
 
 use crate::{
-    level::{
-        fence::{get_sprite_index, FenceTile},
-        ground::Ground,
-        BuildFenceMessage, BuildTurret, Building,
-    },
+    level::{BuildFenceMessage, BuildTurret},
     player::PlayerToolUseEvent,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
@@ -38,18 +34,23 @@ pub fn handle_hammer_use(
         let action = message.action.unwrap();
 
         if let Some((_, tool_pointer_tile)) = q_tool_pointer_tiles.iter().next() {
-            if (message.tool == Tool::Hammer && action == Action::Fence) {
-                mw_fence.write(BuildFenceMessage {
-                    x: tool_pointer_tile.x,
-                    y: tool_pointer_tile.y,
-                });
-            }
-
-            if (message.tool == Tool::Hammer && action == Action::Turret) {
-                mw_turret.write(BuildTurret {
-                    x: tool_pointer_tile.x,
-                    y: tool_pointer_tile.y,
-                });
+            match message.tool {
+                Tool::Hammer => match action {
+                    Action::Fence { width, height } => {
+                        mw_fence.write(BuildFenceMessage {
+                            x: tool_pointer_tile.x,
+                            y: tool_pointer_tile.y,
+                        });
+                    }
+                    Action::Turret { width, height } => {
+                        mw_turret.write(BuildTurret {
+                            x: tool_pointer_tile.x,
+                            y: tool_pointer_tile.y,
+                        });
+                    }
+                    _ => {}
+                },
+                _ => {}
             }
         }
     }

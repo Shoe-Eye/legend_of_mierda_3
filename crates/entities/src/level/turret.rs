@@ -54,12 +54,6 @@ pub fn handle_build_turret(
                     },
                 );
 
-                // ---
-                //
-                println!("x {} y {}", message.x, message.y);
-                //
-                // ---
-
                 commands.spawn((
                     Mesh3d(asset_server.load("models/turrets/simple.obj")),
                     MeshMaterial3d(materials.add(StandardMaterial { ..default() })),

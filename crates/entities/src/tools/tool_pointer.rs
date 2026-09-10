@@ -17,6 +17,11 @@ pub struct ToolPointerLayer {
     pub width: u32,
     pub height: u32,
     pub grid_size: u32,
+
+    pub pointer_size_x: u32,
+    pub pointer_size_y: u32,
+
+    pub enabled: bool,
 }
 
 #[derive(Default, Clone, Copy, Debug)]
@@ -27,6 +32,9 @@ enum Direction {
     Up,
     Down,
 }
+
+#[derive(Component, Default)]
+pub struct ToolPointer;
 
 #[derive(Component, Default)]
 pub struct ToolPointerTile {
@@ -66,6 +74,9 @@ pub fn init_tool_pointer_layer(
                                             width,
                                             height,
                                             grid_size,
+                                            pointer_size_x: 1,
+                                            pointer_size_y: 1,
+                                            enabled: true,
                                         },
                                     ));
                                 }
@@ -122,16 +133,23 @@ pub fn draw_tool_pointer(
 
             commands.entity(tool_pointer_entity).with_children(
                 |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
-                    parent.spawn((
-                        Sprite::from_color(Color::srgba(1.0, 0.0, 0.0, 0.5), Vec2::new(16.0, 16.0)),
-                        Transform::from_translation(Vec3::new(
-                            (x * tool_pointer_layer.grid_size) as f32,
-                            (y * tool_pointer_layer.grid_size) as f32,
-                            0.6,
-                        )),
-                        Name::new("ground tile"),
-                        ToolPointerTile { x, y, direction },
-                    ));
+                    for delta_x in 0..tool_pointer_layer.pointer_size_x {
+                        for delta_y in 0..tool_pointer_layer.pointer_size_y {
+                            parent.spawn((
+                                Sprite::from_color(
+                                    Color::srgba(1.0, 0.0, 0.0, 0.5),
+                                    Vec2::new(16.0, 16.0),
+                                ),
+                                Transform::from_translation(Vec3::new(
+                                    ((x + delta_x) * tool_pointer_layer.grid_size) as f32,
+                                    ((y + delta_y) * tool_pointer_layer.grid_size) as f32,
+                                    0.6,
+                                )),
+                                Name::new("ground tile"),
+                                ToolPointerTile { x, y, direction },
+                            ));
+                        }
+                    }
                 },
             );
         }

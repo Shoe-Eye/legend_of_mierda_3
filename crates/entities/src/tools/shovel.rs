@@ -45,20 +45,23 @@ pub fn handle_shovel_use(
                 continue;
             }
 
-            if message.tool == Tool::Shovel {
-                if action == Action::Dig {
-                    mw_dig_ground.write(DigGroundMessage {
-                        x: tool_pointer_tile.x,
-                        y: tool_pointer_tile.y,
-                    });
-                }
-
-                if action == Action::Foundation {
-                    mw_build_foundation.write(BuildFoundationMessage {
-                        x: tool_pointer_tile.x,
-                        y: tool_pointer_tile.y,
-                    });
-                }
+            match message.tool {
+                Tool::Shovel => match action {
+                    Action::Dig { width, height } => {
+                        mw_dig_ground.write(DigGroundMessage {
+                            x: tool_pointer_tile.x,
+                            y: tool_pointer_tile.y,
+                        });
+                    }
+                    Action::Foundation { width, height } => {
+                        mw_build_foundation.write(BuildFoundationMessage {
+                            x: tool_pointer_tile.x,
+                            y: tool_pointer_tile.y,
+                        });
+                    }
+                    _ => {}
+                },
+                _ => {}
             }
         }
     }

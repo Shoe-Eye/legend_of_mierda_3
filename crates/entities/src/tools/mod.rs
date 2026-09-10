@@ -8,6 +8,7 @@ use crate::{
     player::Player,
     tools::{
         actions::{get_tool_actions, Action},
+        tool_pointer::ToolPointerLayer,
         ui::{spawn_tool_action_ui, UIToolActionMenu},
     },
 };
@@ -82,10 +83,24 @@ pub fn on_choose_tool(
 pub fn on_choose_action(
     mut er_choose_action: MessageReader<ChooseAction>,
     mut q_player: Query<(Entity, &mut Player)>,
+
+    mut q_tool_pointer_layer: Query<(Entity, &mut ToolPointerLayer)>,
 ) {
     for event in er_choose_action.read() {
         for (_, mut player) in q_player.iter_mut() {
             player.choose_action(Some(event.action));
+
+            for (_, mut tool_pointer_layer) in q_tool_pointer_layer.iter_mut() {
+                let (width, height) = match event.action {
+                    Action::Dig { width, height } => (width, height),
+                    Action::Foundation { width, height } => (width, height),
+                    Action::Fence { width, height } => (width, height),
+                    Action::Turret { width, height } => (width, height),
+                };
+
+                tool_pointer_layer.pointer_size_x = width;
+                tool_pointer_layer.pointer_size_y = height;
+            }
         }
     }
 }
