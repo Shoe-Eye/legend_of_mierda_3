@@ -110,8 +110,8 @@ pub fn handle_build_turret(
                     MeshMaterial3d(materials.add(StandardMaterial { ..default() })),
                     TurretModel,
                     Transform::from_xyz(
-                        (message.x as f32) * 0.62 - 13.61,
-                        (message.y as f32) * 0.621 - 8.61,
+                        (message.x as f32) * 0.75 - 16.5,
+                        (message.y as f32) * 0.75 - 10.5,
                         0.0,
                     )
                     .with_rotation(Quat::from_rotation_x(FRAC_PI_4)),

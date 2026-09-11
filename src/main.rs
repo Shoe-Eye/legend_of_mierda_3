@@ -1,8 +1,7 @@
 #![allow(clippy::too_many_arguments, clippy::type_complexity)]
 
-use std::f32::consts::{FRAC_PI_2, FRAC_PI_4};
-
 use bevy::camera::ScalingMode;
+use bevy::color::palettes::css::RED;
 use bevy::window::*;
 use bevy::{input::common_conditions::input_toggle_active, prelude::*};
 use bevy_defer::AsyncPlugin;
@@ -37,6 +36,7 @@ fn main() {
             .set(ImagePlugin::default_nearest())
             .set(WindowPlugin {
                 primary_window: Some(Window {
+                    resizable: false,
                     resolution: (1680, 1280).into(),
                     present_mode: PresentMode::AutoVsync,
                     fit_canvas_to_parent: true,
@@ -102,7 +102,7 @@ impl Plugin for LegendOfMierda3Plugin {
             (sprites::animate_character_sprtire, flash_sprite)
                 .run_if(in_state(GameState::GamePlay)),
         )
-        .add_systems(Startup, (setup_cameras))
+        .add_systems(Startup, setup_cameras)
         .add_message::<LevelChangeEvent>();
     }
 }
@@ -123,13 +123,17 @@ fn setup_cameras(mut commands: Commands) {
             order: 2,
             ..default()
         },
-        // Projection::from(OrthographicProjection {
-        //     // scaling_mode: ScalingMode::FixedVertical {
-        //     //     viewport_height: 38.0,
-        //     // },
-        //     ..OrthographicProjection::default_3d()
-        // }),
+        Projection::from(OrthographicProjection {
+            scaling_mode: ScalingMode::FixedVertical {
+                viewport_height: 30.0,
+            },
+            ..OrthographicProjection::default_3d()
+        }),
     ));
 
-    commands.spawn((PointLight::default(), Transform::from_xyz(0.0, 0.0, 5.0)));
+    commands.insert_resource(GlobalAmbientLight {
+        color: RED.into(),
+        brightness: 500.0,
+        ..default()
+    });
 }
