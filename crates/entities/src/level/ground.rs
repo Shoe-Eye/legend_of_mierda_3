@@ -39,6 +39,12 @@ pub struct FoundationTile {
     pub y: u32,
 }
 
+#[derive(Component, Clone, Copy)]
+pub struct TrailTile {
+    pub x: u32,
+    pub y: u32,
+}
+
 pub fn init_ground_layer(
     mut commands: Commands,
     q_levels: Query<(Entity, &LevelIid)>,

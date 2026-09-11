@@ -4,6 +4,7 @@ use lom_game::GameState;
 pub mod fence;
 pub mod foundation;
 pub mod ground;
+pub mod trail;
 pub mod turret;
 
 pub struct LevelPlugin;
@@ -24,6 +25,12 @@ pub struct GroundStruct {
 
 #[derive(Message, Clone, Copy)]
 pub struct BuildFoundationMessage {
+    pub x: u32,
+    pub y: u32,
+}
+
+#[derive(Message, Clone, Copy)]
+pub struct BuildTrailMessage {
     pub x: u32,
     pub y: u32,
 }
@@ -53,6 +60,7 @@ impl Plugin for LevelPlugin {
                 Update,
                 (
                     foundation::handle_build_foundation,
+                    trail::handle_build_trail,
                     ground::handle_build_ground,
                     turret::handle_build_turret,
                     turret::handle_turret_rotation,
@@ -61,6 +69,7 @@ impl Plugin for LevelPlugin {
             )
             .add_message::<BuildFoundationMessage>()
             .add_message::<BuildFenceMessage>()
+            .add_message::<BuildTrailMessage>()
             .add_message::<BuildTurret>()
             .add_message::<DigGroundMessage>();
     }

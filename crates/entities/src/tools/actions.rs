@@ -9,6 +9,7 @@ use crate::{
 #[derive(PartialEq, Eq, Debug, Clone, Copy, Reflect, Component)]
 pub enum Action {
     Dig { width: u32, height: u32 },
+    Trail { width: u32, height: u32 },
     Foundation { width: u32, height: u32 },
     Fence { width: u32, height: u32 },
     Turret { width: u32, height: u32 },
@@ -23,6 +24,7 @@ impl fmt::Display for Action {
             Action::Turret { width, height } => {
                 write!(f, "Turret {}x{}", width, height)
             }
+            Action::Trail { width, height } => write!(f, "Trail {}x{}", width, height),
         }
     }
 }
@@ -36,6 +38,10 @@ pub fn get_tool_actions(tool: Tool) -> Vec<Action> {
                     height: 1,
                 },
                 Action::Foundation {
+                    width: 1,
+                    height: 1,
+                },
+                Action::Trail {
                     width: 1,
                     height: 1,
                 },
