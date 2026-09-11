@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 use core::fmt;
 
-use crate::tools::Tool;
+use crate::{
+    level::turret::{TURRET_SIZE_X, TURRET_SIZE_Y},
+    tools::Tool,
+};
 
 #[derive(PartialEq, Eq, Debug, Clone, Copy, Reflect, Component)]
 pub enum Action {
@@ -14,10 +17,12 @@ pub enum Action {
 impl fmt::Display for Action {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Action::Dig { width, height } => write!(f, "Hole 1x1"),
-            Action::Foundation { width, height } => write!(f, "Foundation 1x1"),
-            Action::Fence { width, height } => write!(f, "Fence 1x1"),
-            Action::Turret { width, height } => write!(f, "Turret 5x5"),
+            Action::Dig { width, height } => write!(f, "Hole {}x{}", width, height),
+            Action::Foundation { width, height } => write!(f, "Foundation {}x{}", width, height),
+            Action::Fence { width, height } => write!(f, "Fence {}x{}", width, height),
+            Action::Turret { width, height } => {
+                write!(f, "Turret {}x{}", width, height)
+            }
         }
     }
 }
@@ -43,8 +48,8 @@ pub fn get_tool_actions(tool: Tool) -> Vec<Action> {
                     height: 1,
                 },
                 Action::Turret {
-                    width: 4,
-                    height: 4,
+                    width: TURRET_SIZE_X,
+                    height: TURRET_SIZE_Y,
                 },
             ]
         }

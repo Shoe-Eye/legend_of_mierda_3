@@ -55,6 +55,7 @@ impl Plugin for LevelPlugin {
                     foundation::handle_build_foundation,
                     ground::handle_build_ground,
                     turret::handle_build_turret,
+                    turret::handle_turret_rotation,
                 )
                     .run_if(in_state(GameState::GamePlay)),
             )

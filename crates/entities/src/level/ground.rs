@@ -33,7 +33,7 @@ pub struct GroundTile {
     pub y: u32,
 }
 
-#[derive(Component)]
+#[derive(Component, Clone, Copy)]
 pub struct FoundationTile {
     pub x: u32,
     pub y: u32,

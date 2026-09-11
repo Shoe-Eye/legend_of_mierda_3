@@ -155,26 +155,19 @@ pub fn draw_tool_pointer(
                     != 0;
             };
 
-            println!("building {:?}", buildings);
-
             tool_pointer_layer.enabled = true;
             commands.entity(tool_pointer_entity).with_children(
                 |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
                     for delta_x in 0..tool_pointer_layer.pointer_size_x {
                         for delta_y in 0..tool_pointer_layer.pointer_size_y {
-                            println!("%%");
                             if building_blocks(x + delta_x, y + delta_y) {
                                 tool_pointer_layer.enabled = false;
                             }
                         }
                     }
 
-                    println!("~~ {} ~~", tool_pointer_layer.enabled);
-
                     for delta_x in 0..tool_pointer_layer.pointer_size_x {
                         for delta_y in 0..tool_pointer_layer.pointer_size_y {
-                            println!("pointer: {} {}", x + delta_x, y + delta_y);
-
                             parent.spawn((
                                 Sprite::from_color(
                                     match tool_pointer_layer.enabled {
@@ -193,8 +186,6 @@ pub fn draw_tool_pointer(
                             ));
                         }
                     }
-
-                    println!("~~~");
                 },
             );
         }
