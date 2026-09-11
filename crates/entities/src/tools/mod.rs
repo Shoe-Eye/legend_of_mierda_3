@@ -96,6 +96,7 @@ pub fn on_choose_action(
                     Action::Foundation { width, height } => (width, height),
                     Action::Fence { width, height } => (width, height),
                     Action::Turret { width, height } => (width, height),
+                    Action::Trail { width, height } => (width, height),
                 };
 
                 tool_pointer_layer.pointer_size_x = width;

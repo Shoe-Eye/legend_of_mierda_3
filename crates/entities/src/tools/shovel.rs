@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use lom_game::GameState;
 
 use crate::{
-    level::{BuildFoundationMessage, Building, DigGroundMessage},
+    level::{BuildFoundationMessage, BuildTrailMessage, Building, DigGroundMessage},
     player::PlayerToolUseEvent,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
@@ -22,6 +22,7 @@ pub fn handle_shovel_use(
     mut mr: MessageReader<PlayerToolUseEvent>,
     mut mw_build_foundation: MessageWriter<BuildFoundationMessage>,
     mut mw_dig_ground: MessageWriter<DigGroundMessage>,
+    mut mw_build_trail: MessageWriter<BuildTrailMessage>,
     q_tool_pointer_tiles: Query<(Entity, &ToolPointerTile)>,
     q_buildings: Query<(Entity, &Building)>,
 ) {
@@ -55,6 +56,12 @@ pub fn handle_shovel_use(
                     }
                     Action::Foundation { width, height } => {
                         mw_build_foundation.write(BuildFoundationMessage {
+                            x: tool_pointer_tile.x,
+                            y: tool_pointer_tile.y,
+                        });
+                    }
+                    Action::Trail { width, height } => {
+                        mw_build_trail.write(BuildTrailMessage {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
                         });
