@@ -2,9 +2,6 @@ use bevy::prelude::*;
 use lom_game::GameState;
 
 #[derive(Component)]
-pub struct UIPlayerHealth;
-
-#[derive(Component)]
 pub struct UIGameOver;
 
 #[derive(Component)]

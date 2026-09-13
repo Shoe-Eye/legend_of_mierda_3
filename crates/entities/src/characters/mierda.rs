@@ -131,9 +131,9 @@ pub fn update_mierdas_move_direction(
     }
 }
 
-// ---
+// ------
 // Plugin
-// ---
+// ------
 
 pub struct MierdaPlugin;
 

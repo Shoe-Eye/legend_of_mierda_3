@@ -5,10 +5,10 @@ use bevy_rapier2d::prelude::*;
 use lom_assets::loading::GENNADIJ_ASSET_SHEET;
 use lom_assets::loading::SHEET_1_COLUMNS;
 use lom_assets::loading::SHEET_1_ROWS;
-use lom_ui::game::UIPlayerHealth;
 
 use crate::gameplay::gameover::GameOverEvent;
 use crate::tools::actions::Action;
+use crate::tools::ui::UIPlayerHealth;
 use crate::tools::Tool;
 use lom_assets::load_texture_atlas;
 use lom_assets::sprites::*;
@@ -94,7 +94,7 @@ impl LdtkEntity for PlayerBundle {
             collider_bundle,
             active_events: ActiveEvents::COLLISION_EVENTS,
             player: Player {
-                health: 100,
+                health: 10000,
                 tool: Tool::None,
                 action: None,
             },
@@ -180,11 +180,14 @@ pub fn event_player_hit(
     mut q_player: Query<(Entity, &mut Player)>,
     audio: Res<Audio>,
     audio_assets: Res<AudioAssets>,
+    mut q_player_health: Query<(Entity, &mut Text, &UIPlayerHealth)>,
 ) {
     for ev in ev_player_hit_reader.read() {
-        if commands.get_entity(ev.entity).is_err() {
-            continue;
-        }
+        // if commands.get_entity(ev.entity).is_err() {
+        //     println!("contiunued");
+        //     continue;
+        // }
+        //
 
         let (_, mut player) = q_player.get_mut(ev.entity).unwrap();
 
@@ -192,9 +195,13 @@ pub fn event_player_hit(
 
         if player.health == 0 {
             ev_game_over.write(GameOverEvent);
-            continue;
+            // continue;
         } else {
             player.health -= 5;
+        }
+
+        for (_, mut text, _) in q_player_health.iter_mut() {
+            *text = Text::new(format!("Gennadiy Health: {}", player.health));
         }
     }
 }
@@ -219,18 +226,16 @@ pub fn handle_player_enemy_collisions(
             let contact_2_enemy = q_enemies.get(*e2);
             let is_contact_enemy = contact_1_enemy.is_ok() || contact_2_enemy.is_ok();
 
-            if !(is_contact_player && is_contact_enemy) {
-                continue;
+            if is_contact_player && is_contact_enemy {
+                let player_entity = match contact_1_player.is_ok() {
+                    true => contact_1_player.unwrap().0,
+                    false => contact_2_player.unwrap().0,
+                };
+
+                ev_player_hit.write(PlayerHitEvent {
+                    entity: player_entity,
+                });
             }
-
-            let player_entity = match contact_1_player.is_ok() {
-                true => contact_1_player.unwrap().0,
-                false => contact_2_player.unwrap().0,
-            };
-
-            ev_player_hit.write(PlayerHitEvent {
-                entity: player_entity,
-            });
         }
     }
 }

@@ -1,6 +1,5 @@
 use crate::player::Player;
 use crate::tools::actions::Action;
-use crate::tools::tool_pointer::ToolPointerLayer;
 use crate::tools::{ChooseAction, ChooseTool, Tool};
 use bevy::color::palettes::basic::*;
 use bevy::prelude::*;
@@ -30,7 +29,10 @@ pub struct UIToolHovering;
 #[derive(Component)]
 pub struct UIToolActionHovering;
 
-fn spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
+#[derive(Component)]
+pub struct UIPlayerHealth;
+
+fn draw_spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font = asset_server.load("fonts/PixeloidMono-d94EV.ttf");
     commands
         .spawn((
@@ -119,6 +121,90 @@ fn spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetServer
                             );
                         });
                 });
+        });
+}
+
+fn draw_player_status_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let font = asset_server.load("fonts/PixeloidMono-d94EV.ttf");
+    commands
+        .spawn((
+            Node {
+                // fill the entire window
+                width: percent(100),
+                height: px(50),
+                flex_direction: FlexDirection::Column,
+                align_items: AlignItems::Center,
+                position_type: PositionType::Absolute,
+                bottom: Val::Px(64.0),
+                padding: MARGIN.all(),
+                row_gap: MARGIN,
+                ..Default::default()
+            },
+            UIGamePlay,
+            UIToolChooseMenu,
+            Name::from("player_status::ui"),
+        ))
+        .with_children(|builder| {
+            builder.spawn(Node {
+                flex_direction: FlexDirection::Row,
+                ..default()
+            });
+
+            builder
+                .spawn((Node {
+                    width: percent(100),
+                    height: percent(100),
+                    flex_direction: FlexDirection::Column,
+                    row_gap: MARGIN,
+                    ..default()
+                },))
+                .with_children(|builder| {
+                    builder
+                        .spawn((Node {
+                            flex_direction: FlexDirection::Row,
+                            align_items: AlignItems::Center,
+                            justify_content: JustifyContent::Center,
+                            width: percent(100),
+                            height: percent(100),
+                            ..default()
+                        },))
+                        .with_children(|builder| {
+                            builder.spawn((
+                                UIPlayerHealth,
+                                Text::new(format!("Gennadiy Health: 100")),
+                                TextFont::from(font),
+                                TextColor::BLACK,
+                            ));
+                        });
+                });
+        });
+}
+
+fn draw_tool_action_ui_item(
+    builder: &mut ChildSpawnerCommands,
+    font: Handle<Font>,
+    background_color: Color,
+    margin: UiRect,
+    action: Action,
+) {
+    builder
+        .spawn((
+            Node {
+                margin,
+                padding: UiRect::axes(px(5), px(1)),
+                ..default()
+            },
+            BackgroundColor(background_color),
+            UIToolActionChoose,
+            action,
+            Interaction::default(),
+        ))
+        .with_children(|builder| {
+            builder.spawn((
+                Text::new(format!("{}", action)),
+                TextFont::from(font),
+                TextColor::BLACK,
+            ));
         });
 }
 
@@ -214,7 +300,7 @@ fn tool_action_selection_system(
     mut player: Query<&mut Player>,
     mut ew_choose_action: MessageWriter<ChooseAction>,
 ) {
-    for (entity, interaction, mut background_color, children, action, ui_tool_choose) in
+    for (entity, interaction, mut background_color, _children, action, _ui_tool_choose) in
         &mut interaction_query
     {
         if player.single().is_err() {
@@ -344,7 +430,7 @@ pub(crate) fn spawn_tool_action_ui(
                         },))
                         .with_children(|builder| {
                             actions.iter().for_each(|action| {
-                                spawn_tool_action_ui_item(
+                                draw_tool_action_ui_item(
                                     builder,
                                     font.clone(),
                                     WHITE.into(),
@@ -357,49 +443,24 @@ pub(crate) fn spawn_tool_action_ui(
         });
 }
 
-fn spawn_tool_action_ui_item(
-    builder: &mut ChildSpawnerCommands,
-    font: Handle<Font>,
-    background_color: Color,
-    margin: UiRect,
-    action: Action,
-) {
-    builder
-        .spawn((
-            Node {
-                margin,
-                padding: UiRect::axes(px(5), px(1)),
-                ..default()
-            },
-            BackgroundColor(background_color),
-            UIToolActionChoose,
-            action,
-            Interaction::default(),
-        ))
-        .with_children(|builder| {
-            builder.spawn((
-                Text::new(format!("{}", action)),
-                TextFont::from(font),
-                TextColor::BLACK,
-            ));
-        });
-}
-
 pub struct ToolUIPlugin;
 
 impl Plugin for ToolUIPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::GamePlay), (spawn_tool_selection_ui))
-            .add_systems(
-                Update,
-                (
-                    tool_selection_system,
-                    tool_highlight_system,
-                    tool_action_selection_system,
-                    tool_action_highlight_system,
-                )
-                    .chain()
-                    .run_if(in_state(GameState::GamePlay)),
-            );
+        app.add_systems(
+            OnEnter(GameState::GamePlay),
+            (draw_spawn_tool_selection_ui, draw_player_status_ui),
+        )
+        .add_systems(
+            Update,
+            (
+                tool_selection_system,
+                tool_highlight_system,
+                tool_action_selection_system,
+                tool_action_highlight_system,
+            )
+                .chain()
+                .run_if(in_state(GameState::GamePlay)),
+        );
     }
 }

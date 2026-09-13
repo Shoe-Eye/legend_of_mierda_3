@@ -797,7 +797,12 @@
 					"autoLayerTiles": [],
 					"seed": 7640269,
 					"overrideTilesetUid": null,
-					"gridTiles": [{ "px": [64,112], "src": [0,0], "f": 0, "t": 0, "d": [340], "a": 1 }],
+					"gridTiles": [
+						{ "px": [64,112], "src": [0,0], "f": 0, "t": 0, "d": [340], "a": 1 },
+						{ "px": [352,192], "src": [0,0], "f": 0, "t": 0, "d": [598], "a": 1 },
+						{ "px": [208,208], "src": [0,0], "f": 0, "t": 0, "d": [637], "a": 1 },
+						{ "px": [208,224], "src": [0,0], "f": 0, "t": 0, "d": [685], "a": 1 }
+					],
 					"entityInstances": []
 				},
 				{
@@ -909,6 +914,25 @@
 							"fieldInstances": [],
 							"__worldX": 472,
 							"__worldY": 232
+						},
+						{
+							"__identifier": "Mierda",
+							"__grid": [0,0],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": { "tilesetUid": 193, "x": 32, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#EAD4AA",
+							"iid": "82dfee20-96d0-11f1-8711-af34f74a4924",
+							"width": 8,
+							"height": 8,
+							"defUid": 192,
+							"px": [9,9],
+							"fieldInstances": [{ "__identifier": "is_dummy", "__type": "Bool", "__value": true, "__tile": null, "defUid": 194, "realEditorValues": [{
+								"id": "V_Bool",
+								"params": [ true ]
+							}] }],
+							"__worldX": 265,
+							"__worldY": 9
 						}
 					]
 				},

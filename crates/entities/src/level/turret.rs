@@ -63,7 +63,9 @@ pub fn handle_build_turret(
                 }
             }
 
-            if turret_does_not_exist && n_foundation_tiles == TURRET_SIZE_X * TURRET_SIZE_Y {
+            if turret_does_not_exist
+            /* && n_foundation_tiles == TURRET_SIZE_X * TURRET_SIZE_Y  */
+            {
                 commands.entity(ground_entity).with_children(
                     |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
                         parent
@@ -125,6 +127,12 @@ pub fn handle_turret_rotation(
     mut turrets: Query<(&mut Transform, &TurretModel)>,
     timer: Res<Time>,
 ) {
+    for (mut transform, _) in &mut turrets {
+        transform.rotation *= Quat::from_rotation_y(0.1 * TAU * timer.delta_secs());
+    }
+}
+
+pub fn handle_turret_attack(mut turrets: Query<(&mut Transform, &TurretModel)>, timer: Res<Time>) {
     for (mut transform, _) in &mut turrets {
         transform.rotation *= Quat::from_rotation_y(0.1 * TAU * timer.delta_secs());
     }

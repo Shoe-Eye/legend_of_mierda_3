@@ -147,7 +147,13 @@ pub fn event_on_level_change(
                     ..default()
                 };
 
-                let wave_entry = gameplay_state.select_random_wave_entry().unwrap();
+                let wave_entry = gameplay_state.select_random_wave_entry();
+
+                if wave_entry.is_none() {
+                    continue;
+                }
+
+                let wave_entry = wave_entry.unwrap();
 
                 ew_wave.write(WaveEvent {
                     wave_number: 1,
@@ -230,18 +236,14 @@ pub fn ui_wave_info_text(
 pub fn get_level_1_waves() -> Vec<Wave> {
     vec![
         Wave {
+            events: vec![],
+            event_duration: Duration::from_secs(1),
+            wave_duration: Duration::from_secs(1),
+        },
+        Wave {
             events: vec![WaveEntry::Mierda { count: 100 }],
             event_duration: Duration::from_secs(2),
             wave_duration: Duration::from_secs(2),
-        },
-        Wave {
-            events: vec![
-                WaveEntry::Mierda { count: 100 },
-                WaveEntry::Mierda { count: 100 },
-                WaveEntry::Mierda { count: 100 },
-            ],
-            event_duration: Duration::from_secs(10),
-            wave_duration: Duration::from_secs(40),
         },
     ]
 }

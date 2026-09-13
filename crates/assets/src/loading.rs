@@ -2,7 +2,6 @@ use bevy::{image::TextureAtlasLayout, prelude::*};
 use bevy_asset_loader::prelude::*;
 use bevy_kira_audio::AudioSource;
 
-use crate::sprites::*;
 use lom_game::GameState;
 
 pub const SHEET_1_COLUMNS: usize = 13;
@@ -96,6 +95,8 @@ pub struct StaticSpriteAssets {
     pub fence: Handle<Image>,
     #[asset(path = "sprites/farm/Objects/Fence's copiar.png")]
     pub fence_sheet: Handle<Image>,
+    #[asset(path = "sprites/speargun-arrow.png")]
+    pub speargun_arrow: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -111,8 +112,6 @@ impl FromWorld for StaticSpriteTextureAtlasLayoutAssets {
 
         let fence_sheet_texture_layout =
             layouts.add(build_texture_atlas_layout(3, 5, Vec2::ONE * 16.));
-
-        println!("here  1 {:?}", fence_sheet_texture_layout);
 
         StaticSpriteTextureAtlasLayoutAssets {
             fence_sheet_texture_layout: fence_sheet_texture_layout,

@@ -1,6 +1,4 @@
 use bevy::prelude::*;
-use bevy_rapier2d::{parry::simba::scalar::SupersetOf, prelude::*};
-use lom_assets::{loading::StaticSpriteTextureAtlasLayoutAssets, StaticSpriteAssets};
 use lom_game::GameState;
 
 use crate::{

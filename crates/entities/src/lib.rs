@@ -30,13 +30,13 @@ impl Plugin for EntitiesPlugin {
                 .run_if(in_state(GameState::GamePlay)),
         )
         .add_plugins((
-            characters::CharactersPlugin,
             player::PlayerPlugin,
             items::ItemsPlugin,
-            // weapons::WeaponsPlugin,
+            level::LevelPlugin,
+            characters::CharactersPlugin,
             text_indicator::TextIndicatorPlugin,
             tools::ToolsPlugin,
-            level::LevelPlugin,
+            weapons::WeaponsPlugin,
         ))
         .add_message::<GameOverEvent>()
         .add_message::<GameWinEvent>()
