@@ -55,22 +55,26 @@ pub struct BuildTurret {
 
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((ground::GroundPlugin, fence::FencePlugin))
-            .add_systems(
-                Update,
-                (
-                    foundation::handle_build_foundation,
-                    trail::handle_build_trail,
-                    ground::handle_build_ground,
-                    turret::handle_build_turret,
-                    turret::handle_turret_rotation,
-                )
-                    .run_if(in_state(GameState::GamePlay)),
+        app.add_plugins((
+            ground::GroundPlugin,
+            fence::FencePlugin,
+            turret::TurretPlugin,
+        ))
+        .add_systems(
+            Update,
+            (
+                foundation::handle_build_foundation,
+                trail::handle_build_trail,
+                ground::handle_build_ground,
+                turret::handle_build_turret,
+                turret::handle_turret_rotation,
             )
-            .add_message::<BuildFoundationMessage>()
-            .add_message::<BuildFenceMessage>()
-            .add_message::<BuildTrailMessage>()
-            .add_message::<BuildTurret>()
-            .add_message::<DigGroundMessage>();
+                .run_if(in_state(GameState::GamePlay)),
+        )
+        .add_message::<BuildFoundationMessage>()
+        .add_message::<BuildFenceMessage>()
+        .add_message::<BuildTrailMessage>()
+        .add_message::<BuildTurret>()
+        .add_message::<DigGroundMessage>();
     }
 }

@@ -331,9 +331,11 @@ pub fn handle_enemy_hit(
                 hit_sound_played = true;
             }
 
-            let _ = commands.entity(enemy_entity).insert(FlashingTimer {
-                timer: timer.clone(),
-            });
+            if let Ok(mut cmd) = commands.get_entity(enemy_entity) {
+                cmd.insert(FlashingTimer {
+                    timer: timer.clone(),
+                });
+            }
 
             ev_spawn_text_indicator.write(SpawnTextIndicatorEvent {
                 text: format!("-{}", damage),
@@ -387,12 +389,8 @@ impl Plugin for EnemyPlugin {
             // Event Handlers
             .add_systems(
                 Update,
-                handle_enemy_hit.run_if(in_state(GameState::GamePlay)),
-            )
-            .add_systems(
-                Update,
-                despawn_dead_enemies
-                    .after(handle_enemy_hit)
+                (despawn_dead_enemies, handle_enemy_hit)
+                    .chain()
                     .run_if(in_state(GameState::GamePlay)),
             )
             .add_systems(
