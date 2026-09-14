@@ -1,3 +1,4 @@
+use std::f32::consts::FRAC_PI_4;
 use std::time::Duration;
 
 use crate::characters::enemy::{Enemy, EnemyHitEvent};
@@ -74,21 +75,21 @@ pub struct SpeargunArrowTrailDespawnTimer(pub Timer);
 // -------
 
 const TRAIL_TIMER_SPAWN_MILLIS: u64 = 10;
-const ARROW_VELOCITY: f32 = 350.0;
+const ARROW_VELOCITY: f32 = 700.0;
 
 fn handle_speargun_attack_event(
     mut commands: Commands,
     q_spearguns: Query<(Entity, &ChildOf, &Speargun, &Turret)>,
-    q_turret_models: Query<(Entity, &Transform, &TurretModel)>,
+    q_turret_models: Query<(Entity, &TurretModel)>,
     q_ground: Query<(Entity, &Ground)>,
     mut mr_speargun_attack: MessageReader<SpeargunShootEvent>,
     static_sprite_assets: Res<StaticSpriteAssets>,
 ) {
     for attack in mr_speargun_attack.read() {
         if let Ok((entity, child_of, _speargun, turret)) = q_spearguns.get(attack.entity) {
-            if let Some((_, turret_model_transform, _)) = q_turret_models
+            if let Some((_, model)) = q_turret_models
                 .iter()
-                .find(|(_, _, model)| model.game_entity == entity)
+                .find(|(_, model)| model.game_entity == entity)
             {
                 if let Some((ground_entity, ground)) = q_ground.iter().next() {
                     commands.entity(child_of.0).with_children(|parent| {
@@ -102,17 +103,15 @@ fn handle_speargun_attack_event(
                             TimerMode::Repeating,
                         ));
 
+                        let z_rot = model.angle;
+
                         parent.spawn((
                             Transform::from_translation(Vec3::new(
-                                ((turret.x) * ground.grid_size) as f32 + 16. * 8.,
-                                ((turret.y) * ground.grid_size) as f32 + 16. * 8.,
+                                ((turret.x) * ground.grid_size) as f32 + 16. * 2.,
+                                ((turret.y) * ground.grid_size) as f32 + 16. * 2.,
                                 0.52,
                             ))
-                            .with_rotation(Quat::from_rotation_z(
-                                turret_model_transform
-                                    .rotation
-                                    .angle_between(Quat::from_rotation_y(0.0)),
-                            )),
+                            .with_rotation(Quat::from_rotation_z(z_rot)),
                             SpeargunArrowBundle {
                                 speargun_arrow: SpeargunArrow,
                                 active_events: ActiveEvents::COLLISION_EVENTS,
@@ -125,10 +124,14 @@ fn handle_speargun_attack_event(
                                         coefficient: 0.0,
                                         combine_rule: CoefficientCombineRule::Min,
                                     },
-                                    density: ColliderMassProperties::Density(105.0),
+                                    density: ColliderMassProperties::Density(0.0),
                                     rotation_constraints: LockedAxes::ROTATION_LOCKED_X,
                                     velocity: Velocity {
-                                        linear: ARROW_VELOCITY * Vec2::ONE,
+                                        linear: ARROW_VELOCITY
+                                            * Vec2 {
+                                                x: z_rot.cos(),
+                                                y: z_rot.sin(),
+                                            },
                                         angular: 0.0,
                                     },
                                     ..default()
@@ -177,21 +180,21 @@ fn handle_arrow_timers(
                 TimerMode::Once,
             ));
 
-            commands.entity(parent.0).with_children(|parent| {
-                parent.spawn((
-                    SpeargunArrowTrailBundle {
-                        sprite: Sprite {
-                            image: static_sprite_assets.speargun_arrow.clone(),
-                            color: Color::srgba(0.3, 0.0, 0.0, 0.5),
-                            ..default()
-                        },
-                        speargun_arrow_trail: SpeargunArrowTrail,
-                        timer_despawn,
-                    },
-                    ZIndex(105),
-                    Name::new("speargun arrow trail"),
-                ));
-            });
+            // commands.entity(parent.0).with_children(|parent| {
+            //     parent.spawn((
+            //         SpeargunArrowTrailBundle {
+            //             sprite: Sprite {
+            //                 image: static_sprite_assets.speargun_arrow.clone(),
+            //                 color: Color::srgba(0.3, 0.0, 0.0, 0.5),
+            //                 ..default()
+            //             },
+            //             speargun_arrow_trail: SpeargunArrowTrail,
+            //             timer_despawn,
+            //         },
+            //         ZIndex(105),
+            //         Name::new("speargun arrow trail"),
+            //     ));
+            // });
         }
     }
 }
@@ -265,7 +268,7 @@ impl Plugin for SpeargunPlugin {
                 (
                     handle_speargun_attack_event,
                     handle_arrow_timers,
-                    handle_trail_timers,
+                    // handle_trail_timers,
                     handle_arrow_enemy_collisions,
                 )
                     .run_if(in_state(GameState::GamePlay)),

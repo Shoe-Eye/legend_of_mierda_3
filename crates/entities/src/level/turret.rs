@@ -1,4 +1,4 @@
-use std::f32::consts::{FRAC_PI_4, TAU};
+use std::f32::consts::{FRAC_PI_4, PI, TAU};
 use std::time::Duration;
 
 use bevy::prelude::*;
@@ -22,6 +22,7 @@ pub struct Turret {
 #[derive(Component)]
 pub struct TurretModel {
     pub game_entity: Entity,
+    pub angle: f32,
 }
 
 pub fn handle_build_turret(
@@ -68,9 +69,7 @@ pub fn handle_build_turret(
                 }
             }
 
-            if turret_does_not_exist
-            /* && n_foundation_tiles == TURRET_SIZE_X * TURRET_SIZE_Y  */
-            {
+            if turret_does_not_exist && n_foundation_tiles == TURRET_SIZE_X * TURRET_SIZE_Y {
                 let mut turret_entity: Option<Entity> = None;
 
                 commands.entity(ground_entity).with_children(
@@ -127,6 +126,7 @@ pub fn handle_build_turret(
                     MeshMaterial3d(materials.add(StandardMaterial { ..default() })),
                     TurretModel {
                         game_entity: turret_entity.unwrap(),
+                        angle: 0.0,
                     },
                     Transform::from_xyz(
                         (message.x as f32) * 0.75 - 16.5,
@@ -135,17 +135,23 @@ pub fn handle_build_turret(
                     )
                     .with_rotation(Quat::from_rotation_x(FRAC_PI_4)),
                 ));
+
+                break;
             }
         }
     }
 }
 
 pub fn handle_turret_rotation(
-    mut turrets: Query<(&mut Transform, &TurretModel)>,
+    mut turrets: Query<(&mut Transform, &mut TurretModel)>,
     timer: Res<Time>,
 ) {
-    for (mut transform, _) in &mut turrets {
-        transform.rotation *= Quat::from_rotation_y(0.1 * TAU * timer.delta_secs());
+    for (mut transform, mut model) in &mut turrets {
+        let angle = 0.1 * TAU * timer.delta_secs();
+        let delta = Quat::from_rotation_y(angle);
+        transform.rotation *= delta;
+
+        model.angle = (model.angle + angle + PI).rem_euclid(TAU) - PI;
     }
 }
 
