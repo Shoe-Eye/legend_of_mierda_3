@@ -5,8 +5,8 @@ use bevy::prelude::*;
 use bevy_rapier2d::geometry::{ActiveEvents, Collider, Friction};
 use lom_game::GameState;
 
-use crate::level::ground::FoundationTile;
-use crate::level::{ground::Ground, GroundStruct};
+use crate::level::ground::Foundation;
+use crate::level::ground::Ground;
 use crate::level::{BuildTurret, Building};
 use crate::weapons::speargun::{Speargun, SpeargunShootEvent, SpeargunTimer};
 
@@ -32,7 +32,7 @@ pub fn handle_build_turret(
     mut mr_build_turret: MessageReader<BuildTurret>,
     q_ground: Query<(Entity, &Ground)>,
     q_turret_tiles: Query<(Entity, &ChildOf, &Turret)>,
-    q_foundation_tiles: Query<(Entity, &FoundationTile)>,
+    q_foundation_tiles: Query<(Entity, &Foundation)>,
     // q_buildings
 ) {
     for message in mr_build_turret.read() {
@@ -50,7 +50,7 @@ pub fn handle_build_turret(
                 .count()
                 == 0;
 
-            let foundation_tiles: Vec<FoundationTile> = q_foundation_tiles
+            let foundation_tiles: Vec<Foundation> = q_foundation_tiles
                 .iter()
                 .map(|(_, foundation)| foundation.clone())
                 .collect();
@@ -75,10 +75,6 @@ pub fn handle_build_turret(
                 commands.entity(ground_entity).with_children(
                     |parent: &mut bevy_ecs::relationship::RelatedSpawnerCommands<'_, ChildOf>| {
                         let mut ec = parent.spawn((
-                            GroundStruct {
-                                x: message.x,
-                                y: message.y,
-                            },
                             Turret {
                                 x: message.x,
                                 y: message.y,

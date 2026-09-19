@@ -18,6 +18,7 @@ pub mod hammer;
 pub mod shovel;
 pub mod tool_pointer;
 pub mod ui;
+pub mod watering_can;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component, Reflect)]
 pub enum Tool {
@@ -97,6 +98,7 @@ pub fn on_choose_action(
                     Action::Fence { width, height } => (width, height),
                     Action::Turret { width, height } => (width, height),
                     Action::Trail { width, height } => (width, height),
+                    Action::PlantWatermelon { width, height } => (width, height),
                 };
 
                 tool_pointer_layer.pointer_size_x = width;
@@ -115,6 +117,7 @@ impl Plugin for ToolsPlugin {
             shovel::ShovelPlugin,
             hammer::HammerPlugin,
             tool_pointer::ToolPointerPlugin,
+            watering_can::WateringCanPlugin,
         ))
         .add_message::<ChooseTool>()
         .add_message::<ChooseAction>()

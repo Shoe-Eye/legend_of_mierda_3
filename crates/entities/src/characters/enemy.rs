@@ -166,8 +166,6 @@ pub fn handle_spawn_enemy(world: &mut World) {
     let mut rng = ThreadRng::default();
 
     for ev_spawn in &events {
-        println!("spawn_enemy_event");
-
         // 2. Read all query data into owned values (no world borrow held after block)
         let (player_translation, level_bounds, dummy_candidates) = {
             let (_, level_selection, levels, projects, project_assets, enemies, players) =
@@ -176,7 +174,6 @@ pub fn handle_spawn_enemy(world: &mut World) {
             let player_translation = match players.iter().next() {
                 Some((_, t)) => t.translation,
                 None => {
-                    println!("exit 1");
                     continue;
                 }
             };
@@ -184,14 +181,12 @@ pub fn handle_spawn_enemy(world: &mut World) {
             let project_handle = match projects.iter().next() {
                 Some(h) => h,
                 None => {
-                    println!("exit 2");
                     continue;
                 }
             };
             let project = match project_assets.get(project_handle) {
                 Some(p) => p,
                 None => {
-                    println!("exit 3");
                     continue;
                 }
             };

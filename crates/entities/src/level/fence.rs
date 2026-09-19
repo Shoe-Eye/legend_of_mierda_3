@@ -4,7 +4,7 @@ use lom_assets::loading::StaticSpriteTextureAtlasLayoutAssets;
 use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
 
-use crate::level::{ground::Ground, BuildFenceMessage, Building};
+use crate::level::{ground::Ground, BuildFence, Building};
 
 #[derive(Component, Clone, Copy)]
 pub struct FenceTile {
@@ -108,7 +108,7 @@ pub fn adjust_fence_sprites(
 
 pub fn handle_build_fence(
     mut commands: Commands,
-    mut mr: MessageReader<BuildFenceMessage>,
+    mut mr: MessageReader<BuildFence>,
     q_ground: Query<(Entity, &Ground)>,
     q_fence_tiles: Query<(Entity, &ChildOf, &FenceTile)>,
     static_sprite_assets: Res<StaticSpriteAssets>,

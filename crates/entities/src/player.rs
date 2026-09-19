@@ -183,11 +183,9 @@ pub fn event_player_hit(
     mut q_player_health: Query<(Entity, &mut Text, &UIPlayerHealth)>,
 ) {
     for ev in ev_player_hit_reader.read() {
-        // if commands.get_entity(ev.entity).is_err() {
-        //     println!("contiunued");
-        //     continue;
-        // }
-        //
+        if commands.get_entity(ev.entity).is_err() {
+            continue;
+        }
 
         let (_, mut player) = q_player.get_mut(ev.entity).unwrap();
 

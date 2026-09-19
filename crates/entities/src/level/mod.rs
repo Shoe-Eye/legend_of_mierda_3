@@ -6,6 +6,7 @@ pub mod foundation;
 pub mod ground;
 pub mod trail;
 pub mod turret;
+pub mod watermelon;
 
 pub struct LevelPlugin;
 
@@ -17,38 +18,38 @@ pub struct Building {
     pub height: u32,
 }
 
-#[derive(Debug, Clone, Copy, Reflect, Component)]
-pub struct GroundStruct {
+#[derive(Message, Clone, Copy)]
+pub struct BuildFoundation {
     pub x: u32,
     pub y: u32,
 }
 
 #[derive(Message, Clone, Copy)]
-pub struct BuildFoundationMessage {
+pub struct BuildTrail {
     pub x: u32,
     pub y: u32,
 }
 
 #[derive(Message, Clone, Copy)]
-pub struct BuildTrailMessage {
+pub struct DigGround {
     pub x: u32,
     pub y: u32,
 }
 
 #[derive(Message, Clone, Copy)]
-pub struct DigGroundMessage {
-    pub x: u32,
-    pub y: u32,
-}
-
-#[derive(Message, Clone, Copy)]
-pub struct BuildFenceMessage {
+pub struct BuildFence {
     pub x: u32,
     pub y: u32,
 }
 
 #[derive(Message, Clone, Copy)]
 pub struct BuildTurret {
+    pub x: u32,
+    pub y: u32,
+}
+
+#[derive(Message, Clone, Copy)]
+pub struct PlantWatermelon {
     pub x: u32,
     pub y: u32,
 }
@@ -68,13 +69,15 @@ impl Plugin for LevelPlugin {
                 ground::handle_build_ground,
                 turret::handle_build_turret,
                 turret::handle_turret_rotation,
+                watermelon::handle_plant_watermelon,
             )
                 .run_if(in_state(GameState::GamePlay)),
         )
-        .add_message::<BuildFoundationMessage>()
-        .add_message::<BuildFenceMessage>()
-        .add_message::<BuildTrailMessage>()
+        .add_message::<BuildFoundation>()
+        .add_message::<BuildFence>()
+        .add_message::<BuildTrail>()
         .add_message::<BuildTurret>()
-        .add_message::<DigGroundMessage>();
+        .add_message::<PlantWatermelon>()
+        .add_message::<DigGround>();
     }
 }

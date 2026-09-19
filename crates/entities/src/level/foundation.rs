@@ -1,18 +1,15 @@
 use bevy::prelude::*;
 use lom_assets::StaticSpriteAssets;
 
-use crate::level::BuildFoundationMessage;
-use crate::level::{
-    ground::{FoundationTile, Ground, GroundTile},
-    GroundStruct,
-};
+use crate::level::ground::{Foundation, Ground, GroundTile};
+use crate::level::BuildFoundation;
 
 pub fn handle_build_foundation(
     mut commands: Commands,
-    mut mr_build_foundation: MessageReader<BuildFoundationMessage>,
+    mut mr_build_foundation: MessageReader<BuildFoundation>,
     q_ground: Query<(Entity, &Ground)>,
     q_ground_tiles: Query<(Entity, &ChildOf, &GroundTile)>,
-    q_foundation_tiles: Query<(Entity, &ChildOf, &FoundationTile)>,
+    q_foundation_tiles: Query<(Entity, &ChildOf, &Foundation)>,
     static_sprite_assets: Res<StaticSpriteAssets>,
 ) {
     for message in mr_build_foundation.read() {
@@ -46,11 +43,7 @@ pub fn handle_build_foundation(
                                 0.51,
                             )),
                             Name::new("foundation tile"),
-                            GroundStruct {
-                                x: message.x,
-                                y: message.y,
-                            },
-                            FoundationTile {
+                            Foundation {
                                 x: message.x,
                                 y: message.y,
                             },

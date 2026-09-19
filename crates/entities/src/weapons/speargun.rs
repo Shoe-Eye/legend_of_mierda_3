@@ -91,7 +91,7 @@ fn handle_speargun_attack_event(
                 .iter()
                 .find(|(_, model)| model.game_entity == entity)
             {
-                if let Some((ground_entity, ground)) = q_ground.iter().next() {
+                if let Some((_ground_entity, ground)) = q_ground.iter().next() {
                     commands.entity(child_of.0).with_children(|parent| {
                         let timer_despawn = SpeargunArrowDespawnTimer(Timer::new(
                             Duration::from_secs_f32(1.0),
@@ -166,7 +166,7 @@ fn handle_arrow_timers(
     static_sprite_assets: Res<StaticSpriteAssets>,
     time: Res<Time>,
 ) {
-    for (entity, parent, transform, mut timer_despawn, mut timer_trail, _) in q_speargun.iter_mut()
+    for (entity, parent, _transform, mut timer_despawn, mut timer_trail, _) in q_speargun.iter_mut()
     {
         timer_despawn.0.tick(time.delta());
         timer_trail.0.tick(time.delta());
@@ -180,21 +180,21 @@ fn handle_arrow_timers(
                 TimerMode::Once,
             ));
 
-            // commands.entity(parent.0).with_children(|parent| {
-            //     parent.spawn((
-            //         SpeargunArrowTrailBundle {
-            //             sprite: Sprite {
-            //                 image: static_sprite_assets.speargun_arrow.clone(),
-            //                 color: Color::srgba(0.3, 0.0, 0.0, 0.5),
-            //                 ..default()
-            //             },
-            //             speargun_arrow_trail: SpeargunArrowTrail,
-            //             timer_despawn,
-            //         },
-            //         ZIndex(105),
-            //         Name::new("speargun arrow trail"),
-            //     ));
-            // });
+            commands.entity(parent.0).with_children(|parent| {
+                parent.spawn((
+                    SpeargunArrowTrailBundle {
+                        sprite: Sprite {
+                            image: static_sprite_assets.speargun_arrow.clone(),
+                            color: Color::srgba(0.3, 0.0, 0.0, 0.5),
+                            ..default()
+                        },
+                        speargun_arrow_trail: SpeargunArrowTrail,
+                        timer_despawn,
+                    },
+                    ZIndex(105),
+                    Name::new("speargun arrow trail"),
+                ));
+            });
         }
     }
 }
@@ -226,7 +226,6 @@ pub fn handle_arrow_enemy_collisions(
     mut ev_enemy_hit: MessageWriter<EnemyHitEvent>,
 ) {
     for event in collision_events.read() {
-        // println!("collision event: {:?}", event);
         if let CollisionEvent::Started(e1, e2, _) = event {
             let contact_1_enemy = q_enemies.get(*e1);
             let contact_2_enemy = q_enemies.get(*e2);
@@ -268,7 +267,7 @@ impl Plugin for SpeargunPlugin {
                 (
                     handle_speargun_attack_event,
                     handle_arrow_timers,
-                    // handle_trail_timers,
+                    handle_trail_timers,
                     handle_arrow_enemy_collisions,
                 )
                     .run_if(in_state(GameState::GamePlay)),

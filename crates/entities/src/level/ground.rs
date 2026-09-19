@@ -4,7 +4,7 @@ use bevy_ecs_ldtk::{assets::LdtkProject, LdtkProjectHandle, LevelEvent, LevelIid
 use lom_assets::StaticSpriteAssets;
 use lom_game::GameState;
 
-use crate::level::{DigGroundMessage, GroundStruct};
+use crate::level::DigGround;
 
 pub struct GroundPlugin;
 
@@ -34,7 +34,13 @@ pub struct GroundTile {
 }
 
 #[derive(Component, Clone, Copy)]
-pub struct FoundationTile {
+pub struct Foundation {
+    pub x: u32,
+    pub y: u32,
+}
+
+#[derive(Component, Clone, Copy)]
+pub struct Watermelon {
     pub x: u32,
     pub y: u32,
 }
@@ -90,10 +96,10 @@ pub fn init_ground_layer(
 
 pub fn handle_build_ground(
     mut commands: Commands,
-    mut mr_build_foundation: MessageReader<DigGroundMessage>,
+    mut mr_build_foundation: MessageReader<DigGround>,
     q_ground: Query<(Entity, &Ground)>,
     q_ground_tiles: Query<(Entity, &ChildOf, &GroundTile)>,
-    q_foundation_tiles: Query<(Entity, &ChildOf, &FoundationTile)>,
+    q_foundation_tiles: Query<(Entity, &ChildOf, &Foundation)>,
     static_sprite_assets: Res<StaticSpriteAssets>,
 ) {
     for message in mr_build_foundation.read() {
@@ -127,10 +133,6 @@ pub fn handle_build_ground(
                                 0.51,
                             )),
                             Name::new("ground tile"),
-                            GroundStruct {
-                                x: message.x,
-                                y: message.y,
-                            },
                             GroundTile {
                                 x: message.x,
                                 y: message.y,

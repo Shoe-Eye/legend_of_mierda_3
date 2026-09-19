@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use lom_game::GameState;
 
 use crate::{
-    level::{BuildFoundationMessage, BuildTrailMessage, Building, DigGroundMessage},
+    level::{BuildFoundation, BuildTrail, Building, DigGround},
     player::PlayerToolUseEvent,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
@@ -20,9 +20,9 @@ impl Plugin for ShovelPlugin {
 
 pub fn handle_shovel_use(
     mut mr: MessageReader<PlayerToolUseEvent>,
-    mut mw_build_foundation: MessageWriter<BuildFoundationMessage>,
-    mut mw_dig_ground: MessageWriter<DigGroundMessage>,
-    mut mw_build_trail: MessageWriter<BuildTrailMessage>,
+    mut mw_build_foundation: MessageWriter<BuildFoundation>,
+    mut mw_dig_ground: MessageWriter<DigGround>,
+    mut mw_build_trail: MessageWriter<BuildTrail>,
     q_tool_pointer_tiles: Query<(Entity, &ToolPointerTile)>,
     q_buildings: Query<(Entity, &Building)>,
 ) {
@@ -49,19 +49,19 @@ pub fn handle_shovel_use(
             match message.tool {
                 Tool::Shovel => match action {
                     Action::Dig { width, height } => {
-                        mw_dig_ground.write(DigGroundMessage {
+                        mw_dig_ground.write(DigGround {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
                         });
                     }
                     Action::Foundation { width, height } => {
-                        mw_build_foundation.write(BuildFoundationMessage {
+                        mw_build_foundation.write(BuildFoundation {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
                         });
                     }
                     Action::Trail { width, height } => {
-                        mw_build_trail.write(BuildTrailMessage {
+                        mw_build_trail.write(BuildTrail {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
                         });

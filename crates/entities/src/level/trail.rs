@@ -1,16 +1,16 @@
 use bevy::prelude::*;
 use bevy_color::palettes::css::DARK_GREEN;
 
-use crate::level::ground::{FoundationTile, TrailTile};
-use crate::level::BuildTrailMessage;
-use crate::level::{ground::Ground, GroundStruct};
+use crate::level::ground::Ground;
+use crate::level::ground::{Foundation, TrailTile};
+use crate::level::BuildTrail;
 
 pub fn handle_build_trail(
     mut commands: Commands,
-    mut mr_build_trail: MessageReader<BuildTrailMessage>,
+    mut mr_build_trail: MessageReader<BuildTrail>,
     q_ground: Query<(Entity, &Ground)>,
     q_trail_tiles: Query<(Entity, &ChildOf, &TrailTile)>,
-    q_foundation_tiles: Query<(Entity, &ChildOf, &FoundationTile)>,
+    q_foundation_tiles: Query<(Entity, &ChildOf, &Foundation)>,
 ) {
     for message in mr_build_trail.read() {
         if let Some((ground_entity, ground)) = q_ground.iter().next() {
@@ -33,10 +33,6 @@ pub fn handle_build_trail(
                                 0.51,
                             )),
                             Name::new("trail tile"),
-                            GroundStruct {
-                                x: message.x,
-                                y: message.y,
-                            },
                             TrailTile {
                                 x: message.x,
                                 y: message.y,

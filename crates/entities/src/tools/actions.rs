@@ -13,6 +13,7 @@ pub enum Action {
     Foundation { width: u32, height: u32 },
     Fence { width: u32, height: u32 },
     Turret { width: u32, height: u32 },
+    PlantWatermelon { width: u32, height: u32 },
 }
 
 impl fmt::Display for Action {
@@ -25,6 +26,9 @@ impl fmt::Display for Action {
                 write!(f, "Turret {}x{}", width, height)
             }
             Action::Trail { width, height } => write!(f, "Trail {}x{}", width, height),
+            Action::PlantWatermelon { width, height } => {
+                write!(f, "Watermelon {}x{}", width, height)
+            }
         }
     }
 }
@@ -58,6 +62,12 @@ pub fn get_tool_actions(tool: Tool) -> Vec<Action> {
                     height: TURRET_SIZE_Y,
                 },
             ]
+        }
+        Tool::WateringCan => {
+            vec![Action::PlantWatermelon {
+                width: 1,
+                height: 1,
+            }]
         }
         _ => Vec::new(),
     }

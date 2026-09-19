@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use lom_game::GameState;
 
 use crate::{
-    level::{BuildFenceMessage, BuildTurret},
+    level::{BuildFence, BuildTurret},
     player::PlayerToolUseEvent,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
@@ -20,7 +20,7 @@ impl Plugin for HammerPlugin {
 
 pub fn handle_hammer_use(
     mut mr: MessageReader<PlayerToolUseEvent>,
-    mut mw_fence: MessageWriter<BuildFenceMessage>,
+    mut mw_fence: MessageWriter<BuildFence>,
     mut mw_turret: MessageWriter<BuildTurret>,
     q_tool_pointer_tiles: Query<(Entity, &ToolPointerTile)>,
 ) {
@@ -35,7 +35,7 @@ pub fn handle_hammer_use(
             match message.tool {
                 Tool::Hammer => match action {
                     Action::Fence { width, height } => {
-                        mw_fence.write(BuildFenceMessage {
+                        mw_fence.write(BuildFence {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
                         });

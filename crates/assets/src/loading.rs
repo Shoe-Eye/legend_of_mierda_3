@@ -38,6 +38,7 @@ impl Plugin for LoadingPlugin {
 
         app.init_resource::<FontAssets>();
         app.init_resource::<MaterialAssets>();
+        app.init_resource::<StaticSpriteAtlasLayouts>();
         app.init_resource::<MeshAssets>();
         app.init_resource::<CharacterSpritesheets>();
         app.init_resource::<StaticSpriteTextureAtlasLayoutAssets>();
@@ -97,6 +98,8 @@ pub struct StaticSpriteAssets {
     pub fence_sheet: Handle<Image>,
     #[asset(path = "sprites/speargun-arrow.png")]
     pub speargun_arrow: Handle<Image>,
+    #[asset(path = "sprites/watermelon.png")]
+    pub watermelon: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -164,6 +167,29 @@ impl FromWorld for MaterialAssets {
             transparent_white: materials_asset.add(bevy::prelude::Color::srgba(1., 0.9, 0.9, 0.5)),
             transparent_black: materials_asset.add(bevy::prelude::Color::srgba(0., 0.1, 0.1, 0.5)),
         }
+    }
+}
+
+#[derive(Resource)]
+pub struct StaticSpriteAtlasLayouts {
+    pub watermelon: Handle<TextureAtlasLayout>,
+}
+
+impl FromWorld for StaticSpriteAtlasLayouts {
+    fn from_world(world: &mut World) -> Self {
+        let mut layouts = world
+            .get_resource_mut::<Assets<TextureAtlasLayout>>()
+            .unwrap();
+
+        let watermelon = layouts.add(TextureAtlasLayout::from_grid(
+            UVec2::splat(16),
+            9,
+            6,
+            Some(UVec2::ZERO),
+            Some(UVec2 { x: 0, y: 30 }),
+        ));
+
+        StaticSpriteAtlasLayouts { watermelon }
     }
 }
 
