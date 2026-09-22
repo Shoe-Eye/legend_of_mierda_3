@@ -156,7 +156,7 @@ fn handle_turret_attack(
     mut ev_arrow_attack: MessageWriter<SpeargunShootEvent>,
     time: Res<Time>,
 ) {
-    for (entity, speargun, turret, mut timer) in q_speargun.iter_mut() {
+    for (entity, _speargun, _turret, mut timer) in q_speargun.iter_mut() {
         timer.0.tick(time.delta());
         if timer.0.just_finished() {
             ev_arrow_attack.write(SpeargunShootEvent {

@@ -21,7 +21,7 @@ use lom_entities as entities;
 use lom_entities::gameplay::gameover::GameOverPlugin;
 use lom_entities::gameplay::GameplayPlugin;
 use lom_entities::sprites;
-use lom_game::GameState;
+use lom_game::{GameState, GameWorldPlugin};
 use lom_ldtk::ldtk::{self, LevelChangeEvent};
 use lom_ldtk::ldtk::{WallBundle, LEVEL_1_IID};
 use lom_splashscreen::SplashscreenPlugin;
@@ -65,8 +65,8 @@ fn main() {
     })
     .add_plugins((HookPlugin, TweeningPlugin))
     .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-    .init_state::<GameState>()
     .add_plugins((
+        GameWorldPlugin,
         LoadingPlugin,
         MainMenuPlugin,
         GameUIPlugin,

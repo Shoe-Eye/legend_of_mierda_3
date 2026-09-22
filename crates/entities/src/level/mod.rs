@@ -70,6 +70,7 @@ impl Plugin for LevelPlugin {
                 turret::handle_build_turret,
                 turret::handle_turret_rotation,
                 watermelon::handle_plant_watermelon,
+                watermelon::handle_watermelons_growth,
             )
                 .run_if(in_state(GameState::GamePlay)),
         )

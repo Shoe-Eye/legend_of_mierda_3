@@ -5,7 +5,7 @@ use bevy::color::palettes::basic::*;
 use bevy::prelude::*;
 use bevy::ui::Val;
 use bevy_color::Color;
-use lom_game::GameState;
+use lom_game::{GameState, GameWorldState};
 use lom_ui::game::UIGamePlay;
 
 const JUSTIFY_CONTENT_COLOR: Color = Color::srgb(0.102, 0.522, 1.);
@@ -31,6 +31,9 @@ pub struct UIToolActionHovering;
 
 #[derive(Component)]
 pub struct UIPlayerHealth;
+
+#[derive(Component)]
+pub struct UIGameWorldEpoch;
 
 fn draw_spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font = asset_server.load("fonts/PixeloidMono-d94EV.ttf");
@@ -178,6 +181,71 @@ fn draw_player_status_ui(mut commands: Commands, asset_server: Res<AssetServer>)
                         });
                 });
         });
+}
+
+fn draw_epoch_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let font = asset_server.load("fonts/PixeloidMono-d94EV.ttf");
+    commands
+        .spawn((
+            Node {
+                // fill the entire window
+                width: percent(100),
+                height: px(50),
+                flex_direction: FlexDirection::Column,
+                align_items: AlignItems::Start,
+                position_type: PositionType::Absolute,
+                top: Val::Px(0.0),
+                padding: MARGIN.all(),
+                row_gap: MARGIN,
+                ..Default::default()
+            },
+            UIGamePlay,
+            UIToolChooseMenu,
+            Name::from("game_state::ui"),
+        ))
+        .with_children(|builder| {
+            builder.spawn(Node {
+                flex_direction: FlexDirection::Row,
+                ..default()
+            });
+
+            builder
+                .spawn((Node {
+                    width: percent(100),
+                    height: percent(100),
+                    flex_direction: FlexDirection::Column,
+                    row_gap: MARGIN,
+                    ..default()
+                },))
+                .with_children(|builder| {
+                    builder
+                        .spawn((Node {
+                            flex_direction: FlexDirection::Row,
+                            align_items: AlignItems::Start,
+                            justify_content: JustifyContent::FlexStart,
+                            width: percent(100),
+                            height: percent(100),
+                            ..default()
+                        },))
+                        .with_children(|builder| {
+                            builder.spawn((
+                                UIGameWorldEpoch,
+                                Text::new(format!("Game Epoch: 0")),
+                                TextFont::from(font),
+                                TextColor::WHITE,
+                            ));
+                        });
+                });
+        });
+}
+
+pub fn update_epoch_ui(
+    mut q_game_world_epoch_ui: Query<(Entity, &mut Text, &UIGameWorldEpoch)>,
+    game_world_state: Res<GameWorldState>,
+) {
+    for (_, mut text, _) in q_game_world_epoch_ui.iter_mut() {
+        *text = Text::new(format!("GameWorld Epoch: {}", game_world_state.epoch));
+    }
 }
 
 fn draw_tool_action_ui_item(
@@ -449,7 +517,11 @@ impl Plugin for ToolUIPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             OnEnter(GameState::GamePlay),
-            (draw_spawn_tool_selection_ui, draw_player_status_ui),
+            (
+                draw_spawn_tool_selection_ui,
+                draw_player_status_ui,
+                draw_epoch_ui,
+            ),
         )
         .add_systems(
             Update,
@@ -461,6 +533,10 @@ impl Plugin for ToolUIPlugin {
             )
                 .chain()
                 .run_if(in_state(GameState::GamePlay)),
+        )
+        .add_systems(
+            Update,
+            (update_epoch_ui,).run_if(in_state(GameState::GamePlay)),
         );
     }
 }

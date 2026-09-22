@@ -47,8 +47,6 @@ fn setup_menu(
     cutscene_assets: Res<CutsceneAssets>,
     font_assets: Res<FontAssets>,
 ) {
-    info!("menu");
-
     commands
         .spawn((
             Node {

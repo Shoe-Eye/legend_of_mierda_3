@@ -40,12 +40,6 @@ pub struct Foundation {
 }
 
 #[derive(Component, Clone, Copy)]
-pub struct Watermelon {
-    pub x: u32,
-    pub y: u32,
-}
-
-#[derive(Component, Clone, Copy)]
 pub struct TrailTile {
     pub x: u32,
     pub y: u32,
