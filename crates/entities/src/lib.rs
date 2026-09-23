@@ -3,6 +3,7 @@ use bevy::prelude::*;
 pub mod characters;
 pub mod controls;
 pub mod gameplay;
+pub mod inventory;
 pub mod items;
 pub mod ldtk;
 pub mod level;
@@ -31,6 +32,7 @@ impl Plugin for EntitiesPlugin {
         )
         .add_plugins((
             player::PlayerPlugin,
+            inventory::InventoryPlugin,
             items::ItemsPlugin,
             level::LevelPlugin,
             characters::CharactersPlugin,

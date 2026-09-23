@@ -6,6 +6,7 @@ use lom_game::GameWorldState;
 
 use crate::level::ground::{Ground, GroundTile};
 use crate::level::{HarvestPlant, PlantVegetation};
+use crate::player::Player;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PlantType {
@@ -113,6 +114,7 @@ pub fn handle_plant_harvest(
     mut commands: Commands,
     mut er_harvest: MessageReader<HarvestPlant>,
     mut q_plants: Query<(Entity, &mut Sprite, &mut Plant)>,
+    mut q_player: Query<(Entity, &mut Player)>,
 ) {
     for (message) in er_harvest.read() {
         for (entity, _, plant) in q_plants.iter_mut() {
@@ -121,6 +123,10 @@ pub fn handle_plant_harvest(
                 && plant.plant_type.max_growth_stage() == plant.growth_stage
             {
                 commands.entity(entity).despawn();
+
+                if let Ok((_, mut player)) = q_player.single_mut() {
+                    player.inventory.plants.push(*plant);
+                }
             }
         }
     }
