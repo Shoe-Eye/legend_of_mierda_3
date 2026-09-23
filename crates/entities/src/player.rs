@@ -22,7 +22,7 @@ use super::characters::enemy::{Enemy, EnemyHitEvent};
 // Entities
 // --------
 
-#[derive(Clone, Eq, PartialEq, Debug, Default, Component, Reflect)]
+#[derive(Clone, PartialEq, Debug, Default, Component)]
 pub struct Player {
     pub health: u16,
     pub tool: Tool,
@@ -95,7 +95,7 @@ impl LdtkEntity for PlayerBundle {
             active_events: ActiveEvents::COLLISION_EVENTS,
             player: Player {
                 health: 10000,
-                tool: Tool::None,
+                tool: Tool::NoTool,
                 action: None,
             },
             ldtk_player: lom_ldtk::ldtk::Player,
@@ -119,7 +119,7 @@ impl LdtkEntity for PlayerBundle {
 // ------
 
 #[derive(Message, Clone)]
-pub struct PlayerToolUseEvent {
+pub struct ToolUse {
     pub entity: Entity,
     pub tool: Tool,
     pub action: Option<Action>,
@@ -134,9 +134,9 @@ pub struct PlayerHitEvent {
 // Event Handlers
 // --------------
 
-pub fn event_player_attack(
+pub fn handle_tool_use(
     mut commands: Commands,
-    mut ev_player_attack: MessageReader<PlayerToolUseEvent>,
+    mut ev_player_attack: MessageReader<ToolUse>,
     mut ev_enemy_hit: MessageWriter<EnemyHitEvent>,
     mut q_player: Query<(Entity, &Transform, &CharacterAnimation), With<Player>>,
     mut q_enemies: Query<(Entity, &Transform, &mut Enemy)>,
@@ -267,7 +267,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.register_ldtk_entity::<PlayerBundle>("Player")
             // Events
-            .add_message::<PlayerToolUseEvent>()
+            .add_message::<ToolUse>()
             .add_message::<PlayerHitEvent>()
             // Event Handlers
             .add_systems(

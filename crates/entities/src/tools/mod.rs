@@ -15,6 +15,7 @@ use crate::{
 
 pub mod actions;
 pub mod hammer;
+pub mod no_tool;
 pub mod shovel;
 pub mod tool_pointer;
 pub mod ui;
@@ -23,7 +24,7 @@ pub mod watering_can;
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component, Reflect)]
 pub enum Tool {
     #[default]
-    None,
+    NoTool,
     Shovel,
     Axe,
     Hammer,
@@ -34,7 +35,7 @@ pub enum Tool {
 impl fmt::Display for Tool {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Tool::None => write!(f, "No Tool"),
+            Tool::NoTool => write!(f, "No Tool"),
             Tool::Shovel => write!(f, "Shovel"),
             Tool::Axe => write!(f, "Axe"),
             Tool::Hammer => write!(f, "Hammer"),
@@ -70,7 +71,7 @@ pub fn on_choose_tool(
             spawn_tool_action_ui(&mut commands, &asset_server, actions, q_action_menus);
 
             sprite.image = match event.tool {
-                Tool::None => spritesheets.gennadij_no_tool.clone(),
+                Tool::NoTool => spritesheets.gennadij_no_tool.clone(),
                 Tool::Shovel => spritesheets.gennadij_shovel.clone(),
                 Tool::Axe => spritesheets.gennadij_axe.clone(),
                 Tool::Hammer => spritesheets.gennadij_hammer.clone(),
@@ -98,7 +99,12 @@ pub fn on_choose_action(
                     Action::Fence { width, height } => (width, height),
                     Action::Turret { width, height } => (width, height),
                     Action::Trail { width, height } => (width, height),
-                    Action::PlantWatermelon { width, height } => (width, height),
+                    Action::Plant {
+                        plant_type,
+                        width,
+                        height,
+                    } => (width, height),
+                    Action::Harvest => (1, 1),
                 };
 
                 tool_pointer_layer.pointer_size_x = width;
@@ -113,10 +119,11 @@ pub struct ToolsPlugin;
 impl Plugin for ToolsPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((
-            ui::ToolUIPlugin,
-            shovel::ShovelPlugin,
             hammer::HammerPlugin,
+            no_tool::NoToolPlugin,
+            shovel::ShovelPlugin,
             tool_pointer::ToolPointerPlugin,
+            ui::ToolUIPlugin,
             watering_can::WateringCanPlugin,
         ))
         .add_message::<ChooseTool>()

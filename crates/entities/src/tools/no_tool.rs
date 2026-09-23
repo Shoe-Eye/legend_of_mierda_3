@@ -2,48 +2,48 @@ use bevy::prelude::*;
 use lom_game::GameState;
 
 use crate::{
-    level::PlantVegetation,
+    level::HarvestPlant,
     player::ToolUse,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
 
-pub struct WateringCanPlugin;
+pub struct NoToolPlugin;
 
-impl Plugin for WateringCanPlugin {
+impl Plugin for NoToolPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (handle_use_watering_can).run_if(in_state(GameState::GamePlay)),
+            (handle_no_tool_use).run_if(in_state(GameState::GamePlay)),
         );
     }
 }
 
-pub fn handle_use_watering_can(
+pub fn handle_no_tool_use(
     mut mr: MessageReader<ToolUse>,
-    mut mw_plant: MessageWriter<PlantVegetation>,
+    mut mw_harvest_plant: MessageWriter<HarvestPlant>,
     q_tool_pointer_tiles: Query<(Entity, &ToolPointerTile)>,
 ) {
     for message in mr.read() {
+        println!("!!!");
+
         if message.action.is_none() {
             continue;
         }
 
         let action = message.action.unwrap();
 
+        println!("!!!");
+
         if let Some((_, tool_pointer_tile)) = q_tool_pointer_tiles.iter().next() {
             match message.tool {
-                Tool::WateringCan => match action {
-                    Action::Plant {
-                        plant_type,
-                        width,
-                        height,
-                    } => {
-                        mw_plant.write(PlantVegetation {
+                Tool::NoTool => match action {
+                    Action::Harvest => {
+                        mw_harvest_plant.write(HarvestPlant {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
-                            plant_type: plant_type.clone(),
                         });
                     }
+
                     _ => {}
                 },
                 _ => {}

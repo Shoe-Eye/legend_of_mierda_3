@@ -8,7 +8,7 @@ use lom_assets::{
 };
 
 use crate::{
-    player::{Player, PlayerToolUseEvent},
+    player::{Player, ToolUse},
     tools::Tool,
 };
 
@@ -23,7 +23,7 @@ pub fn animate_character_sprtire(
         &Player,
     )>,
     spritesheets: Res<CharacterSpritesheets>,
-    mut mw_player_use_tool: MessageWriter<PlayerToolUseEvent>,
+    mut mw_player_use_tool: MessageWriter<ToolUse>,
 ) {
     for (
         entity,
@@ -79,7 +79,7 @@ pub fn animate_character_sprtire(
                         layout: spritesheets.normal_character_atlas_layout.clone(),
                     });
 
-                    mw_player_use_tool.write(PlayerToolUseEvent {
+                    mw_player_use_tool.write(ToolUse {
                         entity: entity.clone(),
                         tool: player.tool,
                         action: player.action,

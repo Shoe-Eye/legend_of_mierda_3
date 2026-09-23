@@ -1,12 +1,14 @@
 use bevy::prelude::*;
 use lom_game::GameState;
 
+use crate::level::plant::PlantType;
+
 pub mod fence;
 pub mod foundation;
 pub mod ground;
+pub mod plant;
 pub mod trail;
 pub mod turret;
-pub mod watermelon;
 
 pub struct LevelPlugin;
 
@@ -49,7 +51,14 @@ pub struct BuildTurret {
 }
 
 #[derive(Message, Clone, Copy)]
-pub struct PlantWatermelon {
+pub struct PlantVegetation {
+    pub x: u32,
+    pub y: u32,
+    pub plant_type: PlantType,
+}
+
+#[derive(Message, Clone, Copy)]
+pub struct HarvestPlant {
     pub x: u32,
     pub y: u32,
 }
@@ -69,8 +78,9 @@ impl Plugin for LevelPlugin {
                 ground::handle_build_ground,
                 turret::handle_build_turret,
                 turret::handle_turret_rotation,
-                watermelon::handle_plant_watermelon,
-                watermelon::handle_watermelons_growth,
+                plant::handle_plant_vegetation,
+                plant::handle_plant_growth,
+                plant::handle_plant_harvest,
             )
                 .run_if(in_state(GameState::GamePlay)),
         )
@@ -78,7 +88,8 @@ impl Plugin for LevelPlugin {
         .add_message::<BuildFence>()
         .add_message::<BuildTrail>()
         .add_message::<BuildTurret>()
-        .add_message::<PlantWatermelon>()
-        .add_message::<DigGround>();
+        .add_message::<PlantVegetation>()
+        .add_message::<DigGround>()
+        .add_message::<HarvestPlant>();
     }
 }

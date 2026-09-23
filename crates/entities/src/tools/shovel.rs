@@ -3,7 +3,7 @@ use lom_game::GameState;
 
 use crate::{
     level::{BuildFoundation, BuildTrail, Building, DigGround},
-    player::PlayerToolUseEvent,
+    player::ToolUse,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
 
@@ -19,7 +19,7 @@ impl Plugin for ShovelPlugin {
 }
 
 pub fn handle_shovel_use(
-    mut mr: MessageReader<PlayerToolUseEvent>,
+    mut mr: MessageReader<ToolUse>,
     mut mw_build_foundation: MessageWriter<BuildFoundation>,
     mut mw_dig_ground: MessageWriter<DigGround>,
     mut mw_build_trail: MessageWriter<BuildTrail>,

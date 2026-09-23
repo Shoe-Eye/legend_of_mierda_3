@@ -85,7 +85,7 @@ fn draw_spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetS
                                 font.clone(),
                                 WHITE.into(),
                                 px(3.0).top(),
-                                Tool::None,
+                                Tool::NoTool,
                             );
                             spawn_tool_selection_ui_item(
                                 builder,

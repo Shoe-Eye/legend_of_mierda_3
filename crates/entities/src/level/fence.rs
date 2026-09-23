@@ -33,7 +33,13 @@ pub fn get_sprite_index(tile: FenceTile, all_tiles: Vec<FenceTile>) -> usize {
 
     let exists_bottom = all_tiles
         .iter()
-        .filter(|t| t.x == tile.x && t.y == (tile.y - 1))
+        .filter(|t| {
+            if tile.y > 0 {
+                return t.x == tile.x && t.y == (tile.y - 1);
+            } else {
+                return false;
+            }
+        })
         .count()
         > 0;
 

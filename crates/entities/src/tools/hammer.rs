@@ -3,7 +3,7 @@ use lom_game::GameState;
 
 use crate::{
     level::{BuildFence, BuildTurret},
-    player::PlayerToolUseEvent,
+    player::ToolUse,
     tools::{actions::Action, tool_pointer::ToolPointerTile, Tool},
 };
 
@@ -19,7 +19,7 @@ impl Plugin for HammerPlugin {
 }
 
 pub fn handle_hammer_use(
-    mut mr: MessageReader<PlayerToolUseEvent>,
+    mut mr: MessageReader<ToolUse>,
     mut mw_fence: MessageWriter<BuildFence>,
     mut mw_turret: MessageWriter<BuildTurret>,
     q_tool_pointer_tiles: Query<(Entity, &ToolPointerTile)>,

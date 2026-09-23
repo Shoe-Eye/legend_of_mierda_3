@@ -2,18 +2,41 @@ use bevy::prelude::*;
 use core::fmt;
 
 use crate::{
-    level::turret::{TURRET_SIZE_X, TURRET_SIZE_Y},
+    level::{
+        plant::PlantType,
+        turret::{TURRET_SIZE_X, TURRET_SIZE_Y},
+    },
     tools::Tool,
 };
 
-#[derive(PartialEq, Eq, Debug, Clone, Copy, Reflect, Component)]
+#[derive(PartialEq, Debug, Clone, Copy, Component)]
 pub enum Action {
-    Dig { width: u32, height: u32 },
-    Trail { width: u32, height: u32 },
-    Foundation { width: u32, height: u32 },
-    Fence { width: u32, height: u32 },
-    Turret { width: u32, height: u32 },
-    PlantWatermelon { width: u32, height: u32 },
+    Dig {
+        width: u32,
+        height: u32,
+    },
+    Trail {
+        width: u32,
+        height: u32,
+    },
+    Foundation {
+        width: u32,
+        height: u32,
+    },
+    Fence {
+        width: u32,
+        height: u32,
+    },
+    Turret {
+        width: u32,
+        height: u32,
+    },
+    Plant {
+        plant_type: PlantType,
+        width: u32,
+        height: u32,
+    },
+    Harvest,
 }
 
 impl fmt::Display for Action {
@@ -26,9 +49,14 @@ impl fmt::Display for Action {
                 write!(f, "Turret {}x{}", width, height)
             }
             Action::Trail { width, height } => write!(f, "Trail {}x{}", width, height),
-            Action::PlantWatermelon { width, height } => {
-                write!(f, "Watermelon {}x{}", width, height)
+            Action::Plant {
+                plant_type,
+                width,
+                height,
+            } => {
+                write!(f, "Plant {:?} {}x{}", plant_type, width, height)
             }
+            Action::Harvest => write!(f, "Harvest"),
         }
     }
 }
@@ -64,10 +92,14 @@ pub fn get_tool_actions(tool: Tool) -> Vec<Action> {
             ]
         }
         Tool::WateringCan => {
-            vec![Action::PlantWatermelon {
+            vec![Action::Plant {
+                plant_type: PlantType::Watermelon,
                 width: 1,
                 height: 1,
             }]
+        }
+        Tool::NoTool => {
+            vec![Action::Harvest]
         }
         _ => Vec::new(),
     }
