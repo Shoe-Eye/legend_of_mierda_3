@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::{
     level::HarvestPlant,
@@ -13,7 +13,7 @@ impl Plugin for NoToolPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (handle_no_tool_use).run_if(in_state(GameState::GamePlay)),
+            (handle_no_tool_use).run_if(in_state(GameMode::GamePlay)),
         );
     }
 }
@@ -24,15 +24,11 @@ pub fn handle_no_tool_use(
     q_tool_pointer_tiles: Query<(Entity, &ToolPointerTile)>,
 ) {
     for message in mr.read() {
-        println!("!!!");
-
         if message.action.is_none() {
             continue;
         }
 
         let action = message.action.unwrap();
-
-        println!("!!!");
 
         if let Some((_, tool_pointer_tile)) = q_tool_pointer_tiles.iter().next() {
             match message.tool {

@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ecs_ldtk::{assets::LdtkProject, LdtkProjectHandle, LevelEvent, LevelIid};
 use lom_assets::sprites::CharacterAnimation;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::controls::ControlEvent;
 use crate::level::Building;
@@ -221,7 +221,7 @@ impl Plugin for ToolPointerPlugin {
         app.add_systems(
             Update,
             (init_tool_pointer_layer, draw_tool_pointer, control_pointer)
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

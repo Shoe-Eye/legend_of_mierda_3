@@ -9,7 +9,7 @@ use bevy_rapier2d::prelude::Velocity;
 use bevy_rapier2d::prelude::*;
 use lom_assets::sprites::*;
 use lom_assets::{load_texture_atlas_layout, loading::AudioAssets};
-use lom_game::GameState;
+use lom_game::GameMode;
 use lom_ldtk::physics::ColliderBundle;
 use rand::rngs::ThreadRng;
 use rand::seq::IndexedRandom;
@@ -386,11 +386,11 @@ impl Plugin for EnemyPlugin {
                 Update,
                 (despawn_dead_enemies, handle_enemy_hit)
                     .chain()
-                    .run_if(in_state(GameState::GamePlay)),
+                    .run_if(in_state(GameMode::GamePlay)),
             )
             .add_systems(
                 Update,
-                handle_spawn_enemy.run_if(in_state(GameState::GamePlay)),
+                handle_spawn_enemy.run_if(in_state(GameMode::GamePlay)),
             );
     }
 }

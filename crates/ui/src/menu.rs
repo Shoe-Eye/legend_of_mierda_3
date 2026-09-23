@@ -1,23 +1,23 @@
 use bevy::prelude::*;
 use lom_assets::loading::CutsceneAssets;
 use lom_assets::loading::FontAssets;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            OnExit(GameState::Menu),
+            OnExit(GameMode::Menu),
             |mut commands: Commands, q_menu_components: Query<(Entity, &Menu)>| {
                 for (e, _) in q_menu_components.iter() {
                     commands.entity(e).despawn();
                 }
             },
         )
-        .add_systems(OnEnter(GameState::Menu), setup_menu)
-        .add_systems(Update, click_play_button.run_if(in_state(GameState::Menu)))
-        .add_systems(OnExit(GameState::Menu), cleanup_menu);
+        .add_systems(OnEnter(GameMode::Menu), setup_menu)
+        .add_systems(Update, click_play_button.run_if(in_state(GameMode::Menu)))
+        .add_systems(OnExit(GameMode::Menu), cleanup_menu);
     }
 }
 
@@ -99,7 +99,7 @@ fn setup_menu(
                     BackgroundColor(Color::srgba_u8(0, 0, 0, 0)),
                     Button,
                     button_colors,
-                    ChangeState(GameState::Cutscene),
+                    ChangeState(GameMode::Cutscene),
                 ))
                 .with_children(|parent| {
                     parent.spawn((
@@ -117,10 +117,10 @@ fn setup_menu(
 }
 
 #[derive(Component)]
-pub struct ChangeState(pub GameState);
+pub struct ChangeState(pub GameMode);
 
 fn click_play_button(
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_state: ResMut<NextState<GameMode>>,
     mut interaction_query: Query<
         (&Interaction, &ButtonColors, Option<&ChangeState>),
         (Changed<Interaction>, With<Button>),

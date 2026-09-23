@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 use lom_assets::loading::CutsceneAssets;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 #[derive(Resource, Default)]
 pub struct SplashscreenTimer(pub Timer);
@@ -12,7 +12,7 @@ pub struct SplashscreenPlugin;
 impl Plugin for SplashscreenPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            OnExit(GameState::Splash),
+            OnExit(GameMode::Splash),
             |mut commands: Commands, q_menu_components: Query<(Entity, &Splashscreen)>| {
                 for (e, _) in q_menu_components.iter() {
                     commands.entity(e).despawn();
@@ -20,14 +20,14 @@ impl Plugin for SplashscreenPlugin {
             },
         )
         .add_systems(
-            OnEnter(GameState::Splash),
+            OnEnter(GameMode::Splash),
             |mut splashscreen_timer: ResMut<SplashscreenTimer>| {
                 splashscreen_timer.0 = Timer::new(Duration::from_secs(3), TimerMode::Once);
             },
         )
-        .add_systems(Update, (switch_to_menu).run_if(in_state(GameState::Splash)))
-        .add_systems(OnEnter(GameState::Splash), setup_splashscreen)
-        .add_systems(OnExit(GameState::Splash), cleanup_splashscreen)
+        .add_systems(Update, (switch_to_menu).run_if(in_state(GameMode::Splash)))
+        .add_systems(OnEnter(GameMode::Splash), setup_splashscreen)
+        .add_systems(OnExit(GameMode::Splash), cleanup_splashscreen)
         .init_resource::<SplashscreenTimer>();
     }
 }
@@ -65,14 +65,14 @@ fn setup_splashscreen(mut commands: Commands, cutscene_assets: Res<CutsceneAsset
 }
 
 fn switch_to_menu(
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_state: ResMut<NextState<GameMode>>,
     mut splashscreen_timer: ResMut<SplashscreenTimer>,
     time: Res<Time>,
 ) {
     splashscreen_timer.0.tick(time.delta());
 
     if splashscreen_timer.0.just_finished() {
-        next_state.set(GameState::Menu);
+        next_state.set(GameMode::Menu);
     }
 }
 

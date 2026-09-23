@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 use lom_assets::loading::{CutsceneAssets, FontAssets};
-use lom_game::GameState;
+use lom_game::GameMode;
 
 pub struct CutscenePlugin;
 
@@ -30,19 +30,19 @@ struct CutsceneTitleText;
 impl Plugin for CutscenePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            OnExit(GameState::Cutscene),
+            OnExit(GameMode::Cutscene),
             |mut commands: Commands, q_menu_components: Query<(Entity, &Cutscene)>| {
                 for (e, _) in q_menu_components.iter() {
                     commands.entity(e).despawn();
                 }
             },
         )
-        .add_systems(OnEnter(GameState::Cutscene), setup_cutscene)
-        .add_systems(OnExit(GameState::Cutscene), cleanup_cutscene)
+        .add_systems(OnEnter(GameMode::Cutscene), setup_cutscene)
+        .add_systems(OnExit(GameMode::Cutscene), cleanup_cutscene)
         .add_systems(
             Update,
             (handle_cutscene_text, handle_cutscene_termination)
-                .run_if(in_state(GameState::Cutscene)),
+                .run_if(in_state(GameMode::Cutscene)),
         )
         .insert_resource(CutsceneState {
             timer: Timer::new(Duration::from_secs(3), TimerMode::Repeating),
@@ -190,12 +190,12 @@ fn cleanup_cutscene(mut commands: Commands, menu: Query<Entity, With<Cutscene>>)
 }
 
 fn handle_cutscene_termination(
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_state: ResMut<NextState<GameMode>>,
     cutscene_state: ResMut<CutsceneState>,
 ) {
     let cutscene_text = get_cutscene_dialog_text();
     if cutscene_text.len() <= cutscene_state.timer_count {
-        next_state.set(GameState::GamePlay);
+        next_state.set(GameMode::GamePlay);
     }
 }
 

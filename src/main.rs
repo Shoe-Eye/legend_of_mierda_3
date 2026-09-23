@@ -21,7 +21,7 @@ use lom_entities as entities;
 use lom_entities::gameplay::gameover::GameOverPlugin;
 use lom_entities::gameplay::GameplayPlugin;
 use lom_entities::sprites;
-use lom_game::{GameState, GameWorldPlugin};
+use lom_game::{GameMode, GameWorldPlugin};
 use lom_ldtk::ldtk::{self, LevelChangeEvent};
 use lom_ldtk::ldtk::{WallBundle, LEVEL_1_IID};
 use lom_splashscreen::SplashscreenPlugin;
@@ -95,12 +95,12 @@ impl Plugin for LegendOfMierda3Plugin {
             entities::EntitiesPlugin,
             GameplayPlugin,
         ))
-        .add_systems(OnEnter(GameState::GamePlay), ldtk::spawn_game_world)
-        .add_systems(OnExit(GameState::GamePlay), ldtk::despawn_game_world)
+        .add_systems(OnEnter(GameMode::GamePlay), ldtk::spawn_game_world)
+        .add_systems(OnExit(GameMode::GamePlay), ldtk::despawn_game_world)
         .add_systems(
             Update,
             (sprites::animate_character_sprtire, flash_sprite)
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         )
         .add_systems(Startup, setup_cameras)
         .add_message::<LevelChangeEvent>();

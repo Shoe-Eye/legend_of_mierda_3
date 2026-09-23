@@ -5,7 +5,7 @@ use crate::characters::enemy::{Enemy, EnemyHitEvent};
 use crate::level::ground::Ground;
 use crate::level::turret::{Turret, TurretModel};
 use crate::physics::ColliderBundle;
-use crate::{loading::StaticSpriteAssets, GameState};
+use crate::{loading::StaticSpriteAssets, GameMode};
 
 use bevy::prelude::*;
 use bevy_rapier2d::geometry::Collider;
@@ -270,7 +270,7 @@ impl Plugin for SpeargunPlugin {
                     handle_trail_timers,
                     handle_arrow_enemy_collisions,
                 )
-                    .run_if(in_state(GameState::GamePlay)),
+                    .run_if(in_state(GameMode::GamePlay)),
             )
             .add_message::<SpeargunShootEvent>();
     }

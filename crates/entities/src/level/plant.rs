@@ -20,7 +20,7 @@ impl PlantType {
     }
 }
 
-#[derive(Component, Clone, Copy)]
+#[derive(Component, Clone, Copy, Debug, PartialEq)]
 pub struct Plant {
     pub x: u32,
     pub y: u32,
@@ -115,23 +115,13 @@ pub fn handle_plant_harvest(
     mut q_plants: Query<(Entity, &mut Sprite, &mut Plant)>,
 ) {
     for (message) in er_harvest.read() {
-        println!("~~");
         for (entity, _, plant) in q_plants.iter_mut() {
             if plant.x == message.x
                 && plant.y == message.y
                 && plant.plant_type.max_growth_stage() == plant.growth_stage
             {
-                println!("can harvest plant");
+                commands.entity(entity).despawn();
             }
         }
     }
-
-    // for (_, mut sprite, mut watermelon) in q_watermelons.iter_mut() {
-    //     watermelon.growth_stage = (game_world_state.epoch - watermelon.epoch_planted)
-    //         .min(watermelon.plant_type.max_growth_stage());
-
-    //     if let Some(atlas) = sprite.texture_atlas.as_mut() {
-    //         atlas.index = watermelon.growth_stage + 1;
-    //     }
-    // }
 }

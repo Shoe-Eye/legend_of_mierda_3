@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::level::plant::PlantType;
 
@@ -82,7 +82,7 @@ impl Plugin for LevelPlugin {
                 plant::handle_plant_growth,
                 plant::handle_plant_harvest,
             )
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         )
         .add_message::<BuildFoundation>()
         .add_message::<BuildFence>()

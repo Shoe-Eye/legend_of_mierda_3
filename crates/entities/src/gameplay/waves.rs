@@ -7,7 +7,7 @@ use rand::RngExt;
 use crate::characters::enemy::{Enemy, EnemyType, SpawnEnemyEvent};
 use crate::gameplay::gameover::GameWinEvent;
 use crate::items::item::SpawnItemEvent;
-use lom_game::GameState;
+use lom_game::GameMode;
 use lom_ldtk::ldtk::LevelChangeEvent;
 use lom_ui::game::*;
 
@@ -171,7 +171,7 @@ pub fn event_on_level_change(
 }
 
 pub fn check_game_won_or_lost(
-    _next_state: ResMut<NextState<GameState>>,
+    _next_state: ResMut<NextState<GameMode>>,
     gameplay_state: Res<GameplayState>,
     query: Query<&Enemy>,
     mut ev_game_won: MessageWriter<GameWinEvent>,

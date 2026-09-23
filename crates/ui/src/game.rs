@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 #[derive(Component)]
 pub struct UIGameOver;
@@ -53,7 +53,7 @@ pub struct GameUIPlugin;
 
 impl Plugin for GameUIPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::GamePlay), draw_ui)
-            .add_systems(OnExit(GameState::GamePlay), despawn_ui);
+        app.add_systems(OnEnter(GameMode::GamePlay), draw_ui)
+            .add_systems(OnExit(GameMode::GamePlay), despawn_ui);
     }
 }

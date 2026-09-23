@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::{
     level::{BuildFence, BuildTurret},
@@ -13,7 +13,7 @@ impl Plugin for HammerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (handle_hammer_use).run_if(in_state(GameState::GamePlay)),
+            (handle_hammer_use).run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

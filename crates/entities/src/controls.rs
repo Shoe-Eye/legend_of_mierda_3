@@ -43,7 +43,7 @@ pub fn control_character(
                 return;
             }
 
-            if control.use_tool && player.tool != Tool::NoTool && player.action != None {
+            if control.use_tool && player.action != None {
                 char_animation.animation_type = AnimationType::UseTool;
                 char_animation.state = AnimationState::ToolUse;
 

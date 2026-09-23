@@ -2,7 +2,7 @@ use bevy::{image::TextureAtlasLayout, prelude::*};
 use bevy_asset_loader::prelude::*;
 use bevy_kira_audio::AudioSource;
 
-use lom_game::GameState;
+use lom_game::GameMode;
 
 pub const SHEET_1_COLUMNS: usize = 13;
 pub const SHEET_1_ROWS: usize = 54;
@@ -28,8 +28,8 @@ pub struct LoadingPlugin;
 impl Plugin for LoadingPlugin {
     fn build(&self, app: &mut App) {
         app.add_loading_state(
-            LoadingState::new(GameState::Loading)
-                .continue_to_state(GameState::GamePlay)
+            LoadingState::new(GameMode::Loading)
+                .continue_to_state(GameMode::GamePlay)
                 .load_collection::<AudioAssets>()
                 .load_collection::<TextureAssets>()
                 .load_collection::<CutsceneAssets>()

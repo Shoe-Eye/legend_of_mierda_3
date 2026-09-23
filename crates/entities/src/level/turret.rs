@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 use bevy_rapier2d::geometry::{ActiveEvents, Collider, Friction};
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::level::ground::Foundation;
 use crate::level::ground::Ground;
@@ -177,7 +177,7 @@ impl Plugin for TurretPlugin {
                 handle_turret_rotation,
                 handle_turret_attack,
             )
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         )
         .add_message::<BuildTurret>();
     }

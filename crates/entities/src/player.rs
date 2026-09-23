@@ -7,13 +7,14 @@ use lom_assets::loading::SHEET_1_COLUMNS;
 use lom_assets::loading::SHEET_1_ROWS;
 
 use crate::gameplay::gameover::GameOverEvent;
+use crate::level::plant::Plant;
 use crate::tools::actions::Action;
 use crate::tools::ui::UIPlayerHealth;
 use crate::tools::Tool;
 use lom_assets::load_texture_atlas;
 use lom_assets::sprites::*;
 use lom_assets::AudioAssets;
-use lom_game::GameState;
+use lom_game::GameMode;
 use lom_ldtk::physics::ColliderBundle;
 
 use super::characters::enemy::{Enemy, EnemyHitEvent};
@@ -22,11 +23,17 @@ use super::characters::enemy::{Enemy, EnemyHitEvent};
 // Entities
 // --------
 
+#[derive(Default, Clone, PartialEq, Debug)]
+pub struct PlayerInventory {
+    pub plants: Vec<Plant>,
+}
+
 #[derive(Clone, PartialEq, Debug, Default, Component)]
 pub struct Player {
     pub health: u16,
     pub tool: Tool,
     pub action: Option<Action>,
+    pub inventory: PlayerInventory,
 }
 
 impl Player {
@@ -94,9 +101,10 @@ impl LdtkEntity for PlayerBundle {
             collider_bundle,
             active_events: ActiveEvents::COLLISION_EVENTS,
             player: Player {
-                health: 10000,
+                health: 100,
                 tool: Tool::NoTool,
                 action: None,
+                inventory: PlayerInventory::default(),
             },
             ldtk_player: lom_ldtk::ldtk::Player,
             animated_character_sprite: AnimatedCharacterSprite {
@@ -273,14 +281,14 @@ impl Plugin for PlayerPlugin {
             .add_systems(
                 Update,
                 (
-                    handle_player_enemy_collisions.run_if(in_state(GameState::GamePlay)),
+                    handle_player_enemy_collisions.run_if(in_state(GameMode::GamePlay)),
                     // event_player_attack.run_if(in_state(GameState::GamePlay)),
-                    event_player_hit.run_if(in_state(GameState::GamePlay)),
+                    event_player_hit.run_if(in_state(GameMode::GamePlay)),
                 ),
             )
             .add_systems(
                 Update,
-                adjust_healthbar.run_if(in_state(GameState::GamePlay)),
+                adjust_healthbar.run_if(in_state(GameMode::GamePlay)),
             );
     }
 }

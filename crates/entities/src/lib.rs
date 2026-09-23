@@ -14,7 +14,7 @@ pub mod weapons;
 
 pub use gameplay::gameover::{GameOverEvent, GameWinEvent};
 pub use lom_assets::loading;
-pub use lom_game::GameState;
+pub use lom_game::GameMode;
 pub use lom_ldtk::physics;
 pub use lom_ui as ui;
 
@@ -27,7 +27,7 @@ impl Plugin for EntitiesPlugin {
         app.add_systems(
             Update,
             (controls::keyboard_controls, controls::control_character)
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         )
         .add_plugins((
             player::PlayerPlugin,
@@ -44,7 +44,7 @@ impl Plugin for EntitiesPlugin {
         .add_systems(
             Update,
             (ldtk::hide_dummy_entities, ldtk::fix_missing_ldtk_entities)
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

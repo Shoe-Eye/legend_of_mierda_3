@@ -3,7 +3,7 @@ use std::time::Duration;
 use bevy::prelude::*;
 
 #[derive(States, Default, Clone, Eq, PartialEq, Debug, Hash)]
-pub enum GameState {
+pub enum GameMode {
     #[default]
     Loading,
     Splash,
@@ -49,7 +49,7 @@ impl Plugin for GameWorldPlugin {
             Duration::from_secs(1),
             TimerMode::Repeating,
         )))
-        .init_state::<GameState>()
+        .init_state::<GameMode>()
         .insert_resource(GameWorldState {
             epoch: 10,
             is_paused: false,
@@ -57,7 +57,7 @@ impl Plugin for GameWorldPlugin {
 
         app.add_systems(
             Update,
-            (handle_game_world_timer).run_if(in_state(GameState::GamePlay)),
+            (handle_game_world_timer).run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

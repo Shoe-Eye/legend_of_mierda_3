@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use lom_assets::loading::StaticSpriteTextureAtlasLayoutAssets;
 use lom_assets::StaticSpriteAssets;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::level::{ground::Ground, BuildFence, Building};
 
@@ -194,7 +194,7 @@ impl Plugin for FencePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (adjust_fence_sprites, handle_build_fence).run_if(in_state(GameState::GamePlay)),
+            (adjust_fence_sprites, handle_build_fence).run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

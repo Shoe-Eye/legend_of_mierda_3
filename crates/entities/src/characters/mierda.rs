@@ -8,7 +8,7 @@ use lom_assets::{
     loading::MIERDA_ASSET_SHEET,
     sprites::{AnimatedCharacterSprite, AnimationTimer, CharacterAnimation},
 };
-use lom_game::GameState;
+use lom_game::GameMode;
 use lom_ldtk::physics::ColliderBundle;
 
 use crate::player::Player;
@@ -147,7 +147,7 @@ impl Plugin for MierdaPlugin {
                     mierda_activity,
                     update_mierdas_move_direction,
                 )
-                    .run_if(in_state(GameState::GamePlay)),
+                    .run_if(in_state(GameMode::GamePlay)),
             );
     }
 }

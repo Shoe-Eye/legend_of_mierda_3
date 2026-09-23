@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_kira_audio::prelude::*;
 
 use lom_assets::loading::{AudioAssets, FontAssets};
-use lom_game::GameState;
+use lom_game::GameMode;
 use lom_ui::game::UIGameOver;
 
 #[derive(Message, Clone)]
@@ -20,7 +20,7 @@ struct UIGameOverText;
 pub fn event_game_over(
     mut ev_game_over: MessageReader<GameOverEvent>,
     mut q_ui_game_over: Query<(&mut Visibility, &UIGameOver)>,
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_state: ResMut<NextState<GameMode>>,
     audio: Res<Audio>,
     audio_assets: Res<AudioAssets>,
     mut text_query: Query<(&mut Text, &UIGameOverText)>,
@@ -36,14 +36,14 @@ pub fn event_game_over(
 
         // audio.play(audio_assets.game_over.clone());
 
-        next_state.set(GameState::GameOver);
+        next_state.set(GameMode::GameOver);
     }
 }
 
 pub fn event_game_win(
     mut ev_game_over: MessageReader<GameWinEvent>,
     mut q_ui_game_over: Query<(&mut Visibility, &UIGameOver)>,
-    mut next_state: ResMut<NextState<GameState>>,
+    mut next_state: ResMut<NextState<GameMode>>,
     audio: Res<Audio>,
     audio_assets: Res<AudioAssets>,
     mut text_query: Query<(&mut Text, &UIGameOverText)>,
@@ -59,7 +59,7 @@ pub fn event_game_win(
 
         // audio.play(audio_assets.victory.clone());
 
-        next_state.set(GameState::GameOver);
+        next_state.set(GameMode::GameOver);
     }
 }
 
@@ -115,13 +115,13 @@ pub struct GameOverPlugin;
 
 impl Plugin for GameOverPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::GameOver), draw_ui)
-            .add_systems(OnExit(GameState::GameOver), despawn_ui)
+        app.add_systems(OnEnter(GameMode::GameOver), draw_ui)
+            .add_systems(OnExit(GameMode::GameOver), despawn_ui)
             .add_systems(
                 Update,
                 (
-                    event_game_over.run_if(in_state(GameState::GamePlay)),
-                    event_game_win.run_if(in_state(GameState::GamePlay)),
+                    event_game_over.run_if(in_state(GameMode::GamePlay)),
+                    event_game_win.run_if(in_state(GameMode::GamePlay)),
                 ),
             );
     }

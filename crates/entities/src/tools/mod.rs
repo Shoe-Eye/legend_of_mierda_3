@@ -2,7 +2,7 @@ use std::fmt;
 
 use bevy::prelude::*;
 use lom_assets::loading::CharacterSpritesheets;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::{
     player::Player,
@@ -130,7 +130,7 @@ impl Plugin for ToolsPlugin {
         .add_message::<ChooseAction>()
         .add_systems(
             Update,
-            (on_choose_tool, on_choose_action).run_if(in_state(GameState::GamePlay)),
+            (on_choose_tool, on_choose_action).run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

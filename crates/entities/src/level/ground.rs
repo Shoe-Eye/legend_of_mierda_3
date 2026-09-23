@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_ecs_ldtk::{assets::LdtkProject, LdtkProjectHandle, LevelEvent, LevelIid};
 use lom_assets::StaticSpriteAssets;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::level::DigGround;
 
@@ -14,7 +14,7 @@ impl Plugin for GroundPlugin {
             Update,
             (init_ground_layer)
                 .chain()
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

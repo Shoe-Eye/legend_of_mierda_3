@@ -5,7 +5,7 @@ use bevy::color::palettes::basic::*;
 use bevy::prelude::*;
 use bevy::ui::Val;
 use bevy_color::Color;
-use lom_game::{GameState, GameWorldState};
+use lom_game::{GameMode, GameWorldState};
 use lom_ui::game::UIGamePlay;
 
 const JUSTIFY_CONTENT_COLOR: Color = Color::srgb(0.102, 0.522, 1.);
@@ -516,7 +516,7 @@ pub struct ToolUIPlugin;
 impl Plugin for ToolUIPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            OnEnter(GameState::GamePlay),
+            OnEnter(GameMode::GamePlay),
             (
                 draw_spawn_tool_selection_ui,
                 draw_player_status_ui,
@@ -532,11 +532,11 @@ impl Plugin for ToolUIPlugin {
                 tool_action_highlight_system,
             )
                 .chain()
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         )
         .add_systems(
             Update,
-            (update_epoch_ui,).run_if(in_state(GameState::GamePlay)),
+            (update_epoch_ui,).run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

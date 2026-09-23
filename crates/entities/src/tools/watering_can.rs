@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use lom_game::GameState;
+use lom_game::GameMode;
 
 use crate::{
     level::PlantVegetation,
@@ -13,7 +13,7 @@ impl Plugin for WateringCanPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (handle_use_watering_can).run_if(in_state(GameState::GamePlay)),
+            (handle_use_watering_can).run_if(in_state(GameMode::GamePlay)),
         );
     }
 }

@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-pub use lom_game::GameState;
+pub use lom_game::GameMode;
 
 pub mod ldtk;
 pub mod physics;
@@ -15,7 +15,7 @@ impl Plugin for LomLdtkPlugin {
                 ldtk::camera_fit_inside_current_level,
                 ldtk::update_level_selection,
             )
-                .run_if(in_state(GameState::GamePlay)),
+                .run_if(in_state(GameMode::GamePlay)),
         )
         .add_systems(Startup, physics::setup_gravity);
     }
