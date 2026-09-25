@@ -220,7 +220,8 @@ impl Plugin for ToolPointerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (init_tool_pointer_layer, draw_tool_pointer, control_pointer)
+            (init_tool_pointer_layer, control_pointer, draw_tool_pointer)
+                .chain()
                 .run_if(in_state(GameMode::GamePlay)),
         );
     }
