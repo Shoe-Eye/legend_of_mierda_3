@@ -12,12 +12,12 @@ pub struct GameOverEvent;
 pub struct GameWinEvent;
 
 #[derive(Component)]
-struct UIGameOverButton;
+pub struct UIGameOverButton;
 
 #[derive(Component)]
-struct UIGameOverText;
+pub struct UIGameOverText;
 
-pub fn event_game_over(
+pub fn handle_game_over(
     mut ev_game_over: MessageReader<GameOverEvent>,
     mut q_ui_game_over: Query<(&mut Visibility, &UIGameOver)>,
     mut next_state: ResMut<NextState<GameMode>>,
@@ -40,7 +40,7 @@ pub fn event_game_over(
     }
 }
 
-pub fn event_game_win(
+pub fn handle_game_win(
     mut ev_game_over: MessageReader<GameWinEvent>,
     mut q_ui_game_over: Query<(&mut Visibility, &UIGameOver)>,
     mut next_state: ResMut<NextState<GameMode>>,
@@ -64,16 +64,14 @@ pub fn event_game_win(
 }
 
 #[allow(dead_code)]
-pub(crate) fn despawn_ui(mut commands: Commands, query: Query<Entity, With<UIGameOver>>) {
+pub fn despawn_ui(mut commands: Commands, query: Query<Entity, With<UIGameOver>>) {
     for entity in query.iter() {
         commands.entity(entity).despawn();
     }
 }
 
 #[allow(dead_code)]
-pub(crate) fn draw_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
-    print!("draw game over");
-
+pub fn draw_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
     commands
         .spawn((
             Node {
@@ -103,12 +101,27 @@ pub(crate) fn draw_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
                     },
                     BackgroundColor(Color::srgba_u8(0, 0, 0, 255)),
                     Interaction::None,
+                    Button,
                     UIGameOverButton,
                 ))
                 .with_children(|button| {
                     button.spawn((Text::from("REINICIAR"),));
                 });
         });
+}
+
+fn handle_start_over(
+    mut next_state: ResMut<NextState<GameMode>>,
+    interaction_query: Query<(Entity, &Interaction), (Changed<Interaction>, With<Button>)>,
+) {
+    for (_, interaction) in interaction_query.iter() {
+        match interaction {
+            Interaction::Pressed => {
+                next_state.set(GameMode::GamePlay);
+            }
+            _ => {}
+        }
+    }
 }
 
 pub struct GameOverPlugin;
@@ -119,9 +132,13 @@ impl Plugin for GameOverPlugin {
             .add_systems(OnExit(GameMode::GameOver), despawn_ui)
             .add_systems(
                 Update,
+                handle_start_over.run_if(in_state(GameMode::GameOver)),
+            )
+            .add_systems(
+                Update,
                 (
-                    event_game_over.run_if(in_state(GameMode::GamePlay)),
-                    event_game_win.run_if(in_state(GameMode::GamePlay)),
+                    handle_game_over.run_if(in_state(GameMode::GamePlay)),
+                    handle_game_win.run_if(in_state(GameMode::GamePlay)),
                 ),
             );
     }
