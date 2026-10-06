@@ -84,26 +84,30 @@ pub fn update_level_selection(
     }
 }
 
+const ASPECT_RATIO: f32 = 16. / 9.;
+
 #[allow(clippy::type_complexity)]
 pub fn camera_fit_inside_current_level(
     mut params: ParamSet<(
-        Query<(&mut Camera, &mut Transform), With<Camera2d>>,
+        Query<(&mut bevy::camera::Projection, &mut Camera, &mut Transform), With<Camera2d>>,
         Query<&GlobalTransform, With<Player>>,
         Query<(&Transform, &LevelIid), Without<Player>>,
     )>,
     level_selection: Res<LevelSelection>,
     projects: Query<&LdtkProjectHandle>,
     project_assets: Res<Assets<LdtkProject>>,
-) {
+) -> Result {
     if params.p1().is_empty() {
-        return;
+        println!("exit 1");
+        return Ok(());
+        // return Err(BevyError::from("player not found"));
     }
 
-    let _player_translation = params.p1().single().unwrap().translation();
+    let player_translation = params.p1().single().unwrap().translation();
 
     let project = project_assets.get(projects.single().unwrap().id()).unwrap();
 
-    // Collect level data first so we hold no borrow on params
+    // Collect level data first so we hold no borr.2ow on params
     let level_data: Vec<(Transform, LevelIid)> = params
         .p2()
         .iter()
@@ -112,27 +116,46 @@ pub fn camera_fit_inside_current_level(
 
     let mut camera_query = params.p0();
 
-    let (_camera, mut camera_transform) = camera_query.single_mut().unwrap();
+    let (mut projection, _camera, mut camera_transform) = camera_query.single_mut().unwrap();
+
+    let Projection::Orthographic(ref mut orthographic_projection) = &mut *projection else {
+        println!("exit 2");
+        return Err(BevyError::from("non-orthographic projection found"));
+    };
 
     for (level_transform, level_iid) in &level_data {
-        if let Some(ldtk_level) = project.get_raw_level_by_iid(level_iid.get()) {
-            let level = &ldtk_level;
-            if level_selection.is_match(
-                &LevelIndices {
-                    level: 0,
-                    ..default()
-                },
-                level,
-            ) {
-                let level_width = level.px_wid as f32;
-                let level_height = level.px_hei as f32;
+        let ldtk_project = project_assets
+            .get(projects.single()?)
+            .expect("Project should be loaded if level has spawned");
 
-                camera_transform.translation.x = level_transform.translation.x + level_width / 2.0;
-                camera_transform.translation.y = level_transform.translation.y + level_height / 2.0;
-                camera_transform.scale = Vec3::ONE * 0.5;
-            }
+        let level = ldtk_project
+            .get_raw_level_by_iid(&level_iid.to_string())
+            .expect("Spawned level should exist in LDtk project");
+
+        if level_selection.is_match(&LevelIndices::default(), level) {
+            camera_transform.translation.x = player_translation.x;
+            camera_transform.translation.y = player_translation.y;
+
+            // let level_ratio = level.px_wid as f32 / level.px_hei as f32;
+            // orthographic_projection.viewport_origin = Vec2::ZERO;
+
+            // let width = level.px_wid as f32; //(level.px_wid as f32 / 16.).round() * 16.;
+            // let height = level.px_hei as f32; //width / ASPECT_RATIO;
+            // orthographic_projection.scaling_mode =
+            //     bevy::camera::ScalingMode::Fixed { width, height };
+            // camera_transform.translation.y =
+            //     (player_translation.y - level_transform.translation.y - height / 2.)
+            //         .clamp(0., level.px_hei as f32 - height);
+            // camera_transform.translation.x =
+            //     (player_translation.x - level_transform.translation.x - width / 2.)
+            //         .clamp(0., level.px_wid as f32 - width);
+
+            // camera_transform.translation.x += level_transform.translation.x;
+            // camera_transform.translation.y += level_transform.translation.y;
         }
     }
+
+    Ok(())
 }
 
 pub fn spawn_wall_collision(

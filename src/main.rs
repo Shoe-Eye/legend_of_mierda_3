@@ -37,7 +37,7 @@ fn main() {
             .set(WindowPlugin {
                 primary_window: Some(Window {
                     resizable: false,
-                    resolution: (1680, 1280).into(),
+                    resolution: (1280, 720).into(),
                     present_mode: PresentMode::AutoVsync,
                     fit_canvas_to_parent: true,
                     prevent_default_event_handling: false,
@@ -99,8 +99,7 @@ impl Plugin for LegendOfMierda3Plugin {
         .add_systems(OnExit(GameMode::GamePlay), ldtk::despawn_game_world)
         .add_systems(
             Update,
-            (sprites::animate_character_sprtire, flash_sprite)
-                .run_if(in_state(GameMode::GamePlay)),
+            (sprites::animate_character_sprtire, flash_sprite).run_if(in_state(GameMode::GamePlay)),
         )
         .add_systems(Startup, setup_cameras)
         .add_message::<LevelChangeEvent>();

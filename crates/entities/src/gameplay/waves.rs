@@ -240,10 +240,10 @@ pub fn get_level_1_waves() -> Vec<Wave> {
             event_duration: Duration::from_secs(1),
             wave_duration: Duration::from_secs(1),
         },
-        Wave {
-            events: vec![WaveEntry::Mierda { count: 100 }],
-            event_duration: Duration::from_secs(2),
-            wave_duration: Duration::from_secs(2),
-        },
+        // Wave {
+        //     events: vec![WaveEntry::Mierda { count: 100 }],
+        //     event_duration: Duration::from_secs(2),
+        //     wave_duration: Duration::from_secs(2),
+        // },
     ]
 }
