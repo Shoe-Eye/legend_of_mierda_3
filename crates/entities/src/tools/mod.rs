@@ -100,7 +100,7 @@ pub fn on_choose_action(
                     Action::Turret { width, height } => (width, height),
                     Action::Trail { width, height } => (width, height),
                     Action::Plant {
-                        plant_type,
+                        plant_type: _,
                         width,
                         height,
                     } => (width, height),

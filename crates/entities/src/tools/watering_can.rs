@@ -35,8 +35,8 @@ pub fn handle_use_watering_can(
                 Tool::WateringCan => match action {
                     Action::Plant {
                         plant_type,
-                        width,
-                        height,
+                        width: _,
+                        height: _,
                     } => {
                         mw_plant.write(PlantVegetation {
                             x: tool_pointer_tile.x,

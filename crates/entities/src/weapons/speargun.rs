@@ -1,4 +1,3 @@
-use std::f32::consts::FRAC_PI_4;
 use std::time::Duration;
 
 use crate::characters::enemy::{Enemy, EnemyHitEvent};

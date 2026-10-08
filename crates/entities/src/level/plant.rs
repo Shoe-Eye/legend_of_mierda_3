@@ -116,7 +116,7 @@ pub fn handle_plant_harvest(
     mut q_plants: Query<(Entity, &mut Sprite, &mut Plant)>,
     mut q_player: Query<(Entity, &mut Player)>,
 ) {
-    for (message) in er_harvest.read() {
+    for message in er_harvest.read() {
         for (entity, _, plant) in q_plants.iter_mut() {
             if plant.x == message.x
                 && plant.y == message.y

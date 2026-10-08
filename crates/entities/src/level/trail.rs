@@ -9,7 +9,7 @@ pub fn handle_build_trail(
     mut commands: Commands,
     mut mr_build_trail: MessageReader<BuildTrail>,
     q_ground: Query<(Entity, &Ground)>,
-    q_trail_tiles: Query<(Entity, &ChildOf, &TrailTile)>,
+    _q_trail_tiles: Query<(Entity, &ChildOf, &TrailTile)>,
     q_foundation_tiles: Query<(Entity, &ChildOf, &Foundation)>,
 ) {
     for message in mr_build_trail.read() {

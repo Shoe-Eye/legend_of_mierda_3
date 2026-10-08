@@ -80,8 +80,7 @@ fn main() {
     .add_plugins(
         WorldInspectorPlugin::default().run_if(input_toggle_active(false, KeyCode::Escape)),
     )
-    .insert_resource(LevelSelection::iid(LEVEL_1_IID))
-    .register_ldtk_int_cell::<WallBundle>(1);
+    .insert_resource(LevelSelection::iid(LEVEL_1_IID));
 
     app.run();
 }
@@ -114,6 +113,7 @@ fn setup_cameras(mut commands: Commands) {
             order: 1,
             ..default()
         },
+        Transform::from_scale(Vec3::ONE * 0.5),
     ));
     commands.spawn((
         Camera3d::default(),

@@ -21,8 +21,8 @@ pub fn handle_game_over(
     mut ev_game_over: MessageReader<GameOverEvent>,
     mut q_ui_game_over: Query<(&mut Visibility, &UIGameOver)>,
     mut next_state: ResMut<NextState<GameMode>>,
-    audio: Res<Audio>,
-    audio_assets: Res<AudioAssets>,
+    _audio: Res<Audio>,
+    _audio_assets: Res<AudioAssets>,
     mut text_query: Query<(&mut Text, &UIGameOverText)>,
 ) {
     for _ in ev_game_over.read() {
@@ -44,8 +44,8 @@ pub fn handle_game_win(
     mut ev_game_over: MessageReader<GameWinEvent>,
     mut q_ui_game_over: Query<(&mut Visibility, &UIGameOver)>,
     mut next_state: ResMut<NextState<GameMode>>,
-    audio: Res<Audio>,
-    audio_assets: Res<AudioAssets>,
+    _audio: Res<Audio>,
+    _audio_assets: Res<AudioAssets>,
     mut text_query: Query<(&mut Text, &UIGameOverText)>,
 ) {
     for _ in ev_game_over.read() {
@@ -71,7 +71,7 @@ pub fn despawn_ui(mut commands: Commands, query: Query<Entity, With<UIGameOver>>
 }
 
 #[allow(dead_code)]
-pub fn draw_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
+pub fn draw_ui(mut commands: Commands, _font_assets: Res<FontAssets>) {
     commands
         .spawn((
             Node {

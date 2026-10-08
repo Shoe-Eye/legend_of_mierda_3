@@ -91,7 +91,7 @@ pub fn draw_tool_pointer(
     q_player: Query<(Entity, &Transform, &CharacterAnimation, &Player)>,
     mut q_tool_pointer_layer: Query<(Entity, &mut ToolPointerLayer)>,
     q_tool_pointer_tiles: Query<(Entity, &ChildOf, &ToolPointerTile)>,
-    q_buildings: Query<(&Building)>,
+    q_buildings: Query<&Building>,
 ) {
     let mut direction = Direction::default();
 

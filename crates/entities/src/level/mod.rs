@@ -3,11 +3,13 @@ use lom_game::GameMode;
 
 use crate::level::plant::PlantType;
 
+pub mod door;
 pub mod fence;
 pub mod foundation;
 pub mod ground;
 pub mod plant;
 pub mod trail;
+pub mod tree;
 pub mod turret;
 
 pub struct LevelPlugin;
@@ -69,6 +71,8 @@ impl Plugin for LevelPlugin {
             ground::GroundPlugin,
             fence::FencePlugin,
             turret::TurretPlugin,
+            tree::MapleTreePlugin,
+            door::DoorPlugin,
         ))
         .add_systems(
             Update,

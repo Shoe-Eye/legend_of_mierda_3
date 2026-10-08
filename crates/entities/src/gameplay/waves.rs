@@ -194,7 +194,7 @@ pub fn event_wave(
 
     mut gameplay_state: ResMut<GameplayState>,
     mut ev_enemy_spawn: MessageWriter<SpawnEnemyEvent>,
-    mut ev_item_spawn: MessageWriter<SpawnItemEvent>,
+    _ev_item_spawn: MessageWriter<SpawnItemEvent>,
 ) {
     for event in er_on_wave_change.read() {
         match event.wave_entry {

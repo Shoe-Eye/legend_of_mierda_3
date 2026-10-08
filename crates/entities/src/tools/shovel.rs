@@ -48,19 +48,19 @@ pub fn handle_shovel_use(
 
             match message.tool {
                 Tool::Shovel => match action {
-                    Action::Dig { width, height } => {
+                    Action::Dig { width: _, height: _ } => {
                         mw_dig_ground.write(DigGround {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
                         });
                     }
-                    Action::Foundation { width, height } => {
+                    Action::Foundation { width: _, height: _ } => {
                         mw_build_foundation.write(BuildFoundation {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
                         });
                     }
-                    Action::Trail { width, height } => {
+                    Action::Trail { width: _, height: _ } => {
                         mw_build_trail.write(BuildTrail {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,

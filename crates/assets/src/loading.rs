@@ -22,6 +22,7 @@ pub const GENNADIJ_PICKAXE_USE_ASSET_SHEET: &str = "sprites/gennadij_pickaxe_use
 pub const GENNADIJ_SHOVEL_ASSET_SHEET: &str = "sprites/gennadij_shovel.png";
 pub const GENNADIJ_WATERING_CAN_ASSET_SHEET: &str = "sprites/gennadij_watering_can.png";
 pub const MIERDA_ASSET_SHEET: &str = "sprites/mierda.png";
+pub const MAPLE_TREE_ASSET_SHEET: &str = "sprites/farm/Objects/Maple Tree.png";
 
 pub struct LoadingPlugin;
 
@@ -41,6 +42,7 @@ impl Plugin for LoadingPlugin {
         app.init_resource::<StaticSpriteAtlasLayouts>();
         app.init_resource::<MeshAssets>();
         app.init_resource::<CharacterSpritesheets>();
+        app.init_resource::<EnemySpritesheets>();
         app.init_resource::<StaticSpriteTextureAtlasLayoutAssets>();
     }
 }
@@ -237,6 +239,21 @@ impl FromWorld for CharacterSpritesheets {
             gennadij_pickaxe_use: asset_server.load(GENNADIJ_PICKAXE_USE_ASSET_SHEET.to_string()),
             gennadij_shovel: asset_server.load(GENNADIJ_SHOVEL_ASSET_SHEET.to_string()),
             gennadij_watering_can: asset_server.load(GENNADIJ_WATERING_CAN_ASSET_SHEET.to_string()),
+        }
+    }
+}
+
+#[derive(Resource)]
+pub struct EnemySpritesheets {
+    pub mierda: Handle<Image>,
+}
+
+impl FromWorld for EnemySpritesheets {
+    fn from_world(world: &mut World) -> Self {
+        let asset_server = world.get_resource::<AssetServer>().unwrap().clone();
+
+        EnemySpritesheets {
+            mierda: asset_server.load(MIERDA_ASSET_SHEET.to_string()),
         }
     }
 }

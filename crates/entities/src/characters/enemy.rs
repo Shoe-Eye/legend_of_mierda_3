@@ -12,7 +12,6 @@ use lom_assets::{load_texture_atlas_layout, loading::AudioAssets};
 use lom_game::GameMode;
 use lom_ldtk::physics::ColliderBundle;
 use rand::rngs::ThreadRng;
-use rand::seq::IndexedRandom;
 use rand::RngExt;
 
 use crate::player::Player;
@@ -78,7 +77,7 @@ pub fn create_enemy_bundle(is_dummy: bool, enemy_type: EnemyType) -> EnemyBundle
         ..Default::default()
     };
 
-    let (atlas_handle, spritesheet_type) = match enemy_type {
+    let (_atlas_handle, spritesheet_type) = match enemy_type {
         EnemyType::Mierda => (
             load_texture_atlas_layout(5, 1, Vec2::ONE * 16.),
             AnimatedCharacterType::NotAnimated,

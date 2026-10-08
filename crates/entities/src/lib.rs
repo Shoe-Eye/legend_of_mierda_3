@@ -1,3 +1,5 @@
+#![feature(str_as_str)]
+
 use bevy::prelude::*;
 
 pub mod characters;

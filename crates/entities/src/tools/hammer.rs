@@ -34,13 +34,13 @@ pub fn handle_hammer_use(
         if let Some((_, tool_pointer_tile)) = q_tool_pointer_tiles.iter().next() {
             match message.tool {
                 Tool::Hammer => match action {
-                    Action::Fence { width, height } => {
+                    Action::Fence { width: _, height: _ } => {
                         mw_fence.write(BuildFence {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,
                         });
                     }
-                    Action::Turret { width, height } => {
+                    Action::Turret { width: _, height: _ } => {
                         mw_turret.write(BuildTurret {
                             x: tool_pointer_tile.x,
                             y: tool_pointer_tile.y,

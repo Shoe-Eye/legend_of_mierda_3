@@ -6,6 +6,6 @@ pub struct WeaponsPlugin;
 
 impl Plugin for WeaponsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((speargun::SpeargunPlugin));
+        app.add_plugins(speargun::SpeargunPlugin);
     }
 }

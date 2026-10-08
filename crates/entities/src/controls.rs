@@ -7,7 +7,7 @@ use lom_assets::sprites::*;
 use crate::{
     player::Player,
     sprites::get_animation_indices,
-    tools::Tool::{self, Axe, Hammer, Pickaxe},
+    tools::Tool::{Axe, Hammer, Pickaxe},
 };
 
 #[derive(Message, Copy, Clone, Reflect, Debug, PartialEq, Eq, Default)]

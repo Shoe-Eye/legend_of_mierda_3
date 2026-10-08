@@ -5,8 +5,8 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-const _ASPECT_RATIO: f32 = 3.0 / 2.0;
 pub const LEVEL_1_IID: &str = "d53f9950-c640-11ed-8430-4942c04951ff";
+pub const LIBRARY_IID: &str = "bd25c9f0-bde0-11f1-b8c4-c3a3469c37aa";
 
 // Events
 
@@ -36,6 +36,12 @@ pub struct Wall;
 
 #[derive(Clone, Debug, Default, Bundle, LdtkIntCell)]
 pub struct WallBundle {
+    wall: Wall,
+    sensor: Sensor,
+}
+
+#[derive(Clone, Debug, Default, Bundle, LdtkIntCell)]
+pub struct PortalWallBundle {
     wall: Wall,
     sensor: Sensor,
 }
@@ -84,8 +90,6 @@ pub fn update_level_selection(
     }
 }
 
-const ASPECT_RATIO: f32 = 16. / 9.;
-
 #[allow(clippy::type_complexity)]
 pub fn camera_fit_inside_current_level(
     mut params: ParamSet<(
@@ -98,14 +102,13 @@ pub fn camera_fit_inside_current_level(
     project_assets: Res<Assets<LdtkProject>>,
 ) -> Result {
     if params.p1().is_empty() {
-        println!("exit 1");
         return Ok(());
         // return Err(BevyError::from("player not found"));
     }
 
     let player_translation = params.p1().single().unwrap().translation();
 
-    let project = project_assets.get(projects.single().unwrap().id()).unwrap();
+    let _project = project_assets.get(projects.single().unwrap().id()).unwrap();
 
     // Collect level data first so we hold no borr.2ow on params
     let level_data: Vec<(Transform, LevelIid)> = params
@@ -118,12 +121,11 @@ pub fn camera_fit_inside_current_level(
 
     let (mut projection, _camera, mut camera_transform) = camera_query.single_mut().unwrap();
 
-    let Projection::Orthographic(ref mut orthographic_projection) = &mut *projection else {
-        println!("exit 2");
+    let Projection::Orthographic(_orthographic_projection) = &mut *projection else {
         return Err(BevyError::from("non-orthographic projection found"));
     };
 
-    for (level_transform, level_iid) in &level_data {
+    for (_level_transform, level_iid) in &level_data {
         let ldtk_project = project_assets
             .get(projects.single()?)
             .expect("Project should be loaded if level has spawned");
@@ -135,23 +137,6 @@ pub fn camera_fit_inside_current_level(
         if level_selection.is_match(&LevelIndices::default(), level) {
             camera_transform.translation.x = player_translation.x;
             camera_transform.translation.y = player_translation.y;
-
-            // let level_ratio = level.px_wid as f32 / level.px_hei as f32;
-            // orthographic_projection.viewport_origin = Vec2::ZERO;
-
-            // let width = level.px_wid as f32; //(level.px_wid as f32 / 16.).round() * 16.;
-            // let height = level.px_hei as f32; //width / ASPECT_RATIO;
-            // orthographic_projection.scaling_mode =
-            //     bevy::camera::ScalingMode::Fixed { width, height };
-            // camera_transform.translation.y =
-            //     (player_translation.y - level_transform.translation.y - height / 2.)
-            //         .clamp(0., level.px_hei as f32 - height);
-            // camera_transform.translation.x =
-            //     (player_translation.x - level_transform.translation.x - width / 2.)
-            //         .clamp(0., level.px_wid as f32 - width);
-
-            // camera_transform.translation.x += level_transform.translation.x;
-            // camera_transform.translation.y += level_transform.translation.y;
         }
     }
 
@@ -202,6 +187,7 @@ pub fn spawn_wall_collision(
                 .entry(grandparent.get())
                 .or_default()
                 .insert(grid_coords);
+            commands.entity(parent.get()).insert(Visibility::Hidden);
         }
     }
 
@@ -224,7 +210,7 @@ pub fn spawn_wall_collision(
                     ..
                 } = level.layer_instances()[0];
 
-                // combine wall tiles into flat "plates" in each individual row
+                // combine wall tiles into flat "plates" in each indWallividual row
                 let mut plate_stack: Vec<Vec<Plate>> = Vec::new();
 
                 for y in 0..height {
@@ -282,30 +268,27 @@ pub fn spawn_wall_collision(
 
                 commands.entity(level_entity).with_children(|level| {
                     for wall_rect in wall_rects {
-                        level
-                            .spawn_empty()
-                            .insert((
-                                Collider::cuboid(
-                                    (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
-                                        * grid_size as f32
-                                        / 2.,
-                                    (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
-                                        * grid_size as f32
-                                        / 2.,
-                                ),
-                                // Sensor {},
-                                ActiveEvents::COLLISION_EVENTS,
-                            ))
-                            .insert(RigidBody::Fixed)
-                            .insert(Friction::new(1.0))
-                            .insert(Transform::from_xyz(
+                        level.spawn_empty().insert((
+                            Collider::cuboid(
+                                (wall_rect.right as f32 - wall_rect.left as f32 + 1.)
+                                    * grid_size as f32
+                                    / 2.,
+                                (wall_rect.top as f32 - wall_rect.bottom as f32 + 1.)
+                                    * grid_size as f32
+                                    / 2.,
+                            ),
+                            ActiveEvents::COLLISION_EVENTS,
+                            RigidBody::Fixed,
+                            Transform::from_xyz(
                                 (wall_rect.left + wall_rect.right + 1) as f32 * grid_size as f32
                                     / 2.,
                                 (wall_rect.bottom + wall_rect.top + 1) as f32 * grid_size as f32
                                     / 2.,
                                 0.,
-                            ))
-                            .insert(GlobalTransform::default());
+                            ),
+                            Name::new("Wall Collision"),
+                            GlobalTransform::default(),
+                        ));
                     }
                 });
             }

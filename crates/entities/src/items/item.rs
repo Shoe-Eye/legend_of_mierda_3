@@ -4,7 +4,6 @@ use bevy_ecs::entity::EntityCloner;
 use bevy_ecs::system::SystemState;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
-use lom_assets::load_texture_atlas_layout;
 use lom_ldtk::physics::ColliderBundle;
 use rand::rngs::ThreadRng;
 use rand::RngExt;
@@ -30,8 +29,8 @@ pub struct ItemBundle {
 }
 
 pub fn create_item_bundle(
-    asset_server: &AssetServer,
-    texture_atlasses: &mut Assets<TextureAtlasLayout>,
+    _asset_server: &AssetServer,
+    _texture_atlasses: &mut Assets<TextureAtlasLayout>,
     is_dummy: bool,
     item_type: ItemType,
 ) -> ItemBundle {
