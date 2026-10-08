@@ -63,6 +63,8 @@ pub struct AudioAssets {
     pub gameover: Handle<AudioSource>,
     #[asset(path = "audio/mexico.ogg")]
     pub mexico: Handle<AudioSource>,
+    #[asset(path = "audio/yelets.mp3")]
+    pub yelets: Handle<AudioSource>,
 }
 
 #[derive(AssetCollection, Resource)]

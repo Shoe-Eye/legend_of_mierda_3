@@ -33,8 +33,9 @@ fn setup_menu_music(mut commands: Commands, audio_assets: Res<AudioAssets>, audi
 fn setup_gameplay_music(mut commands: Commands, audio_assets: Res<AudioAssets>, audio: Res<Audio>) {
     // audio.pause();
     let handle = audio
-        .play(audio_assets.mexico.clone())
-        // .paused()
+        .play(audio_assets.yelets.clone())
+        /*za*/
+        .looped()
         .handle();
     commands.insert_resource(GameplayMusic(handle));
 }

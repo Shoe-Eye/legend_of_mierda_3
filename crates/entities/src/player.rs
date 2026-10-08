@@ -53,6 +53,7 @@ pub struct PlayerBundle {
     pub animation_timer: AnimationTimer,
     pub player: Player,
     pub ldtk_player: lom_ldtk::ldtk::Player,
+    pub worldly: Worldly,
     pub animated_character_sprite: AnimatedCharacterSprite,
     pub collider_bundle: ColliderBundle,
     pub active_events: ActiveEvents,
@@ -66,7 +67,7 @@ pub struct PlayerBundle {
 
 impl LdtkEntity for PlayerBundle {
     fn bundle_entity(
-        _entity_instance: &EntityInstance,
+        entity_instance: &EntityInstance,
         _layer_instance: &LayerInstance,
         _: Option<&Handle<Image>>,
         _: Option<&TilesetDefinition>,
@@ -107,6 +108,7 @@ impl LdtkEntity for PlayerBundle {
                 inventory: PlayerInventory::default(),
             },
             ldtk_player: lom_ldtk::ldtk::Player,
+            worldly: Worldly::from_entity_info(entity_instance),
             animated_character_sprite: AnimatedCharacterSprite {
                 animated_character_type: AnimatedCharacterType::Player,
             },
