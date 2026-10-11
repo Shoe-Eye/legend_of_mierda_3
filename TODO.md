@@ -1,4 +1,0 @@
-# Tasks
-
-* Gameplay tweaks
-* BOSS

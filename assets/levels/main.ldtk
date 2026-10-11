@@ -11,9 +11,9 @@
 	"iid": "a3386460-7820-11ed-b6fd-157a63b4d02d",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 475928,
-	"nextUid": 286,
+	"nextUid": 288,
 	"identifierStyle": "Capitalize",
-	"toc": [{
+	"toc": [ {
 		"identifier": "Player",
 		"instances": [{
 			"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
@@ -26,8 +26,146 @@
 			"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
 			"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
 			"entityIid": "9fcdc4b0-8990-11ee-9697-350728b4e14a"
-		}, "worldX": -552, "worldY": 1768, "widPx": 8, "heiPx": 8, "fields" : {} }]
-	}],
+		}, "worldX": -545, "worldY": 1772, "widPx": 8, "heiPx": 8, "fields" : {} }]
+	}, {
+		"identifier": "NPC",
+		"instances": [
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "b6e8fa40-bde0-11f1-ac31-816b60b3e598"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cbf4db20-bde0-11f1-ac31-af10d57391bc"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cc465680-bde0-11f1-ac31-f1922729c593"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cc7e7d80-bde0-11f1-ac31-a1ec3b424e34"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "ccbdd070-bde0-11f1-ac31-85f1644eeb49"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cdb269a0-bde0-11f1-ac31-93096c6127b7"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "ce104110-bde0-11f1-ac31-f5b477560c40"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "ce522c10-bde0-11f1-ac31-556eea2fe461"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "ce9bdf40-bde0-11f1-ac31-51d129f0993f"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cf375bf0-bde0-11f1-ac31-3b1f2ad2cc61"
+			},
+			{
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cfd9dd80-bde0-11f1-ac31-3dc46d2f8dd5"
+			}
+		],
+		"instancesData": [
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "b6e8fa40-bde0-11f1-ac31-816b60b3e598"
+			}, "worldX": -341, "worldY": 1782, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cbf4db20-bde0-11f1-ac31-af10d57391bc"
+			}, "worldX": -301, "worldY": 1680, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cc465680-bde0-11f1-ac31-f1922729c593"
+			}, "worldX": -191, "worldY": 1870, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cc7e7d80-bde0-11f1-ac31-a1ec3b424e34"
+			}, "worldX": -474, "worldY": 1923, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "ccbdd070-bde0-11f1-ac31-85f1644eeb49"
+			}, "worldX": -619, "worldY": 1906, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cdb269a0-bde0-11f1-ac31-93096c6127b7"
+			}, "worldX": -382, "worldY": 2460, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "ce104110-bde0-11f1-ac31-f5b477560c40"
+			}, "worldX": 157, "worldY": 2433, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "ce522c10-bde0-11f1-ac31-556eea2fe461"
+			}, "worldX": 221, "worldY": 2918, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "ce9bdf40-bde0-11f1-ac31-51d129f0993f"
+			}, "worldX": 860, "worldY": 2590, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cf375bf0-bde0-11f1-ac31-3b1f2ad2cc61"
+			}, "worldX": 582, "worldY": 1804, "widPx": 8, "heiPx": 8, "fields" : {} },
+			{ "iids": {
+				"worldIid": "c9ef2d10-c640-11ed-ad34-f553e1d803f9",
+				"levelIid": "d53f9950-c640-11ed-8430-4942c04951ff",
+				"layerIid": "d53f9951-c640-11ed-8430-3f3f71a3daf1",
+				"entityIid": "cfd9dd80-bde0-11f1-ac31-3dc46d2f8dd5"
+			}, "worldX": -790, "worldY": 2758, "widPx": 8, "heiPx": 8, "fields" : {} }
+		]
+	} ],
 	"worldLayout": null,
 	"worldGridWidth": null,
 	"worldGridHeight": null,
@@ -1118,6 +1256,79 @@
 			"pivotX": 0,
 			"pivotY": 0,
 			"fieldDefs": []
+		},
+		{
+			"identifier": "NPC",
+			"uid": 286,
+			"tags": ["actor"],
+			"exportToToc": true,
+			"allowOutOfBounds": false,
+			"doc": null,
+			"width": 8,
+			"height": 8,
+			"resizableX": false,
+			"resizableY": false,
+			"minWidth": null,
+			"maxWidth": null,
+			"minHeight": null,
+			"maxHeight": null,
+			"keepAspectRatio": false,
+			"tileOpacity": 1,
+			"fillOpacity": 0.08,
+			"lineOpacity": 0,
+			"hollow": false,
+			"color": "#03CB7C",
+			"renderMode": "Rectangle",
+			"showName": true,
+			"tilesetId": null,
+			"tileRenderMode": "Stretch",
+			"tileRect": { "tilesetUid": 104, "x": 0, "y": 240, "w": 16, "h": 16 },
+			"uiTileRect": { "tilesetUid": 235, "x": 80, "y": 240, "w": 16, "h": 16 },
+			"nineSliceBorders": [],
+			"maxCount": 0,
+			"limitScope": "PerWorld",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0.5,
+			"pivotY": 0.5,
+			"fieldDefs": [
+				{
+					"identifier": "Name",
+					"doc": null,
+					"__type": "String",
+					"uid": 287,
+					"type": "F_String",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -1585,22 +1796,6 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Player",
-							"__grid": [45,30],
-							"__pivot": [0.5,0.5],
-							"__tags": ["actor"],
-							"__tile": null,
-							"__smartColor": "#03CB7C",
-							"iid": "9fcdc4b0-8990-11ee-9697-350728b4e14a",
-							"width": 8,
-							"height": 8,
-							"defUid": 59,
-							"px": [728,488],
-							"fieldInstances": [],
-							"__worldX": -552,
-							"__worldY": 1768
-						},
-						{
 							"__identifier": "Mierda",
 							"__grid": [32,16],
 							"__pivot": [0.5,0.5],
@@ -1787,6 +1982,198 @@
 							"fieldInstances": [],
 							"__worldX": 625,
 							"__worldY": 2387
+						},
+						{
+							"__identifier": "Player",
+							"__grid": [45,30],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "9fcdc4b0-8990-11ee-9697-350728b4e14a",
+							"width": 8,
+							"height": 8,
+							"defUid": 59,
+							"px": [735,492],
+							"fieldInstances": [],
+							"__worldX": -545,
+							"__worldY": 1772
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [58,31],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "b6e8fa40-bde0-11f1-ac31-816b60b3e598",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [939,502],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": -341,
+							"__worldY": 1782
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [61,25],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "cbf4db20-bde0-11f1-ac31-af10d57391bc",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [979,400],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": -301,
+							"__worldY": 1680
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [68,36],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "cc465680-bde0-11f1-ac31-f1922729c593",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [1089,590],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": -191,
+							"__worldY": 1870
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [50,40],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "cc7e7d80-bde0-11f1-ac31-a1ec3b424e34",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [806,643],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": -474,
+							"__worldY": 1923
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [41,39],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "ccbdd070-bde0-11f1-ac31-85f1644eeb49",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [661,626],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": -619,
+							"__worldY": 1906
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [56,73],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "cdb269a0-bde0-11f1-ac31-93096c6127b7",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [898,1180],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": -382,
+							"__worldY": 2460
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [89,72],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "ce104110-bde0-11f1-ac31-f5b477560c40",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [1437,1153],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": 157,
+							"__worldY": 2433
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [93,102],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "ce522c10-bde0-11f1-ac31-556eea2fe461",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [1501,1638],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": 221,
+							"__worldY": 2918
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [133,81],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "ce9bdf40-bde0-11f1-ac31-51d129f0993f",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [2140,1310],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": 860,
+							"__worldY": 2590
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [116,32],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "cf375bf0-bde0-11f1-ac31-3b1f2ad2cc61",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [1862,524],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": 582,
+							"__worldY": 1804
+						},
+						{
+							"__identifier": "NPC",
+							"__grid": [30,92],
+							"__pivot": [0.5,0.5],
+							"__tags": ["actor"],
+							"__tile": null,
+							"__smartColor": "#03CB7C",
+							"iid": "cfd9dd80-bde0-11f1-ac31-3dc46d2f8dd5",
+							"width": 8,
+							"height": 8,
+							"defUid": 286,
+							"px": [490,1478],
+							"fieldInstances": [{ "__identifier": "Name", "__type": "String", "__value": "", "__tile": null, "defUid": 287, "realEditorValues": [] }],
+							"__worldX": -790,
+							"__worldY": 2758
 						}
 					]
 				},

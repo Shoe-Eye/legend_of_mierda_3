@@ -9,6 +9,7 @@ pub mod inventory;
 pub mod items;
 pub mod ldtk;
 pub mod level;
+pub mod npc;
 pub mod player;
 pub mod sprites;
 pub mod text_indicator;
@@ -41,6 +42,7 @@ impl Plugin for EntitiesPlugin {
             text_indicator::TextIndicatorPlugin,
             tools::ToolsPlugin,
             weapons::WeaponsPlugin,
+            npc::NPCPlugin,
         ))
         .add_message::<GameOverEvent>()
         .add_message::<GameWinEvent>()

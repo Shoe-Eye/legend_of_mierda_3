@@ -13,6 +13,7 @@ pub const N_FRAMES_USE_TOOL_SHEET_1: usize = 7;
 pub const N_FRAMES_USE_TOOL_SHEET_2: usize = 9;
 
 pub const GENNADIJ_ASSET_SHEET: &str = "sprites/gennadij.png";
+pub const NPC_1_ASSET_SHEET_SHEET: &str = "sprites/npc-1.png";
 pub const GENNADIJ_AXE_ASSET_SHEET: &str = "sprites/gennadij_axe.png";
 pub const GENNADIJ_AXE_USE_ASSET_SHEET: &str = "sprites/gennadij_axe_use.png";
 pub const GENNADIJ_HAMMER_ASSET_SHEET: &str = "sprites/gennadij_hammer.png";
