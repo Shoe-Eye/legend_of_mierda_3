@@ -284,7 +284,6 @@ impl Plugin for PlayerPlugin {
                 Update,
                 (
                     handle_player_enemy_collisions.run_if(in_state(GameMode::GamePlay)),
-                    // event_player_attack.run_if(in_state(GameState::GamePlay)),
                     event_player_hit.run_if(in_state(GameMode::GamePlay)),
                 ),
             )

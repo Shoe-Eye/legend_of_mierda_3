@@ -4,7 +4,7 @@ use bevy_ecs_ldtk::{assets::LdtkProject, LdtkProjectHandle, LevelEvent, LevelIid
 use lom_assets::sprites::CharacterAnimation;
 use lom_game::GameMode;
 
-use crate::controls::ControlEvent;
+use crate::controls::PlayerControlEvent;
 use crate::level::Building;
 use crate::player::Player;
 
@@ -193,7 +193,7 @@ pub fn draw_tool_pointer(
 }
 
 pub fn control_pointer(
-    mut ev_control: MessageReader<ControlEvent>,
+    mut ev_control: MessageReader<PlayerControlEvent>,
     mut q_tool_pointer_tiles: Query<(Entity, &mut ToolPointerTile)>,
 ) {
     for control in ev_control.read() {

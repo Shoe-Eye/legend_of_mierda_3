@@ -8,11 +8,12 @@ use lom_assets::{
 };
 
 use crate::{
+    npc::NPC,
     player::{Player, ToolUse},
     tools::Tool,
 };
 
-pub fn animate_character_sprtire(
+pub fn animate_character_sprite(
     time: Res<Time>,
     mut query: Query<(
         Entity,
@@ -93,6 +94,69 @@ pub fn animate_character_sprtire(
                         character_animation.animation_type,
                         character_animation.direction,
                         tool,
+                    );
+                }
+
+                indices.first
+            } else {
+                current_index + 1
+            };
+
+            if let Some(atlas) = &mut sprite.texture_atlas {
+                atlas.index = new_index;
+            }
+        }
+    }
+}
+
+pub fn animate_npc_sprite(
+    time: Res<Time>,
+    mut query: Query<(
+        Entity,
+        &mut CharacterAnimation,
+        &mut AnimationTimer,
+        &mut Sprite,
+        &mut AnimatedCharacterSprite,
+        &NPC,
+    )>,
+) {
+    for (
+        _entity,
+        mut character_animation,
+        mut timer,
+        mut sprite,
+        animated_character_sprite,
+        _npc,
+    ) in &mut query
+    {
+        timer.tick(time.delta());
+
+        if animated_character_sprite.animated_character_type == AnimatedCharacterType::NotAnimated {
+            continue;
+        }
+
+        let mut indices = get_animation_indices(
+            character_animation.animation_type,
+            character_animation.direction,
+            None,
+        );
+
+        if timer.just_finished() {
+            let current_index = sprite.texture_atlas.as_ref().map(|t| t.index).unwrap_or(0);
+            let new_index = if (current_index >= indices.last) || (current_index < indices.first) {
+                if character_animation.animation_type == AnimationType::UseTool
+                    && (current_index >= indices.last)
+                {
+                    character_animation.animation_type = AnimationType::Stand;
+                }
+
+                character_animation.state = AnimationState::Normal;
+
+                if character_animation.animation_type == AnimationType::Stand {
+                    indices = get_animation_indices(
+                        character_animation.animation_type,
+                        character_animation.direction,
+                        None,
                     );
                 }
 

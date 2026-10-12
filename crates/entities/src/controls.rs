@@ -11,7 +11,7 @@ use crate::{
 };
 
 #[derive(Message, Copy, Clone, Reflect, Debug, PartialEq, Eq, Default)]
-pub struct ControlEvent {
+pub struct PlayerControlEvent {
     pub go_up: bool,
     pub go_down: bool,
     pub go_left: bool,
@@ -23,8 +23,8 @@ pub struct ControlEvent {
     pub arrow_right: bool,
 }
 
-pub fn control_character(
-    mut ev_control: MessageReader<ControlEvent>,
+pub fn control_player_character(
+    mut ev_control: MessageReader<PlayerControlEvent>,
     mut query: Query<
         (
             Entity,
@@ -143,9 +143,9 @@ pub fn control_character(
 
 pub fn keyboard_controls(
     input: Res<ButtonInput<KeyCode>>,
-    mut ev_control: MessageWriter<ControlEvent>,
+    mut ev_control: MessageWriter<PlayerControlEvent>,
 ) {
-    let mut control = ControlEvent {
+    let mut control = PlayerControlEvent {
         go_right: input.pressed(KeyCode::KeyD),
         go_left: input.pressed(KeyCode::KeyA),
         go_up: input.pressed(KeyCode::KeyW),

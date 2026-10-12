@@ -97,7 +97,12 @@ impl Plugin for LegendOfMierda3Plugin {
         .add_systems(OnExit(GameMode::GamePlay), ldtk::despawn_game_world)
         .add_systems(
             Update,
-            (sprites::animate_character_sprtire, flash_sprite).run_if(in_state(GameMode::GamePlay)),
+            (
+                sprites::animate_character_sprite,
+                sprites::animate_npc_sprite,
+                flash_sprite,
+            )
+                .run_if(in_state(GameMode::GamePlay)),
         )
         .add_systems(Startup, setup_cameras)
         .add_message::<LevelChangeEvent>();

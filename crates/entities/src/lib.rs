@@ -22,7 +22,7 @@ pub use lom_game::GameMode;
 pub use lom_ldtk::physics;
 pub use lom_ui as ui;
 
-use crate::controls::ControlEvent;
+use crate::controls::PlayerControlEvent;
 
 pub struct EntitiesPlugin;
 
@@ -30,7 +30,10 @@ impl Plugin for EntitiesPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             Update,
-            (controls::keyboard_controls, controls::control_character)
+            (
+                controls::keyboard_controls,
+                controls::control_player_character,
+            )
                 .run_if(in_state(GameMode::GamePlay)),
         )
         .add_plugins((
@@ -46,7 +49,7 @@ impl Plugin for EntitiesPlugin {
         ))
         .add_message::<GameOverEvent>()
         .add_message::<GameWinEvent>()
-        .add_message::<ControlEvent>()
+        .add_message::<PlayerControlEvent>()
         .add_systems(
             Update,
             (ldtk::hide_dummy_entities, ldtk::fix_missing_ldtk_entities)
