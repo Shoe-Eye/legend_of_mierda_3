@@ -2,11 +2,12 @@ use std::f32::consts::{FRAC_PI_4, PI, TAU};
 use std::time::Duration;
 
 use bevy::prelude::*;
+use bevy_ecs_ldtk::prelude::LevelSelection;
 use bevy_rapier2d::geometry::{ActiveEvents, Collider, Friction};
 use lom_game::GameMode;
 
 use crate::level::ground::Foundation;
-use crate::level::ground::Ground;
+use crate::level::ground::{selected_level_iid, Ground};
 use crate::level::{BuildTurret, Building};
 use crate::weapons::speargun::{Speargun, SpeargunShootEvent, SpeargunTimer};
 
@@ -33,10 +34,17 @@ pub fn handle_build_turret(
     q_ground: Query<(Entity, &Ground)>,
     q_turret_tiles: Query<(Entity, &ChildOf, &Turret)>,
     q_foundation_tiles: Query<(Entity, &Foundation)>,
+    level_selection: Res<LevelSelection>,
     // q_buildings
 ) {
+    let current_level_iid = selected_level_iid(&level_selection);
+
     for message in mr_build_turret.read() {
-        if let Some((ground_entity, ground)) = q_ground.iter().next() {
+        if let Some((ground_entity, ground)) = q_ground
+            .iter()
+            .find(|(_, ground)| Some(&ground.level_iid) == current_level_iid.as_ref())
+            .or_else(|| q_ground.iter().next())
+        {
             let turret_does_not_exist = q_turret_tiles
                 .iter()
                 .filter(|(_, parent, tile)| {

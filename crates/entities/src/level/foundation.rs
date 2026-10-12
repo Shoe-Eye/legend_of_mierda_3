@@ -1,7 +1,8 @@
 use bevy::prelude::*;
+use bevy_ecs_ldtk::prelude::LevelSelection;
 use lom_assets::StaticSpriteAssets;
 
-use crate::level::ground::{Foundation, Ground, GroundTile};
+use crate::level::ground::{selected_level_iid, Foundation, Ground, GroundTile};
 use crate::level::BuildFoundation;
 
 pub fn handle_build_foundation(
@@ -11,9 +12,16 @@ pub fn handle_build_foundation(
     q_ground_tiles: Query<(Entity, &ChildOf, &GroundTile)>,
     q_foundation_tiles: Query<(Entity, &ChildOf, &Foundation)>,
     static_sprite_assets: Res<StaticSpriteAssets>,
+    level_selection: Res<LevelSelection>,
 ) {
+    let current_level_iid = selected_level_iid(&level_selection);
+
     for message in mr_build_foundation.read() {
-        if let Some((ground_entity, ground)) = q_ground.iter().next() {
+        if let Some((ground_entity, ground)) = q_ground
+            .iter()
+            .find(|(_, ground)| Some(&ground.level_iid) == current_level_iid.as_ref())
+            .or_else(|| q_ground.iter().next())
+        {
             let foundation_does_no_exits = q_foundation_tiles
                 .iter()
                 .filter(|(_, parent, tile)| {

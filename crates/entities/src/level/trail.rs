@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 use bevy_color::palettes::css::DARK_GREEN;
+use bevy_ecs_ldtk::prelude::LevelSelection;
 
 use crate::level::ground::Ground;
-use crate::level::ground::{Foundation, TrailTile};
+use crate::level::ground::{selected_level_iid, Foundation, TrailTile};
 use crate::level::BuildTrail;
 
 pub fn handle_build_trail(
@@ -11,9 +12,16 @@ pub fn handle_build_trail(
     q_ground: Query<(Entity, &Ground)>,
     _q_trail_tiles: Query<(Entity, &ChildOf, &TrailTile)>,
     q_foundation_tiles: Query<(Entity, &ChildOf, &Foundation)>,
+    level_selection: Res<LevelSelection>,
 ) {
+    let current_level_iid = selected_level_iid(&level_selection);
+
     for message in mr_build_trail.read() {
-        if let Some((ground_entity, ground)) = q_ground.iter().next() {
+        if let Some((ground_entity, ground)) = q_ground
+            .iter()
+            .find(|(_, ground)| Some(&ground.level_iid) == current_level_iid.as_ref())
+            .or_else(|| q_ground.iter().next())
+        {
             let foundation_does_exist = q_foundation_tiles
                 .iter()
                 .filter(|(_, parent, tile)| {

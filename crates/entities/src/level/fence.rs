@@ -1,10 +1,14 @@
 use bevy::prelude::*;
+use bevy_ecs_ldtk::prelude::LevelSelection;
 use bevy_rapier2d::prelude::*;
 use lom_assets::loading::StaticSpriteTextureAtlasLayoutAssets;
 use lom_assets::StaticSpriteAssets;
 use lom_game::GameMode;
 
-use crate::level::{ground::Ground, BuildFence, Building};
+use crate::level::{
+    ground::{selected_level_iid, Ground},
+    BuildFence, Building,
+};
 
 #[derive(Component, Clone, Copy)]
 pub struct FenceTile {
@@ -119,14 +123,21 @@ pub fn handle_build_fence(
     q_fence_tiles: Query<(Entity, &ChildOf, &FenceTile)>,
     static_sprite_assets: Res<StaticSpriteAssets>,
     static_sprite_atlas_assets: Res<StaticSpriteTextureAtlasLayoutAssets>,
+    level_selection: Res<LevelSelection>,
 ) {
+    let current_level_iid = selected_level_iid(&level_selection);
+
     for message in mr.read() {
         let fences: Vec<FenceTile> = q_fence_tiles
             .iter()
             .map(|(_, _, fence)| fence.clone())
             .collect();
 
-        if let Some((ground_entity, ground)) = q_ground.iter().next() {
+        if let Some((ground_entity, ground)) = q_ground
+            .iter()
+            .find(|(_, ground)| Some(&ground.level_iid) == current_level_iid.as_ref())
+            .or_else(|| q_ground.iter().next())
+        {
             if q_fence_tiles
                 .iter()
                 .filter(|(_, parent, tile)| {

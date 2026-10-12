@@ -89,10 +89,26 @@ pub fn init_tool_pointer_layer(
 pub fn draw_tool_pointer(
     mut commands: Commands,
     q_player: Query<(Entity, &Transform, &CharacterAnimation, &Player)>,
+    q_levels: Query<(&LevelIid, &GlobalTransform)>,
     mut q_tool_pointer_layer: Query<(Entity, &mut ToolPointerLayer)>,
     q_tool_pointer_tiles: Query<(Entity, &ChildOf, &ToolPointerTile)>,
     q_buildings: Query<&Building>,
+    level_selection: Res<LevelSelection>,
 ) {
+    let current_level_iid = match level_selection.as_ref() {
+        LevelSelection::Iid(iid) => Some(iid.as_str().to_string()),
+        _ => None,
+    };
+
+    // The player is a "worldly" entity, so its transform is in world space while the
+    // tool pointer layer lives in the level's local space. Offset by the current
+    // level's world origin to get level-local grid coordinates.
+    let level_origin = q_levels
+        .iter()
+        .find(|(iid, _)| Some(iid.as_str()) == current_level_iid.as_deref())
+        .map(|(_, transform)| transform.translation())
+        .unwrap_or(Vec3::ZERO);
+
     let mut direction = Direction::default();
 
     for (entity, _, tile) in q_tool_pointer_tiles.iter() {
@@ -101,15 +117,15 @@ pub fn draw_tool_pointer(
     }
 
     for (_, player_transform, _character_animation, _player) in q_player.iter() {
-        if let Some((tool_pointer_entity, mut tool_pointer_layer)) =
-            q_tool_pointer_layer.iter_mut().next()
+        if let Some((tool_pointer_entity, mut tool_pointer_layer)) = q_tool_pointer_layer
+            .iter_mut()
+            .find(|(_, layer)| Some(&layer.level_iid) == current_level_iid.as_ref())
         {
-            let mut x =
-                f32::floor(player_transform.translation.x / (tool_pointer_layer.grid_size as f32))
-                    as u32;
-            let mut y =
-                f32::floor(player_transform.translation.y / (tool_pointer_layer.grid_size as f32))
-                    as u32;
+            let grid_size = tool_pointer_layer.grid_size as f32;
+            let local_position = player_transform.translation - level_origin;
+
+            let mut x = f32::floor(local_position.x / grid_size).max(0.0) as u32;
+            let mut y = f32::floor(local_position.y / grid_size).max(0.0) as u32;
 
             match direction {
                 Direction::Left => {

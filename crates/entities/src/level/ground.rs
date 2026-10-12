@@ -27,6 +27,13 @@ pub struct Ground {
     pub grid_size: u32,
 }
 
+pub fn selected_level_iid(level_selection: &LevelSelection) -> Option<String> {
+    match level_selection {
+        LevelSelection::Iid(iid) => Some(iid.as_str().to_string()),
+        _ => None,
+    }
+}
+
 #[derive(Component)]
 pub struct GroundTile {
     pub x: u32,
@@ -95,9 +102,16 @@ pub fn handle_build_ground(
     q_ground_tiles: Query<(Entity, &ChildOf, &GroundTile)>,
     q_foundation_tiles: Query<(Entity, &ChildOf, &Foundation)>,
     static_sprite_assets: Res<StaticSpriteAssets>,
+    level_selection: Res<LevelSelection>,
 ) {
+    let current_level_iid = selected_level_iid(&level_selection);
+
     for message in mr_build_foundation.read() {
-        if let Some((ground_entity, ground)) = q_ground.iter().next() {
+        if let Some((ground_entity, ground)) = q_ground
+            .iter()
+            .find(|(_, ground)| Some(&ground.level_iid) == current_level_iid.as_ref())
+            .or_else(|| q_ground.iter().next())
+        {
             let foundation_does_not_exist = q_foundation_tiles
                 .iter()
                 .filter(|(_, parent, tile)| {

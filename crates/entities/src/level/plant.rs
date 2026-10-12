@@ -1,10 +1,11 @@
 use bevy::prelude::*;
+use bevy_ecs_ldtk::prelude::LevelSelection;
 use bevy_rapier2d::geometry::{ActiveEvents, Collider, Friction};
 use lom_assets::loading::StaticSpriteAtlasLayouts;
 use lom_assets::StaticSpriteAssets;
 use lom_game::GameWorldState;
 
-use crate::level::ground::{Ground, GroundTile};
+use crate::level::ground::{selected_level_iid, Ground, GroundTile};
 use crate::level::{HarvestPlant, PlantVegetation};
 use crate::player::Player;
 
@@ -39,9 +40,16 @@ pub fn handle_plant_vegetation(
     static_sprite_assets: Res<StaticSpriteAssets>,
     sprite_layouts: Res<StaticSpriteAtlasLayouts>,
     game_world_state: Res<GameWorldState>,
+    level_selection: Res<LevelSelection>,
 ) {
+    let current_level_iid = selected_level_iid(&level_selection);
+
     for message in mt_plant_vegetation.read() {
-        if let Some((ground_entity, ground)) = q_ground.iter().next() {
+        if let Some((ground_entity, ground)) = q_ground
+            .iter()
+            .find(|(_, ground)| Some(&ground.level_iid) == current_level_iid.as_ref())
+            .or_else(|| q_ground.iter().next())
+        {
             let watermelon_does_not_exist = q_watermelons
                 .iter()
                 .filter(|(_, parent, tile)| {

@@ -1,12 +1,13 @@
 use std::time::Duration;
 
 use crate::characters::enemy::{Enemy, EnemyHitEvent};
-use crate::level::ground::Ground;
+use crate::level::ground::{selected_level_iid, Ground};
 use crate::level::turret::{Turret, TurretModel};
 use crate::physics::ColliderBundle;
 use crate::{loading::StaticSpriteAssets, GameMode};
 
 use bevy::prelude::*;
+use bevy_ecs_ldtk::prelude::LevelSelection;
 use bevy_rapier2d::geometry::Collider;
 use bevy_rapier2d::prelude::*;
 
@@ -83,14 +84,21 @@ fn handle_speargun_attack_event(
     q_ground: Query<(Entity, &Ground)>,
     mut mr_speargun_attack: MessageReader<SpeargunShootEvent>,
     static_sprite_assets: Res<StaticSpriteAssets>,
+    level_selection: Res<LevelSelection>,
 ) {
+    let current_level_iid = selected_level_iid(&level_selection);
+
     for attack in mr_speargun_attack.read() {
         if let Ok((entity, child_of, _speargun, turret)) = q_spearguns.get(attack.entity) {
             if let Some((_, model)) = q_turret_models
                 .iter()
                 .find(|(_, model)| model.game_entity == entity)
             {
-                if let Some((_ground_entity, ground)) = q_ground.iter().next() {
+                if let Some((_ground_entity, ground)) = q_ground
+                    .iter()
+                    .find(|(_, ground)| Some(&ground.level_iid) == current_level_iid.as_ref())
+                    .or_else(|| q_ground.iter().next())
+                {
                     commands.entity(child_of.0).with_children(|parent| {
                         let timer_despawn = SpeargunArrowDespawnTimer(Timer::new(
                             Duration::from_secs_f32(1.0),
