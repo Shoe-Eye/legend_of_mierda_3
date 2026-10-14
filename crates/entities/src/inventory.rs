@@ -21,7 +21,10 @@ pub fn count_plants(inventory: &PlayerInventory) -> Vec<(PlantType, usize)> {
     let mut counts: Vec<(PlantType, usize)> = Vec::new();
 
     for plant in &inventory.plants {
-        match counts.iter_mut().find(|(plant_type, _)| *plant_type == plant.plant_type) {
+        match counts
+            .iter_mut()
+            .find(|(plant_type, _)| *plant_type == plant.plant_type)
+        {
             Some((_, count)) => *count += 1,
             None => counts.push((plant.plant_type, 1)),
         }
@@ -105,7 +108,7 @@ pub fn spawn_inventory_ui(mut commands: Commands) {
             justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
             position_type: PositionType::Absolute,
-            bottom: Val::Px(120.0),
+            bottom: Val::Px(10.0),
             column_gap: Val::Px(6.0),
             padding: UiRect::axes(Val::Px(10.0), Val::Px(6.0)),
             ..default()

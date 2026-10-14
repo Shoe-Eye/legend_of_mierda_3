@@ -1,11 +1,11 @@
 [package]
 name = "legend_of_mierda_3"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-bevy = { version = "0.18", features = ["default", "jpeg", "bevy_sprite", "free_camera"] }
+bevy = { version = "0.18", features = ["default", "default_font", "jpeg", "bevy_sprite", "free_camera"] }
 bevy-inspector-egui = "0.36.0"
 bevy-scene-hook = { git = "https://github.com/stillonearth/bevy-scene-hook.git", rev ="663cab4" }
 bevy_asset_loader = "0.26"

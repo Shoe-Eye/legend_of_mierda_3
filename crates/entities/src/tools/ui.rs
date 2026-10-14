@@ -46,7 +46,7 @@ fn draw_spawn_tool_selection_ui(mut commands: Commands, asset_server: Res<AssetS
                 flex_direction: FlexDirection::Column,
                 align_items: AlignItems::Center,
                 position_type: PositionType::Absolute,
-                bottom: Val::Px(16.0),
+                bottom: Val::Px(36.0),
                 padding: MARGIN.all(),
                 row_gap: MARGIN,
                 ..Default::default()
