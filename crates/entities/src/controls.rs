@@ -3,6 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use lom_assets::loading::CharacterSpritesheets;
 use lom_assets::sprites::*;
+use lom_dialogue::ActiveDialogue;
 
 use crate::{
     player::Player,
@@ -21,6 +22,7 @@ pub struct PlayerControlEvent {
     pub arrow_down: bool,
     pub arrow_left: bool,
     pub arrow_right: bool,
+    pub interact: bool,
 }
 
 pub fn control_player_character(
@@ -143,6 +145,7 @@ pub fn control_player_character(
 
 pub fn keyboard_controls(
     input: Res<ButtonInput<KeyCode>>,
+    active_dialogue: Res<ActiveDialogue>,
     mut ev_control: MessageWriter<PlayerControlEvent>,
 ) {
     let mut control = PlayerControlEvent {
@@ -155,7 +158,16 @@ pub fn keyboard_controls(
         arrow_down: input.pressed(KeyCode::ArrowDown),
         arrow_left: input.pressed(KeyCode::ArrowLeft),
         arrow_right: input.pressed(KeyCode::ArrowRight),
+        interact: input.just_pressed(KeyCode::KeyE),
     };
+
+    // player stands still while talking; only the interact key goes through
+    if active_dialogue.is_active() {
+        control = PlayerControlEvent {
+            interact: control.interact,
+            ..default()
+        };
+    }
 
     if control.use_tool {
         control.go_right = false;

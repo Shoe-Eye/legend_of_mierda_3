@@ -7,25 +7,21 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
-use lom_assets::loading::NPC_1_ASSET_SHEET_SHEET;
-use lom_assets::loading::SHEET_1_COLUMNS;
-use lom_assets::loading::SHEET_1_ROWS;
 
 use lom_assets::load_texture_atlas;
 use lom_assets::sprites::*;
 use lom_game::GameMode;
 use lom_ldtk::physics::ColliderBundle;
-use rand::rngs::ThreadRng;
 use rand::RngExt;
+use rand::rngs::ThreadRng;
 
-use crate::npc::ai::npc_ai;
-use crate::npc::ai::BehaviourTimer;
-use crate::npc::control::handle_npc_control;
-use crate::npc::control::NPCControlMessage;
-use crate::npc::ui::handle_despawn_npc_name_label;
-use crate::npc::ui::handle_player_npc_proximity;
-use crate::npc::ui::handle_spawn_npc_name_label;
-use crate::npc::ui::{DespawnNPCNameLabel, SpawnNPCNameLabel};
+use lom_assets::loading::NPC_1_ASSET_SHEET_SHEET;
+use lom_assets::loading::SHEET_1_COLUMNS;
+use lom_assets::loading::SHEET_1_ROWS;
+
+use crate::npc::ai::*;
+use crate::npc::control::*;
+use crate::npc::ui::*;
 
 // --------
 // Entities
@@ -36,6 +32,7 @@ pub struct NPC {
     pub health: u16,
     pub name: String,
     pub is_ai_driven: bool,
+    pub dialogue: Vec<String>,
 }
 
 #[derive(Default, Bundle)]
@@ -91,6 +88,17 @@ impl LdtkEntity for NPCBundle {
             .get_bool_field("IsAIDriven")
             .expect("expected entity to have non-nullable IsAIDriven string field");
 
+        // optional `Dialogue` (Array<String>) field in LDtk; placeholder lines otherwise
+        let dialogue: Vec<String> = entity_instance
+            .get_maybe_strings_field("Dialogue")
+            .map(|lines| lines.iter().flatten().cloned().collect())
+            .unwrap_or_default();
+        let dialogue = if dialogue.is_empty() {
+            default_dialogue(npc_name)
+        } else {
+            dialogue
+        };
+
         let mut rng = ThreadRng::default();
         let behaviour_timer_duration_sec = rng.random_range(1..10) as u64;
 
@@ -103,6 +111,7 @@ impl LdtkEntity for NPCBundle {
                 health: 100,
                 name: npc_name.clone(),
                 is_ai_driven: *is_ai_driven,
+                dialogue,
             },
             animated_character_sprite: AnimatedCharacterSprite {
                 animated_character_type: AnimatedCharacterType::Player,
@@ -121,6 +130,14 @@ impl LdtkEntity for NPCBundle {
             )),
         }
     }
+}
+
+fn default_dialogue(name: &str) -> Vec<String> {
+    vec![
+        format!("Hola, amigo! I'm {name}."),
+        "Hot day today, isn't it? The cactuses are thirsty, and so am I...".to_string(),
+        "Come back later, maybe I'll have something interesting to tell you.".to_string(),
+    ]
 }
 
 // ------
@@ -144,6 +161,7 @@ impl Plugin for NPCPlugin {
                     handle_despawn_npc_name_label,
                     handle_spawn_npc_name_label,
                     handle_player_npc_proximity,
+                    handle_start_npc_dialogue,
                 )
                     .chain()
                     .run_if(in_state(GameMode::GamePlay)),

@@ -13,16 +13,18 @@ use bevy_obj::ObjPlugin;
 use bevy_rapier2d::prelude::*;
 use bevy_scene_hook::HookPlugin;
 use bevy_tweening::TweeningPlugin;
+
 use lom_assets::loading::LoadingPlugin;
 use lom_assets::sprites::flash_sprite;
 use lom_audio::InternalAudioPlugin;
 use lom_cutscene::CutscenePlugin;
+use lom_dialogue::DialoguePlugin;
 use lom_entities as entities;
-use lom_entities::gameplay::gameover::GameOverPlugin;
 use lom_entities::gameplay::GameplayPlugin;
+use lom_entities::gameplay::gameover::GameOverPlugin;
 use lom_entities::sprites;
 use lom_game::{GameMode, GameWorldPlugin};
-use lom_ldtk::ldtk::{self, LevelChangeEvent, LEVEL_1_IID};
+use lom_ldtk::ldtk::{self, LEVEL_1_IID, LevelChangeEvent};
 use lom_splashscreen::SplashscreenPlugin;
 use lom_ui::game::GameUIPlugin;
 use lom_ui::menu::MainMenuPlugin;
@@ -73,6 +75,7 @@ fn main() {
         LegendOfMierda3Plugin,
         GameOverPlugin,
         SplashscreenPlugin,
+        DialoguePlugin,
     ))
     .add_plugins(InternalAudioPlugin)
     .add_plugins(EguiPlugin::default())

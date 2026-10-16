@@ -4615,6 +4615,7 @@ dependencies = [
  "lom_assets",
  "lom_audio",
  "lom_cutscene",
+ "lom_dialogue",
  "lom_entities",
  "lom_game",
  "lom_ldtk",
@@ -4756,6 +4757,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "lom_dialogue"
+version = "0.0.1"
+dependencies = [
+ "bevy",
+ "bevy_kira_audio",
+ "lom_assets",
+ "lom_game",
+]
+
+[[package]]
 name = "lom_entities"
 version = "0.2.0"
 dependencies = [
@@ -4769,6 +4780,7 @@ dependencies = [
  "bevy_rapier2d",
  "bevy_tweening",
  "lom_assets",
+ "lom_dialogue",
  "lom_game",
  "lom_ldtk",
  "lom_ui",

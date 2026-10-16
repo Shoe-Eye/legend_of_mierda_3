@@ -21,6 +21,7 @@ lom_audio = { path = "crates/audio" }
 lom_cutscene = { path = "crates/cutscene" }
 lom_entities = { path = "crates/entities" }
 lom_game = { path = "crates/game" }
+lom_dialogue = { path = "crates/dialogue" }
 lom_ldtk = { path = "crates/ldtk" }
 lom_splashscreen = { path = "crates/splashscreen" }
 lom_ui = { path = "crates/ui" }

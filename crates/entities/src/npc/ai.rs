@@ -1,8 +1,9 @@
 use bevy::prelude::*;
+use lom_dialogue::ActiveDialogue;
 use rand::rngs::ThreadRng;
 use rand::seq::IndexedRandom;
 
-use crate::npc::{NPCControlMessage, NPC};
+use crate::npc::{NPC, NPCControlMessage};
 
 #[derive(Component, Deref, DerefMut, Clone, Default, Reflect)]
 pub struct BehaviourTimer(pub Timer);
@@ -10,12 +11,13 @@ pub struct BehaviourTimer(pub Timer);
 pub fn npc_ai(
     mut q_npc: Query<(Entity, &mut NPC, &mut BehaviourTimer)>,
     time: Res<Time>,
+    active_dialogue: Res<ActiveDialogue>,
     mut mw_control_npc: MessageWriter<NPCControlMessage>,
 ) {
     for (entity, npc, mut timer) in q_npc.iter_mut() {
         timer.tick(time.delta());
 
-        if !npc.is_ai_driven {
+        if !npc.is_ai_driven || active_dialogue.npc == Some(entity) {
             continue;
         }
 

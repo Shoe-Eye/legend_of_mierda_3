@@ -1,7 +1,15 @@
 use bevy::prelude::*;
 use lom_assets::FontAssets;
+use lom_dialogue::{ActiveDialogue, AdvanceDialogue, StartNPCDialogue};
 
-use crate::{npc::NPC, player::Player};
+use crate::{
+    controls::PlayerControlEvent,
+    npc::{NPC, control::NPCControlMessage},
+    player::Player,
+};
+
+/// How close the player must be to an NPC to see its name and talk to it.
+pub const NPC_INTERACTION_DISTANCE: f32 = 60.0;
 
 #[derive(Component)]
 pub struct UINPCNameLabel;
@@ -84,7 +92,7 @@ pub fn handle_player_npc_proximity(
                 continue;
             }
 
-            if distance <= 60.0 {
+            if distance <= NPC_INTERACTION_DISTANCE {
                 mw_spawn_name.write(SpawnNPCNameLabel {
                     text: npc.name.clone(),
                     entity: entity.clone(),
@@ -96,4 +104,57 @@ pub fn handle_player_npc_proximity(
             }
         }
     }
+}
+
+pub fn handle_start_npc_dialogue(
+    mut ev_control: MessageReader<PlayerControlEvent>,
+    active_dialogue: Res<ActiveDialogue>,
+    q_player: Query<&GlobalTransform, With<Player>>,
+    q_npc: Query<(Entity, &GlobalTransform, &NPC)>,
+    mut mw_start_dialogue: MessageWriter<StartNPCDialogue>,
+    mut mw_advance_dialogue: MessageWriter<AdvanceDialogue>,
+    mut mw_control_npc: MessageWriter<NPCControlMessage>,
+) {
+    if !ev_control.read().any(|event| event.interact) {
+        return;
+    }
+
+    if active_dialogue.is_active() {
+        mw_advance_dialogue.write(AdvanceDialogue);
+        return;
+    }
+
+    let Some(player_transform) = q_player.iter().next() else {
+        return;
+    };
+    let player_position = player_transform.translation().truncate();
+
+    let nearest = q_npc
+        .iter()
+        .map(|(entity, transform, npc)| {
+            let distance = player_position.distance(transform.translation().truncate());
+            (entity, npc, distance)
+        })
+        .filter(|(_, _, distance)| *distance <= NPC_INTERACTION_DISTANCE)
+        .min_by(|a, b| a.2.total_cmp(&b.2));
+
+    let Some((entity, npc, _)) = nearest else {
+        return;
+    };
+
+    // stop the NPC so it doesn't walk away mid-sentence
+    mw_control_npc.write(NPCControlMessage {
+        go_up: false,
+        go_down: false,
+        go_left: false,
+        go_right: false,
+        idle: true,
+        entity,
+    });
+
+    mw_start_dialogue.write(StartNPCDialogue {
+        entity,
+        speaker: npc.name.clone(),
+        lines: npc.dialogue.clone(),
+    });
 }

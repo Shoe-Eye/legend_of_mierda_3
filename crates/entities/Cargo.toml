@@ -18,6 +18,7 @@ lom_assets = { path = "../assets" }
 lom_game = { path = "../game" }
 lom_ldtk = { path = "../ldtk" }
 lom_ui = { path = "../ui" }
+lom_dialogue = { path = "../dialogue" }
 rand = "0.10"
 
 
